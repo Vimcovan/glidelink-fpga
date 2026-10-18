@@ -71,6 +71,9 @@ class ShallowPlanner(Planner):
                              ['sd.conv1', 'sd.conv_res']))
         buf('sd.conv1_plus_res line buffer', '3x3 line buffer (3 rows)', 3 * w * c)
         buf('sd.conv1.shuffle row (main)', 'pixel-shuffle row buffer (1 row)', 2 * w * n)
+        # one output row behind the main shuffle: the IGDN takes ~13 cycles per element, so reading the shuffle row
+        # buffer out directly into it would stall the merged engine for that time on every input row
+        buf('sd.conv1.shuffle drain (main)', 'pixel-shuffle drain FIFO (1 row)', 2 * w * n)
         buf('sd.conv_res.shuffle row (main)', 'pixel-shuffle row buffer (1 row)', 2 * w * n)
         E.append(self.gdn('sd.igdn', n, 2 * h, 2 * w))
         buf('sd.sum skip delay', 'skip delay FIFO (1 row)', 2 * w * n, 'sd.sum.b')

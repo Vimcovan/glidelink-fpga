@@ -292,11 +292,27 @@ class Top:
             return
         h, w, c = self.shape(op['in'])
         blk = block_of(op['out'])
-        b = self.bufs.get(f'{blk}.shuffle row ({"skip" if ".skip" in op["in"] else "main"})')
+        kind = "skip" if ".skip" in op["in"] else "main"
+        b = self.bufs.get(f'{blk}.shuffle row ({kind})')
         style = 'distributed' if b is None or b['elems'] * 12 <= 4096 else ('ultra' if b['loc'] == 'URAM' else 'block')
+        # optional drain FIFO (memory plan '<blk>.shuffle drain (main)'): lets the shuffle read its row buffer out at
+        # full rate when the consumer is slow, so that the input side (the conv engine) is not stalled meanwhile
+        drain = self.bufs.get(f'{blk}.shuffle drain ({kind})')
+        p = f'{o}_ps' if drain else o
+        if drain:
+            self.decl_stream(p, 12)
         self.B.append(f'''    axis_pixel_shuffle #(.DATA_W(12), .C({c}), .R({r}), .W({w}), .H({h}), .RB_STYLE({q(style)})) u_{o} (
         .clk(clk), .rst_n(rst_n), .s_tdata({src}_d), .s_tvalid({src}_v), .s_tready({src}_r),
-        .m_tdata({o}_d), .m_tvalid({o}_v), .m_tready({o}_r), .m_tlast({o}_l), .m_tuser({o}_u));''')
+        .m_tdata({p}_d), .m_tvalid({p}_v), .m_tready({p}_r), .m_tlast({p}_l), .m_tuser({p}_u));''')
+        if drain:
+            if drain['loc'] == 'URAM':
+                pack = 72 // 14; depth = math.ceil(drain['elems'] / pack); dstyle = 'ultra'
+            else:
+                pack, depth, dstyle = fifo_shape(drain['elems'], 14)
+            self.fifos.append((f'{op["out"]} drain', drain['elems'], 14, pack, depth, dstyle))
+            self.B.append(f'''    axis_fifo_packed #(.DATA_W(14), .PACK({pack}), .DEPTH_W({depth}), .RAM_STYLE({q(dstyle)})) u_drain_{o} (
+        .clk(clk), .rst_n(rst_n), .s_tdata({{{p}_u, {p}_l, {p}_d}}), .s_tvalid({p}_v), .s_tready({p}_r),
+        .m_tdata({{{o}_u, {o}_l, {o}_d}}), .m_tvalid({o}_v), .m_tready({o}_r));''')
 
     def out_width(self, t):
         kind = self.byname.get(t, {}).get('op')
