@@ -106,8 +106,12 @@ def report_figure(ks, fit_json, out):
     bx = axs[2]
     x = np.arange(len(labels))
     for off, w, c in ((-0.2, '32', S.LBLUE), (0.2, '128', S.BLUE)):
-        bx.bar(x + off, [res[k][w] for k in labels], 0.38, color=c, label=f'中间层宽度 {w}')
-    bx.set_yscale('log'); bx.set_ylim(0.05, 150)
+        v = [res[k][w] for k in labels]
+        bx.bar(x + off, v, 0.38, color=c, label=f'中间层宽度 {w}')
+        for xi, vi in zip(x + off, v):                         # value labels: the trained-kernel bars are tiny
+            bx.text(xi, vi + 1.2, f'{vi:.2f}' if vi < 1 else f'{vi:.1f}', ha='center', va='bottom', fontsize=4.8,
+                    color=S.INK)
+    bx.set_ylim(0, 88)
     bx.set_xticks(x); bx.set_xticklabels(list(labels.values()), fontsize=5.5)
     bx.set_ylabel('拟合残差（% 核能量）', fontsize=6.5); bx.tick_params(axis='y', labelsize=6)
     bx.set_title('(c) 用 3×3 小核级联拟合大核的残差', fontsize=6.5)
