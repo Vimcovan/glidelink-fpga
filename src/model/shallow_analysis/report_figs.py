@@ -1,6 +1,7 @@
 """Figures and numbers of the shallow-decoder write-up (report/notes/shallow_decoder_design.md), final model.
 
-    python report_figs.py --ckpt data/model_shallow/checkpoint/best.pt --cache <data/cache> --sweep <run>/sweep.json
+    python int_sweep.py ... --out report/notes/figures/shallow_decoder/int_sweep.json   (first)
+    python report_figs.py --ckpt data/model_shallow/checkpoint/best.pt --cache <data/cache>
 -> report/notes/figures/shallow_decoder/{interp_stages,pwl_final,noise_stages,psnr_snr_shallow}.png and the numbers
    printed (path statistics incl. the encoder, PWL shape statistics, stage deviation SNRs).
 """
@@ -154,30 +155,24 @@ def fig_noise(enc, dec, val, dev):
         print(f'noise stages {snr:g} dB: ' + ', '.join(f'{k} {res[snr][k] - res[snr]["input"]:+.2f}' for k in ks))
 
 
-# W8A12 integer PSNR, DIV2K validation (shallow, deployed), quant_shallow.py on the final checkpoint (table 4 of the
-# write-up); same noise for both
-INT_DIV2K = {4.0: (26.77, 26.78), 10.0: (31.13, 31.22)}
-
-
-def fig_psnr(sweep_path, manifest):
-    d = json.load(open(sweep_path, encoding='utf-8'))['val_div2k']
-    snr = [float(k) for k in d if k != 'Infinity']
-    sh = np.array([d[k]['shallow'] for k in d if k != 'Infinity'])
-    dp = np.array([d[k]['deployed'] for k in d if k != 'Infinity'])
-    fig, (ax, bx) = plt.subplots(2, 1, figsize=(4.4, 3.8), dpi=300, sharex=True,
+def fig_psnr(sweep_path):
+    """sweep_path: int_sweep.json (int_sweep.py): float and W8A12 integer PSNR of both models, same noise"""
+    d = json.load(open(sweep_path, encoding='utf-8'))['psnr_db']
+    snr = np.array([float(k) for k in d])
+    g = lambda key: np.array([d[k][key] for k in d])
+    fig, (ax, bx) = plt.subplots(2, 1, figsize=(4.4, 3.9), dpi=300, sharex=True,
                                  gridspec_kw={'height_ratios': [2, 1.3]})
-    ax.plot(snr, dp, color=S.GRAY, ls='--', marker='s', ms=3, lw=1.1, label='原解码器（1.443 GMAC / 帧）')
-    ax.plot(snr, sh, color=S.BLUE, marker='o', ms=2.5, lw=1.2, label='浅层解码器（0.250 GMAC / 帧）')
+    ax.plot(snr, g('dep_int'), color=S.GRAY, ls='--', marker='s', ms=3, lw=1.1, label='原解码器（1.443 GMAC / 帧）')
+    ax.plot(snr, g('int'), color=S.BLUE, marker='o', ms=2.5, lw=1.2, label='浅层解码器（0.250 GMAC / 帧）')
     ax.set_ylabel('PSNR (dB)')
+    ax.set_title('W8A12 整数模型', fontsize=8)
     ax.legend(fontsize=6.5, loc='lower right')
     bx.axhline(0, color=S.GRAY, lw=0.6)
-    bx.plot(snr, sh - dp, color=S.BLUE, marker='o', ms=2.5, lw=1.2, label='浮点模型')
-    k = sorted(INT_DIV2K)
-    bx.plot(k, [INT_DIV2K[s][0] - INT_DIV2K[s][1] for s in k], color=S.ORANGE, marker='*', ms=7, ls='none',
-            label='W8A12 整数模型')
-    bx.set_ylim(-0.3, 0.15)
+    bx.plot(snr, g('int') - g('dep_int'), color=S.BLUE, marker='o', ms=2.5, lw=1.2, label='W8A12 整数模型')
+    bx.plot(snr, g('float') - g('dep_float'), color=S.ORANGE, marker='^', ms=2.5, lw=1.0, ls='--', label='浮点模型')
+    bx.set_ylim(-0.3, 0.3)
     bx.set_xlabel('信道 SNR (dB)'); bx.set_ylabel('PSNR 差 (dB)')
-    bx.legend(fontsize=6.5, loc='lower right')
+    bx.legend(fontsize=6.5, loc='lower right', ncol=2)
     S.finish(ax); S.finish(bx)
     fig.tight_layout(); fig.savefig(OUT / 'psnr_snr_shallow.png', bbox_inches='tight', pad_inches=0.03)
 
@@ -186,7 +181,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--ckpt', required=True)
     ap.add_argument('--cache', required=True)
-    ap.add_argument('--sweep', required=True, help='sweep.json of the training run (float PSNR vs SNR)')
+    ap.add_argument('--sweep', default=str(OUT / 'int_sweep.json'), help='int_sweep.py output (float and W8A12 PSNR vs SNR)')
     ap.add_argument('--manifest', default=str(REPO / 'data' / 'model_shallow' / 'manifest.json'))
     a = ap.parse_args()
     S.apply()
@@ -197,7 +192,7 @@ def main():
     fig_interp(enc, dec, val, dev)
     fig_pwl(enc, dec, val, dev)
     fig_noise(enc, dec, val, dev)
-    fig_psnr(a.sweep, json.load(open(a.manifest, encoding='utf-8')))
+    fig_psnr(a.sweep)
     print('figures in', OUT)
 
 

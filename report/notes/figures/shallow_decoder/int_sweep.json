@@ -1,0 +1,93 @@
+{
+ "dataset": "DIV2K validation, 100 centre crops",
+ "psnr_db": {
+  "0": {
+   "float": 20.8864,
+   "int_enc": 20.9898,
+   "int_dec": 20.8856,
+   "int": 20.9903,
+   "dep_float": 20.8352,
+   "dep_int": 20.8622
+  },
+  "2": {
+   "float": 23.922,
+   "int_enc": 24.0099,
+   "int_dec": 23.9117,
+   "int": 24.0013,
+   "dep_float": 23.9003,
+   "dep_int": 23.9181
+  },
+  "4": {
+   "float": 26.7269,
+   "int_enc": 26.7861,
+   "int_dec": 26.7033,
+   "int": 26.7653,
+   "dep_float": 26.7692,
+   "dep_int": 26.7769
+  },
+  "6": {
+   "float": 28.8347,
+   "int_enc": 28.8639,
+   "int_dec": 28.811,
+   "int": 28.8384,
+   "dep_float": 28.9505,
+   "dep_int": 28.9355
+  },
+  "8": {
+   "float": 30.2164,
+   "int_enc": 30.2366,
+   "int_dec": 30.1909,
+   "int": 30.2053,
+   "dep_float": 30.3685,
+   "dep_int": 30.3318
+  },
+  "10": {
+   "float": 31.1276,
+   "int_enc": 31.1569,
+   "int_dec": 31.1047,
+   "int": 31.126,
+   "dep_float": 31.2705,
+   "dep_int": 31.2187
+  },
+  "12": {
+   "float": 31.7638,
+   "int_enc": 31.8047,
+   "int_dec": 31.7431,
+   "int": 31.7736,
+   "dep_float": 31.8754,
+   "dep_int": 31.8096
+  },
+  "15": {
+   "float": 32.3761,
+   "int_enc": 32.43,
+   "int_dec": 32.3564,
+   "int": 32.3967,
+   "dep_float": 32.4301,
+   "dep_int": 32.3489
+  },
+  "20": {
+   "float": 32.847,
+   "int_enc": 32.9121,
+   "int_dec": 32.8282,
+   "int": 32.8784,
+   "dep_float": 32.8372,
+   "dep_int": 32.743
+  },
+  "25": {
+   "float": 33.0068,
+   "int_enc": 33.0759,
+   "int_dec": 32.9887,
+   "int": 33.0417,
+   "dep_float": 32.9711,
+   "dep_int": 32.8722
+  },
+  "30": {
+   "float": 33.0588,
+   "int_enc": 33.1292,
+   "int_dec": 33.0417,
+   "int": 33.0949,
+   "dep_float": 33.0142,
+   "dep_int": 32.9135
+  }
+ }
+}
