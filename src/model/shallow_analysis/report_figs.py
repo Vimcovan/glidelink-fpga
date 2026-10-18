@@ -172,6 +172,7 @@ def fig_psnr(sweep_path):
     bx.plot(snr, g('float') - g('dep_float'), color=S.ORANGE, marker='^', ms=2.5, lw=1.0, ls='--', label='浮点模型')
     bx.set_ylim(-0.3, 0.3)
     bx.set_xlabel('信道 SNR (dB)'); bx.set_ylabel('PSNR 差 (dB)')
+    bx.set_title('浅层解码器 − 原解码器', fontsize=8)
     bx.legend(fontsize=6.5, loc='lower right', ncol=2)
     S.finish(ax); S.finish(bx)
     fig.tight_layout(); fig.savefig(OUT / 'psnr_snr_shallow.png', bbox_inches='tight', pad_inches=0.03)
