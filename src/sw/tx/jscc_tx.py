@@ -80,6 +80,18 @@ class JsccTx:
         self.spi(0x07C, r7c | 0x40)
         return code / 4
 
+    def set_carrier(self, mhz, log=print):
+        """retune both AD9361 synthesizers to `mhz` and repeat the TX quadrature calibration phase search
+        (the PL init and its search run at 915 MHz; see ad9361_lo.py). Returns the search result."""
+        import ad9361_lo as L
+        t0 = time.time()
+        while not self.rd("SPI_STAT") >> 16 & 1:            # PL init + its phase search still running
+            if time.time() - t0 > 15:
+                raise RuntimeError("AD9361 not ready (rf_ready = 0) after 15 s")
+            time.sleep(0.1)
+        L.retune(self.spi, mhz * 1e6, log)
+        return L.tx_quad_search(self.spi, log)
+
     def clear_counters(self):
         self.wr("CTRL", (self.rd("CTRL") & 5) | 2)
 

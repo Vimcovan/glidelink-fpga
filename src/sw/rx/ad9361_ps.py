@@ -61,8 +61,14 @@ class AD9361:
         return self.m.read(RF_CTRL) & 1
 
     def init(self, script=os.path.join(HERE, "ad9361_rx_init.json"), poll_timeout=2.0):
-        """hardware reset, run the init script, then release the PL datapath (RF_CTRL init_done)."""
+        """hardware reset, run the init script, then release the PL datapath (RF_CTRL init_done). The script is for
+        915 MHz; with rf_lo_mhz.txt next to this file it is patched for that carrier first (ad9361_lo.py)."""
         ops = json.load(open(script, encoding="utf-8"))["ops"]
+        import ad9361_lo
+        lo_mhz = ad9361_lo.configured_mhz(HERE)
+        if lo_mhz != ad9361_lo.DEFAULT_MHZ:
+            ops = ad9361_lo.patch_init_ops(ops, lo_mhz * 1e6)
+            self.log(f"AD9361 PS init for {lo_mhz:g} MHz (rf_lo_mhz.txt)")
         t_start = time.time()
         self.m.write(RF_CTRL, 0b001)                     # PS mode, RESETB low, not done
         time.sleep(0.002)

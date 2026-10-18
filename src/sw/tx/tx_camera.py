@@ -18,6 +18,7 @@ import numpy as np
 from jscc_tx import JsccTx
 import jscc_udp as U
 import sscc_pkt
+import ad9361_lo
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--device", type=int, default=0)
@@ -413,7 +414,11 @@ def _send_preview(fid, img):
 
 # ------------------------------------------------------------------ TX overlay: load until the DAC side takes data
 for attempt in range(5):
-    tx = JsccTx(); time.sleep(3); tx.set_source("prbs"); time.sleep(0.5)
+    tx = JsccTx(); time.sleep(3)
+    lo_mhz = ad9361_lo.configured_mhz(os.path.dirname(os.path.abspath(__file__)))
+    if lo_mhz != ad9361_lo.DEFAULT_MHZ and tx.has_spi():     # carrier other than the 915 MHz of the PL init
+        tx.set_carrier(lo_mhz, log=lambda m: print(f"{time.strftime('%H:%M:%S')} {m}", flush=True))
+    tx.set_source("prbs"); time.sleep(0.5)
     a0 = tx.rd("TX_FRAMES"); time.sleep(1); r = tx.rd("TX_FRAMES") - a0
     print(f"{time.strftime('%H:%M:%S')} load {attempt}: PRBS {r} frames/s", flush=True)
     if r > 300:
