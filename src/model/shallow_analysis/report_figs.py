@@ -109,29 +109,18 @@ def fig_pwl(enc, dec, val, dev):
     eps = 0.05
     cls = np.where(R <= eps, 2, np.where(L < -eps, 0, 1))         # 0: V shape, 1: monotone rising, 2: falling right side
     names = ['V形（左侧斜率为负）', '单调上升', '右侧不上升']
-    cols = [S.BLUE, S.ORANGE, S.GRAY]
-    fig, (ax, bx) = plt.subplots(1, 2, figsize=(7.0, 2.9), dpi=300, gridspec_kw={'width_ratios': [1, 1.25]})
-    for q in range(3):
-        m = cls == q
-        ax.scatter(L[m], R[m], s=7, color=cols[q], alpha=0.8, lw=0, label=f'{names[q]}（{m.sum()}）')
-    ax.scatter([1 / 128], [1.0], s=40, marker='*', color=S.INK, zorder=5, label='LeakyReLU')
-    ax.axhline(0, color=S.GRAY, lw=0.5); ax.axvline(0, color=S.GRAY, lw=0.5)
-    ax.set_xlabel('左侧斜率（输入 −2～−0.5）', fontsize=7); ax.set_ylabel('右侧斜率（输入 0.5～2）', fontsize=7)
-    ax.tick_params(labelsize=6); ax.legend(fontsize=5.5, loc='lower right')
+    C = np.array(curves)
+    lo = np.median([r[0] for r in rng]); hi = np.median([r[1] for r in rng])
+    fig, ax = plt.subplots(figsize=(4.6, 3.0), dpi=300)
+    for y in C:                                                 # all channels, faint: overlaps get darker
+        ax.plot(xs, y, color=S.BLUE, lw=0.6, alpha=0.12, zorder=1)
+    ax.plot([], [], color=S.BLUE, lw=0.8, alpha=0.4, label=f'各通道（{len(C)}条）')
+    ax.plot(xs, C.mean(0), color=S.ORANGE, lw=1.8, zorder=3, label='平均')
+    ax.plot(xs, np.where(xs > 0, xs, xs / 128), color=S.INK, lw=0.9, ls='--', zorder=2, label='LeakyReLU（初始值）')
+    ax.set_xlim(-2.5, 2.5); ax.set_ylim(-1.2, 2.0)
+    ax.set_xlabel('输入', fontsize=7.5); ax.set_ylabel('输出', fontsize=7.5)
+    ax.tick_params(labelsize=6.5); ax.legend(fontsize=6.5, loc='upper left')
     S.finish(ax)
-    for q in range(3):
-        idx = np.nonzero(cls == q)[0]
-        if len(idx) < 5:
-            continue
-        med = np.array([np.median(L[idx]), np.median(R[idx])])
-        k = idx[np.argmin(np.hypot(L[idx] - med[0], R[idx] - med[1]))]   # channel closest to the class median
-        lo, hi = rng[k]; m = (xs >= lo) & (xs <= hi)
-        bx.plot(xs[m], curves[k][m], color=cols[q], lw=1.4, label=names[q])
-    bx.plot(xs, np.where(xs > 0, xs, xs / 128), color=S.INK, lw=0.8, ls='--', label='LeakyReLU（初始值）')
-    bx.set_xlim(-3, 3); bx.set_ylim(-1.0, 1.3)
-    bx.set_xlabel('输入', fontsize=7); bx.set_ylabel('输出', fontsize=7)
-    bx.tick_params(labelsize=6); bx.legend(fontsize=5.5, loc='upper left')
-    S.finish(bx)
     fig.tight_layout(); fig.savefig(OUT / 'pwl_final.png', bbox_inches='tight', pad_inches=0.03)
     print(f'PWL: {len(L)} channels, left slope (-2..-0.5) median {np.median(L):.2f}, right (0.5..2) {np.median(R):.2f}, '
           f'negative left slope {np.mean(L < 0) * 100:.0f} %; classes ' +
