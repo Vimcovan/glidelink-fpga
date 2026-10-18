@@ -95,30 +95,47 @@ def fig_pwl(enc, dec, val, dev):
     for h in hooks:
         h.remove()
     u = torch.linspace(-3, 3, 601, device=dev).view(1, 1, -1, 1)
-    fig, axs = plt.subplots(2, 4, figsize=(7.2, 3.3), dpi=300, sharex=True)
-    left, right = [], []
-    for n, (a, ax) in enumerate(zip(acts, axs.T.flatten())):
+    xs = u.flatten().cpu().numpy()
+    curves, rng, L, R = [], [], [], []
+    for a in acts:
         c = a.a.shape[1]
         y = a(u.expand(1, c, -1, 1)).squeeze().cpu().numpy()          # (c, 601)
-        xs = u.flatten().cpu().numpy()
         lo, hi = np.percentile(torch.cat(ins[id(a)]).numpy(), [1, 99])
-        ax.axvspan(lo, hi, color=S.SHADE_B, lw=0)
-        for k in range(c):
-            ax.plot(xs, y[k], color=S.BLUE, lw=0.5, alpha=0.6)
-        ax.plot(xs, np.where(xs > 0, xs, xs / 128), color=S.ORANGE, lw=0.8, ls='--')
-        ax.set_title(f'残差块 {n // 2 + 1}，第 {n % 2 + 1} 个激活', fontsize=7)
-        ax.set_ylim(-1.5, 3.2)
-        ax.tick_params(labelsize=6)
-        S.finish(ax)
         sl = np.gradient(y, xs, axis=1)
-        left.append(sl[:, (xs >= -2) & (xs <= -0.5)].mean(1)); right.append(sl[:, (xs >= 0.5) & (xs <= 2)].mean(1))
-    for ax in axs[1]:
-        ax.set_xlabel('输入', fontsize=7)
+        for k in range(c):
+            curves.append(y[k]); rng.append((lo, hi))
+            L.append(sl[k, (xs >= -2) & (xs <= -0.5)].mean()); R.append(sl[k, (xs >= 0.5) & (xs <= 2)].mean())
+    L, R = np.array(L), np.array(R)
+    eps = 0.05
+    cls = np.where(R <= eps, 2, np.where(L < -eps, 0, 1))         # 0: V shape, 1: monotone rising, 2: falling right side
+    names = ['V形（左侧斜率为负）', '单调上升', '右侧不上升']
+    cols = [S.BLUE, S.ORANGE, S.GRAY]
+    fig, (ax, bx) = plt.subplots(1, 2, figsize=(7.0, 2.9), dpi=300, gridspec_kw={'width_ratios': [1, 1.25]})
+    for q in range(3):
+        m = cls == q
+        ax.scatter(L[m], R[m], s=7, color=cols[q], alpha=0.8, lw=0, label=f'{names[q]}（{m.sum()}）')
+    ax.scatter([1 / 128], [1.0], s=40, marker='*', color=S.INK, zorder=5, label='LeakyReLU')
+    ax.axhline(0, color=S.GRAY, lw=0.5); ax.axvline(0, color=S.GRAY, lw=0.5)
+    ax.set_xlabel('左侧斜率（输入 −2～−0.5）', fontsize=7); ax.set_ylabel('右侧斜率（输入 0.5～2）', fontsize=7)
+    ax.tick_params(labelsize=6); ax.legend(fontsize=5.5, loc='lower right')
+    S.finish(ax)
+    for q in range(3):
+        idx = np.nonzero(cls == q)[0]
+        if len(idx) < 5:
+            continue
+        med = np.array([np.median(L[idx]), np.median(R[idx])])
+        k = idx[np.argmin(np.hypot(L[idx] - med[0], R[idx] - med[1]))]   # channel closest to the class median
+        lo, hi = rng[k]; m = (xs >= lo) & (xs <= hi)
+        bx.plot(xs[m], curves[k][m], color=cols[q], lw=1.4, label=names[q])
+    bx.plot(xs, np.where(xs > 0, xs, xs / 128), color=S.INK, lw=0.8, ls='--', label='LeakyReLU（初始值）')
+    bx.set_xlim(-3, 3); bx.set_ylim(-1.0, 1.3)
+    bx.set_xlabel('输入', fontsize=7); bx.set_ylabel('输出', fontsize=7)
+    bx.tick_params(labelsize=6); bx.legend(fontsize=5.5, loc='upper left')
+    S.finish(bx)
     fig.tight_layout(); fig.savefig(OUT / 'pwl_final.png', bbox_inches='tight', pad_inches=0.03)
-    L, R = np.concatenate(left), np.concatenate(right)
     print(f'PWL: {len(L)} channels, left slope (-2..-0.5) median {np.median(L):.2f}, right (0.5..2) {np.median(R):.2f}, '
-          f'negative left slope {np.mean(L < 0) * 100:.0f} %')
-
+          f'negative left slope {np.mean(L < 0) * 100:.0f} %; classes ' +
+          ', '.join(f'{names[q]} {int((cls == q).sum())}' for q in range(3)))
 
 @torch.no_grad()
 def fig_noise(enc, dec, val, dev):
