@@ -154,17 +154,31 @@ def fig_noise(enc, dec, val, dev):
         print(f'noise stages {snr:g} dB: ' + ', '.join(f'{k} {res[snr][k] - res[snr]["input"]:+.2f}' for k in ks))
 
 
+# W8A12 integer PSNR, DIV2K validation (shallow, deployed), quant_shallow.py on the final checkpoint (table 4 of the
+# write-up); same noise for both
+INT_DIV2K = {4.0: (26.77, 26.78), 10.0: (31.13, 31.22)}
+
+
 def fig_psnr(sweep_path, manifest):
     d = json.load(open(sweep_path, encoding='utf-8'))['val_div2k']
     snr = [float(k) for k in d if k != 'Infinity']
-    sh = [d[k]['shallow'] for k in d if k != 'Infinity']
-    dp = [d[k]['deployed'] for k in d if k != 'Infinity']
-    fig, ax = plt.subplots(figsize=(4.4, 2.8), dpi=300)
+    sh = np.array([d[k]['shallow'] for k in d if k != 'Infinity'])
+    dp = np.array([d[k]['deployed'] for k in d if k != 'Infinity'])
+    fig, (ax, bx) = plt.subplots(2, 1, figsize=(4.4, 3.8), dpi=300, sharex=True,
+                                 gridspec_kw={'height_ratios': [2, 1.3]})
     ax.plot(snr, dp, color=S.GRAY, ls='--', marker='s', ms=3, lw=1.1, label='原解码器（1.443 GMAC / 帧）')
-    ax.plot(snr, sh, color=S.BLUE, marker='o', ms=3, lw=1.2, label='浅层解码器（0.250 GMAC / 帧）')
-    ax.set_xlabel('信道 SNR (dB)'); ax.set_ylabel('PSNR (dB)')
+    ax.plot(snr, sh, color=S.BLUE, marker='o', ms=2.5, lw=1.2, label='浅层解码器（0.250 GMAC / 帧）')
+    ax.set_ylabel('PSNR (dB)')
     ax.legend(fontsize=6.5, loc='lower right')
-    S.finish(ax)
+    bx.axhline(0, color=S.GRAY, lw=0.6)
+    bx.plot(snr, sh - dp, color=S.BLUE, marker='o', ms=2.5, lw=1.2, label='浮点模型')
+    k = sorted(INT_DIV2K)
+    bx.plot(k, [INT_DIV2K[s][0] - INT_DIV2K[s][1] for s in k], color=S.ORANGE, marker='*', ms=7, ls='none',
+            label='W8A12 整数模型')
+    bx.set_ylim(-0.3, 0.15)
+    bx.set_xlabel('信道 SNR (dB)'); bx.set_ylabel('PSNR 差 (dB)')
+    bx.legend(fontsize=6.5, loc='lower right')
+    S.finish(ax); S.finish(bx)
     fig.tight_layout(); fig.savefig(OUT / 'psnr_snr_shallow.png', bbox_inches='tight', pad_inches=0.03)
 
 

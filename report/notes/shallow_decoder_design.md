@@ -103,7 +103,7 @@ $$
 
 ![PSNR随信道SNR的变化](figures/shallow_decoder/psnr_snr_shallow.png)
 
-图5　浮点模型的PSNR随信道SNR的变化（DIV2K验证集100张，AWGN）。
+图5　PSNR随信道SNR的变化（DIV2K验证集100张，AWGN）。上：两种解码器的浮点模型；下：浅层解码器减原解码器的PSNR差，星号为两者W8A12整数模型之差。
 
 ## 4. 硬件实现
 
