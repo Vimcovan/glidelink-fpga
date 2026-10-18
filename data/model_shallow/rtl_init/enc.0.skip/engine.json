@@ -1,0 +1,43 @@
+{
+ "name": "enc.0.skip",
+ "ops": [
+  "enc.0.skip"
+ ],
+ "CIN": 3,
+ "COUT": 32,
+ "K": 1,
+ "STRIDE": 2,
+ "PAD": 0,
+ "P": 3,
+ "GROUPS": 11,
+ "ACT": "none",
+ "ACT2": "none",
+ "ACT_SPLIT": 32,
+ "WROM_STYLE": "distributed",
+ "WROM_MODE": "direct",
+ "WG_NCOL": 1,
+ "WROM_DEPTH": 33,
+ "WROM_WIDTH": 24,
+ "WROM_BANK_DEPTH": 0,
+ "RQ_MUL": "lut",
+ "PRE": 0,
+ "SH_MIN": 23,
+ "SH_BITS": 2,
+ "in": "input",
+ "in_shape_hwc": [
+  256,
+  256,
+  3
+ ],
+ "out": [
+  "enc.0.skip"
+ ],
+ "out_shape_hwc": [
+  [
+   128,
+   128,
+   32
+  ]
+ ],
+ "note": "centre tap of enc.0.conv1"
+}

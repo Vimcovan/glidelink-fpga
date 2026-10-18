@@ -99,6 +99,13 @@ class IntB(IR.IntBackend):
         else:
             acc = sq * x.q + p['iq'][ch, seg]
         v = self.requant(name, acc, (x.s * p['sw'] / s_y).cpu().numpy(), per_channel=True)
+        self.track(name + '.acc', acc)
+        if self.PWL_FORM == 'knot':
+            rq = self.plan['_rq'][name]
+            self.record({'op': 'pwl', 'name': name, 'in': x.name, 'out': name, 'channels': x.q.shape[1],
+                         'T0': int(round(p['t0'])), 'STEP_LOG2': int(round(math.log2(p['step']))), 'NK': p['nk'],
+                         'slope': p['sq'], 'yk': p['yq'], 'rq_pre': rq['pre'], 'rq_M': rq['M'], 'rq_sh': rq['sh'],
+                         'in_scale': x.s, 'out_scale': s_y})
         return self.out_act(name, v, s_y)
 
 

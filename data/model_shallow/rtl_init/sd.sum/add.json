@@ -1,0 +1,12 @@
+{
+ "name": "sd.sum",
+ "MA": 71682,
+ "MB": 29913,
+ "SH": 16,
+ "RELU": 0,
+ "in": [
+  "sd.igdn",
+  "sd.conv_res.ps2"
+ ],
+ "out": "sd.sum"
+}

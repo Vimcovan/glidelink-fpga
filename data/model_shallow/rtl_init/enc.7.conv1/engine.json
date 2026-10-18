@@ -1,0 +1,43 @@
+{
+ "name": "enc.7.conv1",
+ "ops": [
+  "enc.7.conv1"
+ ],
+ "CIN": 32,
+ "COUT": 16,
+ "K": 3,
+ "STRIDE": 1,
+ "PAD": 1,
+ "P": 4,
+ "GROUPS": 4,
+ "ACT": "leaky",
+ "ACT2": "none",
+ "ACT_SPLIT": 16,
+ "WROM_STYLE": "block",
+ "WROM_MODE": "direct",
+ "WG_NCOL": 1,
+ "WROM_DEPTH": 1152,
+ "WROM_WIDTH": 32,
+ "WROM_BANK_DEPTH": 512,
+ "RQ_MUL": "lut",
+ "PRE": 0,
+ "SH_MIN": 25,
+ "SH_BITS": 1,
+ "in": "enc.6.out",
+ "in_shape_hwc": [
+  64,
+  64,
+  32
+ ],
+ "out": [
+  "enc.7.conv1"
+ ],
+ "out_shape_hwc": [
+  [
+   64,
+   64,
+   16
+  ]
+ ],
+ "note": "stride 1"
+}

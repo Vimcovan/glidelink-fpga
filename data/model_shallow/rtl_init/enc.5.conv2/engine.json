@@ -1,0 +1,43 @@
+{
+ "name": "enc.5.conv2",
+ "ops": [
+  "enc.5.conv2"
+ ],
+ "CIN": 32,
+ "COUT": 32,
+ "K": 3,
+ "STRIDE": 1,
+ "PAD": 1,
+ "P": 7,
+ "GROUPS": 5,
+ "ACT": "none",
+ "ACT2": "none",
+ "ACT_SPLIT": 32,
+ "WROM_STYLE": "block",
+ "WROM_MODE": "gear",
+ "WG_NCOL": 5,
+ "WROM_DEPTH": 1440,
+ "WROM_WIDTH": 56,
+ "WROM_BANK_DEPTH": 0,
+ "RQ_MUL": "lut",
+ "PRE": 0,
+ "SH_MIN": 24,
+ "SH_BITS": 2,
+ "in": "enc.5.conv1",
+ "in_shape_hwc": [
+  64,
+  64,
+  32
+ ],
+ "out": [
+  "enc.5.conv2"
+ ],
+ "out_shape_hwc": [
+  [
+   64,
+   64,
+   32
+  ]
+ ],
+ "note": ""
+}

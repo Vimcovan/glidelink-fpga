@@ -268,6 +268,19 @@ class Top:
         .clk(clk), .rst_n(rst_n), .s_tdata({src}_d), .s_tvalid({src}_v), .s_tready({src}_r), .s_tlast({src}_l), .s_tuser({src}_u),
         .m_tdata({o}_d), .m_tvalid({o}_v), .m_tready({o}_r), .m_tlast({o}_l), .m_tuser({o}_u));''')
 
+    def pwl(self, op):
+        """per-channel piecewise-linear activation (shallow decoder export, export_shallow.py)"""
+        f = op['files']
+        src = self.consume(op['in'], f'pwl_{ident(op["out"])}')
+        o = ident(op['out'])
+        self.decl_stream(o, 12)
+        pre = int((EXP / f['rq_pre']['file']).read_text(encoding='ascii').split()[0], 16)
+        p = lambda k: q((EXP / f[k]['file']).as_posix())
+        self.B.append(f'''    axis_pwl #(.X_W(12), .C({op["channels"]}), .NK({op["NK"]}), .T0({op["T0"]}), .SL({op["STEP_LOG2"]}), .YW({f["yk"]["bits"]}), .PRE({pre}),
+        .SLOPE_FILE({p("slope")}), .YK_FILE({p("yk")}), .M_FILE({p("rq_M")}), .SH_FILE({p("rq_sh")}), .U_W(1)) u_{o} (
+        .clk(clk), .rst_n(rst_n), .s_tdata({src}_d), .s_tvalid({src}_v), .s_tready({src}_r), .s_tlast({src}_l), .s_tuser({src}_u),
+        .m_tdata({o}_d), .m_tvalid({o}_v), .m_tready({o}_r), .m_tlast({o}_l), .m_tuser({o}_u));''')
+
     def pixel_shuffle(self, op):
         r = op['factor']
         src = self.consume(op['in'], f'ps_{ident(op["out"])}')
@@ -336,6 +349,8 @@ class Top:
                 self.rx_input(op)
             elif op['op'] == 'pixel_shuffle':
                 self.pixel_shuffle(op)
+            elif op['op'] == 'pwl':
+                self.pwl(op)
             else:
                 raise NotImplementedError(op['op'])
         # forks: every stream with several consumers
