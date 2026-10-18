@@ -30,7 +30,7 @@ set r36  [llength [get_cells -quiet -hier -filter {REF_NAME == RAMB36E2}]]
 set r18  [llength [get_cells -quiet -hier -filter {REF_NAME == RAMB18E2}]]
 set uram [llength [get_cells -quiet -hier -filter {REF_NAME == URAM288}]]
 set dsp  [llength [get_cells -quiet -hier -filter {REF_NAME == DSP48E2}]]
-set lut  [llength [get_cells -quiet -hier -filter {REF_NAME =~ LUT*}]]
+set lut  [llength [get_cells -quiet -hier -filter {REF_NAME =~ LUT*}]]   ;# LUT cells (a LUT6_2 site counts twice, no LUTRAM): the util report "CLB LUTs" is the site count
 set ff   [llength [get_cells -quiet -hier -filter {REF_NAME =~ FD*}]]
 set wns  [get_property SLACK [lindex [get_timing_paths -quiet -max_paths 1 -setup] 0]]
-puts "RESULT $top LUT $lut FF $ff BRAM36 [expr {$r36 + $r18 / 2.0}] (RAMB36 $r36 RAMB18 $r18) URAM $uram DSP $dsp WNS $wns"
+puts "RESULT $top LUT_cells $lut FF $ff BRAM36 [expr {$r36 + $r18 / 2.0}] (RAMB36 $r36 RAMB18 $r18) URAM $uram DSP $dsp WNS $wns"

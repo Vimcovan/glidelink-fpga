@@ -3,7 +3,6 @@
 # [constr] constraints, [ip] Vivado IP (.xci). The PS block design is built by bd/create_ps_tx_bd.tcl.
 # Files the project had but Vivado auto-disabled (outside the top's hierarchy) are not in the repository.
 [src]
-rtl/phy/ofdm_tx/preamble.mem
 rtl/network/mem/params__sigmoid_pwl.c0.mem
 rtl/network/mem/params__sigmoid_pwl.c1.mem
 rtl/network/mem/rtl_init__enc.0.conv1__bias.mem
@@ -382,6 +381,7 @@ rtl/network/mem/rtl_init__enc.8.b3__pre.mem
 rtl/network/mem/rtl_init__enc.8.b3__sh.mem
 rtl/network/mem/rtl_init__enc.8.b3__wrom.mem
 rtl/network/mem/rtl_init__enc.8.b3__wrom_s0.mem
+rtl/phy/ofdm_tx/preamble.mem
 rtl/phy/ad9361_config_lut.v
 rtl/phy/ad9361_config.v
 rtl/phy/ad9361_lvds_mode.v
