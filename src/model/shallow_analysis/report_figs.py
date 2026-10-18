@@ -44,8 +44,8 @@ def fig_interp(enc, dec, val, dev):
     pairs = [tuple(torch.randperm(len(val), generator=g)[:2].tolist()) for _ in range(100)]
     ts = TS.to(dev).view(-1, 1, 1, 1)
     keys = ['编码器（图像→潜变量）', '解码器前段（潜变量→残差块输出）', '解码器后段（残差块输出→sigmoid 前）',
-            '整个解码器（潜变量→图像）']
-    curves, lengths = {k: [] for k in keys}, {k: [] for k in keys}
+            '整个解码器（潜变量→图像）', '编码器＋解码器（图像→64QAM→重建图像）']
+    curves, lengths, extra = {k: [] for k in keys}, {k: [] for k in keys}, {}
     for i, j in pairs:
         x = val[[i, j]].float() / 255
         xt = (1 - ts) * x[0:1] + ts * x[1:2]
@@ -57,11 +57,14 @@ def fig_interp(enc, dec, val, dev):
         h = front(dec, yt)
         ht = (1 - ts) * h[0:1] + ts * h[-1:]
         z, _ = tail(dec, ht)
-        for k, cv in ((keys[1], h), (keys[2], z), (keys[3], dec(yt))):
+        it, sh = tx_iq(enc, xt)                                # whole chain, noiseless: image -> 64-QAM -> image
+        for k, cv in ((keys[1], h), (keys[2], z), (keys[3], dec(yt)), (keys[4], dec(iq_to_latent(it, *sh)))):
             d, l = dev_curve(cv); curves[k].append(d); lengths[k].append(l)
-    fig, ax = plt.subplots(figsize=(5.2, 3.4), dpi=300)
-    cols = [S.GRAY, S.ORANGE, S.BLUE, S.LBLUE]
-    styles = ['--', '-', '-', ':']
+        d, l = dev_curve(dec(enc.encoder(xt)))                # chain without the 64-QAM decision (printed only)
+        extra.setdefault('d', []).append(d); extra.setdefault('l', []).append(l)
+    fig, ax = plt.subplots(figsize=(5.2, 3.6), dpi=300)
+    cols = [S.GRAY, S.ORANGE, S.BLUE, S.LBLUE, S.INK]
+    styles = ['--', '-', '-', ':', '-']
     for k, c, ls in zip(keys, cols, styles):
         m = np.median(np.array(curves[k]), 0)
         ax.plot(TS.numpy(), m, color=c, ls=ls, lw=1.3, marker='o', ms=2.5,
@@ -73,6 +76,8 @@ def fig_interp(enc, dec, val, dev):
     fig.tight_layout(); fig.savefig(OUT / 'interp_stages.png', bbox_inches='tight', pad_inches=0.03)
     for k in keys:
         print(f'interp {k}: max deviation {np.median(np.max(curves[k], 1)):.3f}, length {np.median(lengths[k]):.3f}')
+    print(f"interp chain without 64-QAM decision: max deviation {np.median(np.max(extra['d'], 1)):.3f}, "
+          f"length {np.median(extra['l']):.3f}")
 
 
 @torch.no_grad()
