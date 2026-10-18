@@ -1,0 +1,25 @@
+{
+ "name": "sd.igdn",
+ "op": "igdn",
+ "C": 24,
+ "LANES": 2,
+ "INVERSE": 1,
+ "X2_SHIFT": 0,
+ "LSH": 16,
+ "F": 0,
+ "QW": 1,
+ "DW": 48,
+ "NUNITS": 3,
+ "PRE": 8,
+ "M": 114696,
+ "SH": 30,
+ "in": "sd.conv1.ps2",
+ "out": "sd.igdn",
+ "shape_hwc": [
+  128,
+  128,
+  24
+ ],
+ "mac_cycles_per_frame": 4718592,
+ "budget_cycles": 6666666.666666667
+}

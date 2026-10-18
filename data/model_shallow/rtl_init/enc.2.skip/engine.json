@@ -1,0 +1,43 @@
+{
+ "name": "enc.2.skip",
+ "ops": [
+  "enc.2.skip"
+ ],
+ "CIN": 32,
+ "COUT": 32,
+ "K": 1,
+ "STRIDE": 2,
+ "PAD": 0,
+ "P": 7,
+ "GROUPS": 5,
+ "ACT": "none",
+ "ACT2": "none",
+ "ACT_SPLIT": 32,
+ "WROM_STYLE": "block",
+ "WROM_MODE": "direct",
+ "WG_NCOL": 1,
+ "WROM_DEPTH": 160,
+ "WROM_WIDTH": 56,
+ "WROM_BANK_DEPTH": 0,
+ "RQ_MUL": "lut",
+ "PRE": 0,
+ "SH_MIN": 24,
+ "SH_BITS": 1,
+ "in": "enc.1.out",
+ "in_shape_hwc": [
+  128,
+  128,
+  32
+ ],
+ "out": [
+  "enc.2.skip"
+ ],
+ "out_shape_hwc": [
+  [
+   64,
+   64,
+   32
+  ]
+ ],
+ "note": "centre tap of enc.2.conv1"
+}

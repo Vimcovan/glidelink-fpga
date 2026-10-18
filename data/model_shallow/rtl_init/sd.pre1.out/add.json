@@ -1,0 +1,12 @@
+{
+ "name": "sd.pre1.out",
+ "MA": 55417,
+ "MB": 66321,
+ "SH": 16,
+ "RELU": 0,
+ "in": [
+  "sd.pre1.a2",
+  "sd.pre0.out"
+ ],
+ "out": "sd.pre1.out"
+}

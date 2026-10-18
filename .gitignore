@@ -27,3 +27,5 @@ sim/*.gen/
 src/network/vivado_projects/
 sim/network/work*/
 hs_err_pid*
+data/model_shallow/golden/
+src/network/gen_shallow/

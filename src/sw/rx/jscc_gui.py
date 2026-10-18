@@ -612,7 +612,7 @@ TX_ATT0 = 0.0                                 # TX1 attenuation set by tx_camera
 class AttenBar(QtWidgets.QFrame):
     """touch control of the TX attenuation (extra dB on top of the config LUT value); shown only while the TX board
     answers (boards cabled, demo step 2). Several bars (one per page) stay in step through Gui.set_atten."""
-    MAX = 36                                    # slider range, dB (at the bench distance sync is lost near +35 dB)
+    MAX = 48                                    # slider range, dB (at the bench distance sync is lost near +45 dB)
     STEP = 4                                    # slider units per dB (smooth animation)
 
     def __init__(self, gui, presets, two_rows=False, modes=True, sources=False, side=False):

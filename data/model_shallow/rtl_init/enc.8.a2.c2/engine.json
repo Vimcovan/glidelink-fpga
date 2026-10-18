@@ -1,0 +1,43 @@
+{
+ "name": "enc.8.a2.c2",
+ "ops": [
+  "enc.8.a2.c2"
+ ],
+ "CIN": 8,
+ "COUT": 16,
+ "K": 1,
+ "STRIDE": 1,
+ "PAD": 0,
+ "P": 1,
+ "GROUPS": 16,
+ "ACT": "none",
+ "ACT2": "none",
+ "ACT_SPLIT": 16,
+ "WROM_STYLE": "distributed",
+ "WROM_MODE": "direct",
+ "WG_NCOL": 1,
+ "WROM_DEPTH": 128,
+ "WROM_WIDTH": 8,
+ "WROM_BANK_DEPTH": 0,
+ "RQ_MUL": "dsp",
+ "PRE": 0,
+ "SH_MIN": 24,
+ "SH_BITS": 1,
+ "in": "enc.8.a2.c1",
+ "in_shape_hwc": [
+  64,
+  64,
+  8
+ ],
+ "out": [
+  "enc.8.a2.c2"
+ ],
+ "out_shape_hwc": [
+  [
+   64,
+   64,
+   16
+  ]
+ ],
+ "note": ""
+}

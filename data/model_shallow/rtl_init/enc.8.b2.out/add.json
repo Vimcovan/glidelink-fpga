@@ -1,0 +1,12 @@
+{
+ "name": "enc.8.b2.out",
+ "MA": 124083,
+ "MB": 96918,
+ "SH": 17,
+ "RELU": 1,
+ "in": [
+  "enc.8.b2.c2",
+  "enc.8.b1.out"
+ ],
+ "out": "enc.8.b2.out"
+}

@@ -1,0 +1,50 @@
+{
+ "name": "enc.3.ab0.c0",
+ "ops": [
+  "enc.3.a0.c0",
+  "enc.3.b0.c0"
+ ],
+ "CIN": 32,
+ "COUT": 32,
+ "K": 1,
+ "STRIDE": 1,
+ "PAD": 0,
+ "P": 1,
+ "GROUPS": 32,
+ "ACT": "relu",
+ "ACT2": "relu",
+ "ACT_SPLIT": 16,
+ "WROM_STYLE": "distributed",
+ "WROM_MODE": "direct",
+ "WG_NCOL": 1,
+ "WROM_DEPTH": 1024,
+ "WROM_WIDTH": 8,
+ "WROM_BANK_DEPTH": 0,
+ "RQ_MUL": "lut",
+ "PRE": 0,
+ "SH_MIN": 24,
+ "SH_BITS": 2,
+ "in": "enc.2.out",
+ "in_shape_hwc": [
+  64,
+  64,
+  32
+ ],
+ "out": [
+  "enc.3.a0.c0",
+  "enc.3.b0.c0"
+ ],
+ "out_shape_hwc": [
+  [
+   64,
+   64,
+   16
+  ],
+  [
+   64,
+   64,
+   16
+  ]
+ ],
+ "note": "a0.c0 and b0.c0 merged (same input)"
+}

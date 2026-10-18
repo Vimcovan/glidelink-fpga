@@ -1,0 +1,43 @@
+{
+ "name": "enc.3.a2.c1",
+ "ops": [
+  "enc.3.a2.c1"
+ ],
+ "CIN": 16,
+ "COUT": 16,
+ "K": 3,
+ "STRIDE": 1,
+ "PAD": 1,
+ "P": 2,
+ "GROUPS": 8,
+ "ACT": "relu",
+ "ACT2": "none",
+ "ACT_SPLIT": 16,
+ "WROM_STYLE": "block",
+ "WROM_MODE": "gear",
+ "WG_NCOL": 2,
+ "WROM_DEPTH": 1152,
+ "WROM_WIDTH": 16,
+ "WROM_BANK_DEPTH": 0,
+ "RQ_MUL": "lut",
+ "PRE": 0,
+ "SH_MIN": 23,
+ "SH_BITS": 2,
+ "in": "enc.3.a2.c0",
+ "in_shape_hwc": [
+  64,
+  64,
+  16
+ ],
+ "out": [
+  "enc.3.a2.c1"
+ ],
+ "out_shape_hwc": [
+  [
+   64,
+   64,
+   16
+  ]
+ ],
+ "note": ""
+}

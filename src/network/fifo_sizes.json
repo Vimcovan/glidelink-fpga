@@ -88,5 +88,15 @@
  "enc.8.b2.out.b": 1197,
  "enc.8.out.a": 72,
  "enc.8.out.g": 65,
- "enc.8.out.x": 4259
+ "enc.8.out.x": 4259,
+ "sd.pre0.out.a": 87,
+ "sd.pre0.out.b": 2404,
+ "sd.pre1.out.a": 87,
+ "sd.pre1.out.b": 2404,
+ "sd.pre2.out.a": 87,
+ "sd.pre2.out.b": 2404,
+ "sd.pre3.out.a": 87,
+ "sd.pre3.out.b": 2404,
+ "sd.sum.a": 109,
+ "sd.sum.b": 3259
 }

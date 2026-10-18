@@ -1,0 +1,12 @@
+{
+ "source": "yang_kernels.py --fit (trained kernels) and the controls of yang_kernels.py --controls; Yang & Mandt checkpoints two_layer_syn wid=2 (lambda 0.005, ckpt-2600000) and jpegl wid=2 (lambda 0.005, ckpt-2300000)",
+ "metric": "residual energy of the least-squares fit by a cascade of linear 3x3 stride-2 transposed convolutions, % of the kernel energy",
+ "residual_pct": {
+  "two-layer main 13x13 (3 layers)": {"32": 26.22, "128": 0.11},
+  "two-layer residual 13x13 (3 layers)": {"32": 16.84, "128": 0.38},
+  "JPEG-like 18x18 (4 layers)": {"32": 12.06, "128": 0.24},
+  "iid random 13x13": {"32": 77.48, "128": 23.91},
+  "random, same spatial energy profile": {"32": 72.00, "128": 16.44},
+  "trained main, channels shuffled per tap": {"32": 71.49, "128": 16.25}
+ }
+}

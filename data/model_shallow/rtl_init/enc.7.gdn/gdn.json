@@ -1,0 +1,25 @@
+{
+ "name": "enc.7.gdn",
+ "op": "gdn",
+ "C": 16,
+ "LANES": 1,
+ "INVERSE": 0,
+ "X2_SHIFT": 0,
+ "LSH": 14,
+ "F": 32,
+ "QW": 25,
+ "DW": 48,
+ "NUNITS": 1,
+ "PRE": 0,
+ "M": 128313,
+ "SH": 28,
+ "in": "enc.7.conv2",
+ "out": "enc.7.gdn",
+ "shape_hwc": [
+  64,
+  64,
+  16
+ ],
+ "mac_cycles_per_frame": 1048576,
+ "budget_cycles": 6666666.666666667
+}

@@ -607,12 +607,12 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(32), .COUT(32), .K(3), .P(32), .ACT("none"), .ACT2("none"), .ACT_SPLIT(32),
         .WROM_PREFIX("rtl_init__enc.0.conv2__wrom"), .WROM_STYLE("block"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("direct"), .WG_NCOL(1), .RQ_MUL("dsp"),
-        .PRE(0), .SH_MIN(26), .SH_BITS(2),
+        .PRE(0), .SH_MIN(25), .SH_BITS(2),
         .BIAS_FILE("rtl_init__enc.0.conv2__bias.mem"), .PRE_FILE("rtl_init__enc.0.conv2__pre.mem"), .M_FILE("rtl_init__enc.0.conv2__m.mem"), .SH_FILE("rtl_init__enc.0.conv2__sh.mem")) u_enc_0_conv2 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_0_conv2__eng_enc_0_conv2_d), .s_in_tvalid(_win_enc_0_conv2__eng_enc_0_conv2_v), .s_in_tready(_win_enc_0_conv2__eng_enc_0_conv2_r), .s_in_tlast(_win_enc_0_conv2__eng_enc_0_conv2_l), .s_in_tuser(_win_enc_0_conv2__eng_enc_0_conv2_u),
         .m_out_tdata(enc_0_conv2_d), .m_out_tvalid(enc_0_conv2_v), .m_out_tready(enc_0_conv2_r), .m_out_tlast(enc_0_conv2_l), .m_out_tuser(enc_0_conv2_u));
-    axis_gdn #(.C(32), .LANES(3), .INVERSE(0), .X2_SHIFT(0), .LSH(14), .F(32),
-        .QW(25), .DW(46), .NUNITS(5), .PRE(0), .M(121352), .SH(29),
+    axis_gdn #(.C(32), .LANES(3), .INVERSE(0), .X2_SHIFT(0), .LSH(14), .F(31),
+        .QW(25), .DW(46), .NUNITS(5), .PRE(0), .M(112471), .SH(28),
         .GAMMA_FILE("rtl_init__enc.0.gdn__gamma.mem"), .BETA_FILE("rtl_init__enc.0.gdn__beta.mem")) u_enc_0_gdn (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_0_conv2__gdn_enc_0_gdn_d), .s_tvalid(enc_0_conv2__gdn_enc_0_gdn_v), .s_tready(enc_0_conv2__gdn_enc_0_gdn_r), .s_tlast(enc_0_conv2__gdn_enc_0_gdn_l), .s_tuser(enc_0_conv2__gdn_enc_0_gdn_u),
         .m_tdata(enc_0_gdn_d), .m_tvalid(enc_0_gdn_v), .m_tready(enc_0_gdn_r), .m_tlast(enc_0_gdn_l), .m_tuser(enc_0_gdn_u));
@@ -630,7 +630,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_0_skip__enc_0_out_b_d), .s_tvalid(enc_0_skip__enc_0_out_b_v), .s_tready(enc_0_skip__enc_0_out_b_r),
         .m_tdata(q_enc_0_out_b_d), .m_tvalid(q_enc_0_out_b_v), .m_tready(q_enc_0_out_b_r));
     assign q_enc_0_out_b_l = 1'b0; assign q_enc_0_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(73231), .MB(44147), .SH(16), .RELU(0), .U_W(1)) u_enc_0_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(73653), .MB(51482), .SH(16), .RELU(0), .U_W(1)) u_enc_0_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_0_gdn__enc_0_out_a_d), .a_tvalid(enc_0_gdn__enc_0_out_a_v), .a_tready(enc_0_gdn__enc_0_out_a_r), .a_tlast(enc_0_gdn__enc_0_out_a_l), .a_tuser(enc_0_gdn__enc_0_out_a_u),
         .b_tdata(q_enc_0_out_b_d), .b_tvalid(q_enc_0_out_b_v), .b_tready(q_enc_0_out_b_r),
         .m_tdata(enc_0_out_d), .m_tvalid(enc_0_out_v), .m_tready(enc_0_out_r), .m_tlast(enc_0_out_l), .m_tuser(enc_0_out_u));
@@ -641,7 +641,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(32), .COUT(32), .K(3), .P(32), .ACT("leaky"), .ACT2("none"), .ACT_SPLIT(32),
         .WROM_PREFIX("rtl_init__enc.1.conv1__wrom"), .WROM_STYLE("block"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("direct"), .WG_NCOL(1), .RQ_MUL("dsp"),
-        .PRE(0), .SH_MIN(25), .SH_BITS(2),
+        .PRE(0), .SH_MIN(25), .SH_BITS(1),
         .BIAS_FILE("rtl_init__enc.1.conv1__bias.mem"), .PRE_FILE("rtl_init__enc.1.conv1__pre.mem"), .M_FILE("rtl_init__enc.1.conv1__m.mem"), .SH_FILE("rtl_init__enc.1.conv1__sh.mem")) u_enc_1_conv1 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_1_conv1__eng_enc_1_conv1_d), .s_in_tvalid(_win_enc_1_conv1__eng_enc_1_conv1_v), .s_in_tready(_win_enc_1_conv1__eng_enc_1_conv1_r), .s_in_tlast(_win_enc_1_conv1__eng_enc_1_conv1_l), .s_in_tuser(_win_enc_1_conv1__eng_enc_1_conv1_u),
         .m_out_tdata(enc_1_conv1_d), .m_out_tvalid(enc_1_conv1_v), .m_out_tready(enc_1_conv1_r), .m_out_tlast(enc_1_conv1_l), .m_out_tuser(enc_1_conv1_u));
@@ -652,7 +652,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(32), .COUT(32), .K(3), .P(32), .ACT("leaky"), .ACT2("none"), .ACT_SPLIT(32),
         .WROM_PREFIX("rtl_init__enc.1.conv2__wrom"), .WROM_STYLE("block"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("direct"), .WG_NCOL(1), .RQ_MUL("dsp"),
-        .PRE(0), .SH_MIN(25), .SH_BITS(2),
+        .PRE(0), .SH_MIN(24), .SH_BITS(2),
         .BIAS_FILE("rtl_init__enc.1.conv2__bias.mem"), .PRE_FILE("rtl_init__enc.1.conv2__pre.mem"), .M_FILE("rtl_init__enc.1.conv2__m.mem"), .SH_FILE("rtl_init__enc.1.conv2__sh.mem")) u_enc_1_conv2 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_1_conv2__eng_enc_1_conv2_d), .s_in_tvalid(_win_enc_1_conv2__eng_enc_1_conv2_v), .s_in_tready(_win_enc_1_conv2__eng_enc_1_conv2_r), .s_in_tlast(_win_enc_1_conv2__eng_enc_1_conv2_l), .s_in_tuser(_win_enc_1_conv2__eng_enc_1_conv2_u),
         .m_out_tdata(enc_1_conv2_d), .m_out_tvalid(enc_1_conv2_v), .m_out_tready(enc_1_conv2_r), .m_out_tlast(enc_1_conv2_l), .m_out_tuser(enc_1_conv2_u));
@@ -663,7 +663,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_0_out__enc_1_out_b_d), .s_tvalid(enc_0_out__enc_1_out_b_v), .s_tready(enc_0_out__enc_1_out_b_r),
         .m_tdata(q_enc_1_out_b_d), .m_tvalid(q_enc_1_out_b_v), .m_tready(q_enc_1_out_b_r));
     assign q_enc_1_out_b_l = 1'b0; assign q_enc_1_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(97698), .MB(85490), .SH(17), .RELU(0), .U_W(1)) u_enc_1_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(100664), .MB(76537), .SH(17), .RELU(0), .U_W(1)) u_enc_1_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(q_enc_1_out_a_d), .a_tvalid(q_enc_1_out_a_v), .a_tready(q_enc_1_out_a_r), .a_tlast(q_enc_1_out_a_l), .a_tuser(q_enc_1_out_a_u),
         .b_tdata(q_enc_1_out_b_d), .b_tvalid(q_enc_1_out_b_v), .b_tready(q_enc_1_out_b_r),
         .m_tdata(enc_1_out_d), .m_tvalid(enc_1_out_v), .m_tready(enc_1_out_r), .m_tlast(enc_1_out_l), .m_tuser(enc_1_out_u));
@@ -674,7 +674,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(32), .COUT(32), .K(3), .P(7), .ACT("leaky"), .ACT2("none"), .ACT_SPLIT(32),
         .WROM_PREFIX("rtl_init__enc.2.conv1__wrom"), .WROM_STYLE("block"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("gear"), .WG_NCOL(5), .RQ_MUL("lut"),
-        .PRE(0), .SH_MIN(26), .SH_BITS(1),
+        .PRE(0), .SH_MIN(25), .SH_BITS(1),
         .BIAS_FILE("rtl_init__enc.2.conv1__bias.mem"), .PRE_FILE("rtl_init__enc.2.conv1__pre.mem"), .M_FILE("rtl_init__enc.2.conv1__m.mem"), .SH_FILE("rtl_init__enc.2.conv1__sh.mem")) u_enc_2_conv1 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_2_conv1__eng_enc_2_conv1_d), .s_in_tvalid(_win_enc_2_conv1__eng_enc_2_conv1_v), .s_in_tready(_win_enc_2_conv1__eng_enc_2_conv1_r), .s_in_tlast(_win_enc_2_conv1__eng_enc_2_conv1_l), .s_in_tuser(_win_enc_2_conv1__eng_enc_2_conv1_u),
         .m_out_tdata(enc_2_conv1_d), .m_out_tvalid(enc_2_conv1_v), .m_out_tready(enc_2_conv1_r), .m_out_tlast(enc_2_conv1_l), .m_out_tuser(enc_2_conv1_u));
@@ -690,7 +690,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_2_conv2__eng_enc_2_conv2_d), .s_in_tvalid(_win_enc_2_conv2__eng_enc_2_conv2_v), .s_in_tready(_win_enc_2_conv2__eng_enc_2_conv2_r), .s_in_tlast(_win_enc_2_conv2__eng_enc_2_conv2_l), .s_in_tuser(_win_enc_2_conv2__eng_enc_2_conv2_u),
         .m_out_tdata(enc_2_conv2_d), .m_out_tvalid(enc_2_conv2_v), .m_out_tready(enc_2_conv2_r), .m_out_tlast(enc_2_conv2_l), .m_out_tuser(enc_2_conv2_u));
     axis_gdn #(.C(32), .LANES(1), .INVERSE(0), .X2_SHIFT(0), .LSH(14), .F(32),
-        .QW(25), .DW(48), .NUNITS(2), .PRE(0), .M(92372), .SH(28),
+        .QW(25), .DW(48), .NUNITS(2), .PRE(0), .M(86784), .SH(28),
         .GAMMA_FILE("rtl_init__enc.2.gdn__gamma.mem"), .BETA_FILE("rtl_init__enc.2.gdn__beta.mem")) u_enc_2_gdn (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_2_conv2__gdn_enc_2_gdn_d), .s_tvalid(enc_2_conv2__gdn_enc_2_gdn_v), .s_tready(enc_2_conv2__gdn_enc_2_gdn_r), .s_tlast(enc_2_conv2__gdn_enc_2_gdn_l), .s_tuser(enc_2_conv2__gdn_enc_2_gdn_u),
         .m_tdata(enc_2_gdn_d), .m_tvalid(enc_2_gdn_v), .m_tready(enc_2_gdn_r), .m_tlast(enc_2_gdn_l), .m_tuser(enc_2_gdn_u));
@@ -708,7 +708,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_2_skip__enc_2_out_b_d), .s_tvalid(enc_2_skip__enc_2_out_b_v), .s_tready(enc_2_skip__enc_2_out_b_r),
         .m_tdata(q_enc_2_out_b_d), .m_tvalid(q_enc_2_out_b_v), .m_tready(q_enc_2_out_b_r));
     assign q_enc_2_out_b_l = 1'b0; assign q_enc_2_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(83384), .MB(93244), .SH(17), .RELU(0), .U_W(1)) u_enc_2_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(97817), .MB(94573), .SH(17), .RELU(0), .U_W(1)) u_enc_2_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_2_gdn__enc_2_out_a_d), .a_tvalid(enc_2_gdn__enc_2_out_a_v), .a_tready(enc_2_gdn__enc_2_out_a_r), .a_tlast(enc_2_gdn__enc_2_out_a_l), .a_tuser(enc_2_gdn__enc_2_out_a_u),
         .b_tdata(q_enc_2_out_b_d), .b_tvalid(q_enc_2_out_b_v), .b_tready(q_enc_2_out_b_r),
         .m_tdata(enc_2_out_d), .m_tvalid(enc_2_out_v), .m_tready(enc_2_out_r), .m_tlast(enc_2_out_l), .m_tuser(enc_2_out_u));
@@ -733,7 +733,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(16), .COUT(16), .K(3), .P(2), .ACT("relu"), .ACT2("none"), .ACT_SPLIT(16),
         .WROM_PREFIX("rtl_init__enc.3.a0.c1__wrom"), .WROM_STYLE("block"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("gear"), .WG_NCOL(2), .RQ_MUL("lut"),
-        .PRE(0), .SH_MIN(25), .SH_BITS(1),
+        .PRE(0), .SH_MIN(25), .SH_BITS(2),
         .BIAS_FILE("rtl_init__enc.3.a0.c1__bias.mem"), .PRE_FILE("rtl_init__enc.3.a0.c1__pre.mem"), .M_FILE("rtl_init__enc.3.a0.c1__m.mem"), .SH_FILE("rtl_init__enc.3.a0.c1__sh.mem")) u_enc_3_a0_c1 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_3_a0_c1__eng_enc_3_a0_c1_d), .s_in_tvalid(_win_enc_3_a0_c1__eng_enc_3_a0_c1_v), .s_in_tready(_win_enc_3_a0_c1__eng_enc_3_a0_c1_r), .s_in_tlast(_win_enc_3_a0_c1__eng_enc_3_a0_c1_l), .s_in_tuser(_win_enc_3_a0_c1__eng_enc_3_a0_c1_u),
         .m_out_tdata(enc_3_a0_c1_d), .m_out_tvalid(enc_3_a0_c1_v), .m_out_tready(enc_3_a0_c1_r), .m_out_tlast(enc_3_a0_c1_l), .m_out_tuser(enc_3_a0_c1_u));
@@ -751,7 +751,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_2_out__enc_3_a0_out_b_d), .s_tvalid(enc_2_out__enc_3_a0_out_b_v), .s_tready(enc_2_out__enc_3_a0_out_b_r),
         .m_tdata(q_enc_3_a0_out_b_d), .m_tvalid(q_enc_3_a0_out_b_v), .m_tready(q_enc_3_a0_out_b_r));
     assign q_enc_3_a0_out_b_l = 1'b0; assign q_enc_3_a0_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(94456), .MB(107352), .SH(17), .RELU(1), .U_W(1)) u_enc_3_a0_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(102908), .MB(89759), .SH(17), .RELU(1), .U_W(1)) u_enc_3_a0_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_3_a0_c2__enc_3_a0_out_a_d), .a_tvalid(enc_3_a0_c2__enc_3_a0_out_a_v), .a_tready(enc_3_a0_c2__enc_3_a0_out_a_r), .a_tlast(enc_3_a0_c2__enc_3_a0_out_a_l), .a_tuser(enc_3_a0_c2__enc_3_a0_out_a_u),
         .b_tdata(q_enc_3_a0_out_b_d), .b_tvalid(q_enc_3_a0_out_b_v), .b_tready(q_enc_3_a0_out_b_r),
         .m_tdata(enc_3_a0_out_d), .m_tvalid(enc_3_a0_out_v), .m_tready(enc_3_a0_out_r), .m_tlast(enc_3_a0_out_l), .m_tuser(enc_3_a0_out_u));
@@ -782,7 +782,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(16), .COUT(32), .K(1), .P(1), .ACT("none"), .ACT2("none"), .ACT_SPLIT(32),
         .WROM_PREFIX("rtl_init__enc.3.a1.c2__wrom"), .WROM_STYLE("distributed"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("direct"), .WG_NCOL(1), .RQ_MUL("lut"),
-        .PRE(0), .SH_MIN(23), .SH_BITS(2),
+        .PRE(0), .SH_MIN(23), .SH_BITS(3),
         .BIAS_FILE("rtl_init__enc.3.a1.c2__bias.mem"), .PRE_FILE("rtl_init__enc.3.a1.c2__pre.mem"), .M_FILE("rtl_init__enc.3.a1.c2__m.mem"), .SH_FILE("rtl_init__enc.3.a1.c2__sh.mem")) u_enc_3_a1_c2 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_3_a1_c2__eng_enc_3_a1_c2_d), .s_in_tvalid(_win_enc_3_a1_c2__eng_enc_3_a1_c2_v), .s_in_tready(_win_enc_3_a1_c2__eng_enc_3_a1_c2_r), .s_in_tlast(_win_enc_3_a1_c2__eng_enc_3_a1_c2_l), .s_in_tuser(_win_enc_3_a1_c2__eng_enc_3_a1_c2_u),
         .m_out_tdata(enc_3_a1_c2_d), .m_out_tvalid(enc_3_a1_c2_v), .m_out_tready(enc_3_a1_c2_r), .m_out_tlast(enc_3_a1_c2_l), .m_out_tuser(enc_3_a1_c2_u));
@@ -790,7 +790,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_3_a0_out__enc_3_a1_out_b_d), .s_tvalid(enc_3_a0_out__enc_3_a1_out_b_v), .s_tready(enc_3_a0_out__enc_3_a1_out_b_r),
         .m_tdata(q_enc_3_a1_out_b_d), .m_tvalid(q_enc_3_a1_out_b_v), .m_tready(q_enc_3_a1_out_b_r));
     assign q_enc_3_a1_out_b_l = 1'b0; assign q_enc_3_a1_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(45470), .MB(119999), .SH(17), .RELU(1), .U_W(1)) u_enc_3_a1_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(77985), .MB(116246), .SH(17), .RELU(1), .U_W(1)) u_enc_3_a1_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_3_a1_c2__enc_3_a1_out_a_d), .a_tvalid(enc_3_a1_c2__enc_3_a1_out_a_v), .a_tready(enc_3_a1_c2__enc_3_a1_out_a_r), .a_tlast(enc_3_a1_c2__enc_3_a1_out_a_l), .a_tuser(enc_3_a1_c2__enc_3_a1_out_a_u),
         .b_tdata(q_enc_3_a1_out_b_d), .b_tvalid(q_enc_3_a1_out_b_v), .b_tready(q_enc_3_a1_out_b_r),
         .m_tdata(enc_3_a1_out_d), .m_tvalid(enc_3_a1_out_v), .m_tready(enc_3_a1_out_r), .m_tlast(enc_3_a1_out_l), .m_tuser(enc_3_a1_out_u));
@@ -800,7 +800,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(32), .COUT(16), .K(1), .P(1), .ACT("relu"), .ACT2("none"), .ACT_SPLIT(16),
         .WROM_PREFIX("rtl_init__enc.3.a2.c0__wrom"), .WROM_STYLE("distributed"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("direct"), .WG_NCOL(1), .RQ_MUL("lut"),
-        .PRE(0), .SH_MIN(22), .SH_BITS(2),
+        .PRE(0), .SH_MIN(21), .SH_BITS(3),
         .BIAS_FILE("rtl_init__enc.3.a2.c0__bias.mem"), .PRE_FILE("rtl_init__enc.3.a2.c0__pre.mem"), .M_FILE("rtl_init__enc.3.a2.c0__m.mem"), .SH_FILE("rtl_init__enc.3.a2.c0__sh.mem")) u_enc_3_a2_c0 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_3_a2_c0__eng_enc_3_a2_c0_d), .s_in_tvalid(_win_enc_3_a2_c0__eng_enc_3_a2_c0_v), .s_in_tready(_win_enc_3_a2_c0__eng_enc_3_a2_c0_r), .s_in_tlast(_win_enc_3_a2_c0__eng_enc_3_a2_c0_l), .s_in_tuser(_win_enc_3_a2_c0__eng_enc_3_a2_c0_u),
         .m_out_tdata(enc_3_a2_c0_d), .m_out_tvalid(enc_3_a2_c0_v), .m_out_tready(enc_3_a2_c0_r), .m_out_tlast(enc_3_a2_c0_l), .m_out_tuser(enc_3_a2_c0_u));
@@ -829,7 +829,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_3_a1_out__enc_3_a2_out_b_d), .s_tvalid(enc_3_a1_out__enc_3_a2_out_b_v), .s_tready(enc_3_a1_out__enc_3_a2_out_b_r),
         .m_tdata(q_enc_3_a2_out_b_d), .m_tvalid(q_enc_3_a2_out_b_v), .m_tready(q_enc_3_a2_out_b_r));
     assign q_enc_3_a2_out_b_l = 1'b0; assign q_enc_3_a2_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(42938), .MB(108054), .SH(17), .RELU(1), .U_W(1)) u_enc_3_a2_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(44031), .MB(125125), .SH(17), .RELU(1), .U_W(1)) u_enc_3_a2_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_3_a2_c2__enc_3_a2_out_a_d), .a_tvalid(enc_3_a2_c2__enc_3_a2_out_a_v), .a_tready(enc_3_a2_c2__enc_3_a2_out_a_r), .a_tlast(enc_3_a2_c2__enc_3_a2_out_a_l), .a_tuser(enc_3_a2_c2__enc_3_a2_out_a_u),
         .b_tdata(q_enc_3_a2_out_b_d), .b_tvalid(q_enc_3_a2_out_b_v), .b_tready(q_enc_3_a2_out_b_r),
         .m_tdata(enc_3_a2_out_d), .m_tvalid(enc_3_a2_out_v), .m_tready(enc_3_a2_out_r), .m_tlast(enc_3_a2_out_l), .m_tuser(enc_3_a2_out_u));
@@ -840,7 +840,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(16), .COUT(16), .K(3), .P(2), .ACT("relu"), .ACT2("none"), .ACT_SPLIT(16),
         .WROM_PREFIX("rtl_init__enc.3.b0.c1__wrom"), .WROM_STYLE("block"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("gear"), .WG_NCOL(2), .RQ_MUL("lut"),
-        .PRE(0), .SH_MIN(25), .SH_BITS(1),
+        .PRE(0), .SH_MIN(24), .SH_BITS(2),
         .BIAS_FILE("rtl_init__enc.3.b0.c1__bias.mem"), .PRE_FILE("rtl_init__enc.3.b0.c1__pre.mem"), .M_FILE("rtl_init__enc.3.b0.c1__m.mem"), .SH_FILE("rtl_init__enc.3.b0.c1__sh.mem")) u_enc_3_b0_c1 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_3_b0_c1__eng_enc_3_b0_c1_d), .s_in_tvalid(_win_enc_3_b0_c1__eng_enc_3_b0_c1_v), .s_in_tready(_win_enc_3_b0_c1__eng_enc_3_b0_c1_r), .s_in_tlast(_win_enc_3_b0_c1__eng_enc_3_b0_c1_l), .s_in_tuser(_win_enc_3_b0_c1__eng_enc_3_b0_c1_u),
         .m_out_tdata(enc_3_b0_c1_d), .m_out_tvalid(enc_3_b0_c1_v), .m_out_tready(enc_3_b0_c1_r), .m_out_tlast(enc_3_b0_c1_l), .m_out_tuser(enc_3_b0_c1_u));
@@ -858,7 +858,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_2_out__enc_3_b0_out_b_d), .s_tvalid(enc_2_out__enc_3_b0_out_b_v), .s_tready(enc_2_out__enc_3_b0_out_b_r),
         .m_tdata(q_enc_3_b0_out_b_d), .m_tvalid(q_enc_3_b0_out_b_v), .m_tready(q_enc_3_b0_out_b_r));
     assign q_enc_3_b0_out_b_l = 1'b0; assign q_enc_3_b0_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(96065), .MB(108378), .SH(17), .RELU(1), .U_W(1)) u_enc_3_b0_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(117295), .MB(121281), .SH(17), .RELU(1), .U_W(1)) u_enc_3_b0_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_3_b0_c2__enc_3_b0_out_a_d), .a_tvalid(enc_3_b0_c2__enc_3_b0_out_a_v), .a_tready(enc_3_b0_c2__enc_3_b0_out_a_r), .a_tlast(enc_3_b0_c2__enc_3_b0_out_a_l), .a_tuser(enc_3_b0_c2__enc_3_b0_out_a_u),
         .b_tdata(q_enc_3_b0_out_b_d), .b_tvalid(q_enc_3_b0_out_b_v), .b_tready(q_enc_3_b0_out_b_r),
         .m_tdata(enc_3_b0_out_d), .m_tvalid(enc_3_b0_out_v), .m_tready(enc_3_b0_out_r), .m_tlast(enc_3_b0_out_l), .m_tuser(enc_3_b0_out_u));
@@ -879,7 +879,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(16), .COUT(16), .K(3), .P(2), .ACT("relu"), .ACT2("none"), .ACT_SPLIT(16),
         .WROM_PREFIX("rtl_init__enc.3.b1.c1__wrom"), .WROM_STYLE("block"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("gear"), .WG_NCOL(2), .RQ_MUL("lut"),
-        .PRE(0), .SH_MIN(26), .SH_BITS(1),
+        .PRE(0), .SH_MIN(25), .SH_BITS(2),
         .BIAS_FILE("rtl_init__enc.3.b1.c1__bias.mem"), .PRE_FILE("rtl_init__enc.3.b1.c1__pre.mem"), .M_FILE("rtl_init__enc.3.b1.c1__m.mem"), .SH_FILE("rtl_init__enc.3.b1.c1__sh.mem")) u_enc_3_b1_c1 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_3_b1_c1__eng_enc_3_b1_c1_d), .s_in_tvalid(_win_enc_3_b1_c1__eng_enc_3_b1_c1_v), .s_in_tready(_win_enc_3_b1_c1__eng_enc_3_b1_c1_r), .s_in_tlast(_win_enc_3_b1_c1__eng_enc_3_b1_c1_l), .s_in_tuser(_win_enc_3_b1_c1__eng_enc_3_b1_c1_u),
         .m_out_tdata(enc_3_b1_c1_d), .m_out_tvalid(enc_3_b1_c1_v), .m_out_tready(enc_3_b1_c1_r), .m_out_tlast(enc_3_b1_c1_l), .m_out_tuser(enc_3_b1_c1_u));
@@ -897,7 +897,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_3_b0_out__enc_3_b1_out_b_d), .s_tvalid(enc_3_b0_out__enc_3_b1_out_b_v), .s_tready(enc_3_b0_out__enc_3_b1_out_b_r),
         .m_tdata(q_enc_3_b1_out_b_d), .m_tvalid(q_enc_3_b1_out_b_v), .m_tready(q_enc_3_b1_out_b_r));
     assign q_enc_3_b1_out_b_l = 1'b0; assign q_enc_3_b1_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(115380), .MB(78611), .SH(17), .RELU(1), .U_W(1)) u_enc_3_b1_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(110310), .MB(64478), .SH(17), .RELU(1), .U_W(1)) u_enc_3_b1_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_3_b1_c2__enc_3_b1_out_a_d), .a_tvalid(enc_3_b1_c2__enc_3_b1_out_a_v), .a_tready(enc_3_b1_c2__enc_3_b1_out_a_r), .a_tlast(enc_3_b1_c2__enc_3_b1_out_a_l), .a_tuser(enc_3_b1_c2__enc_3_b1_out_a_u),
         .b_tdata(q_enc_3_b1_out_b_d), .b_tvalid(q_enc_3_b1_out_b_v), .b_tready(q_enc_3_b1_out_b_r),
         .m_tdata(enc_3_b1_out_d), .m_tvalid(enc_3_b1_out_v), .m_tready(enc_3_b1_out_r), .m_tlast(enc_3_b1_out_l), .m_tuser(enc_3_b1_out_u));
@@ -918,7 +918,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(16), .COUT(16), .K(3), .P(2), .ACT("relu"), .ACT2("none"), .ACT_SPLIT(16),
         .WROM_PREFIX("rtl_init__enc.3.b2.c1__wrom"), .WROM_STYLE("block"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("gear"), .WG_NCOL(2), .RQ_MUL("lut"),
-        .PRE(0), .SH_MIN(26), .SH_BITS(1),
+        .PRE(0), .SH_MIN(25), .SH_BITS(2),
         .BIAS_FILE("rtl_init__enc.3.b2.c1__bias.mem"), .PRE_FILE("rtl_init__enc.3.b2.c1__pre.mem"), .M_FILE("rtl_init__enc.3.b2.c1__m.mem"), .SH_FILE("rtl_init__enc.3.b2.c1__sh.mem")) u_enc_3_b2_c1 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_3_b2_c1__eng_enc_3_b2_c1_d), .s_in_tvalid(_win_enc_3_b2_c1__eng_enc_3_b2_c1_v), .s_in_tready(_win_enc_3_b2_c1__eng_enc_3_b2_c1_r), .s_in_tlast(_win_enc_3_b2_c1__eng_enc_3_b2_c1_l), .s_in_tuser(_win_enc_3_b2_c1__eng_enc_3_b2_c1_u),
         .m_out_tdata(enc_3_b2_c1_d), .m_out_tvalid(enc_3_b2_c1_v), .m_out_tready(enc_3_b2_c1_r), .m_out_tlast(enc_3_b2_c1_l), .m_out_tuser(enc_3_b2_c1_u));
@@ -936,7 +936,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_3_b1_out__enc_3_b2_out_b_d), .s_tvalid(enc_3_b1_out__enc_3_b2_out_b_v), .s_tready(enc_3_b1_out__enc_3_b2_out_b_r),
         .m_tdata(q_enc_3_b2_out_b_d), .m_tvalid(q_enc_3_b2_out_b_v), .m_tready(q_enc_3_b2_out_b_r));
     assign q_enc_3_b2_out_b_l = 1'b0; assign q_enc_3_b2_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(89285), .MB(58778), .SH(17), .RELU(1), .U_W(1)) u_enc_3_b2_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(86893), .MB(64030), .SH(17), .RELU(1), .U_W(1)) u_enc_3_b2_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_3_b2_c2__enc_3_b2_out_a_d), .a_tvalid(enc_3_b2_c2__enc_3_b2_out_a_v), .a_tready(enc_3_b2_c2__enc_3_b2_out_a_r), .a_tlast(enc_3_b2_c2__enc_3_b2_out_a_l), .a_tuser(enc_3_b2_c2__enc_3_b2_out_a_u),
         .b_tdata(q_enc_3_b2_out_b_d), .b_tvalid(q_enc_3_b2_out_b_v), .b_tready(q_enc_3_b2_out_b_r),
         .m_tdata(enc_3_b2_out_d), .m_tvalid(enc_3_b2_out_v), .m_tready(enc_3_b2_out_r), .m_tlast(enc_3_b2_out_l), .m_tuser(enc_3_b2_out_u));
@@ -950,7 +950,7 @@ module blk_enc_0_latent_idx (
         .BIAS_FILE("rtl_init__enc.3.b3__bias.mem"), .PRE_FILE("rtl_init__enc.3.b3__pre.mem"), .M_FILE("rtl_init__enc.3.b3__m.mem"), .SH_FILE("rtl_init__enc.3.b3__sh.mem")) u_enc_3_b3 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_3_b3__eng_enc_3_b3_d), .s_in_tvalid(_win_enc_3_b3__eng_enc_3_b3_v), .s_in_tready(_win_enc_3_b3__eng_enc_3_b3_r), .s_in_tlast(_win_enc_3_b3__eng_enc_3_b3_l), .s_in_tuser(_win_enc_3_b3__eng_enc_3_b3_u),
         .m_out_tdata(enc_3_b3_d), .m_out_tvalid(enc_3_b3_v), .m_out_tready(enc_3_b3_r), .m_out_tlast(enc_3_b3_l), .m_out_tuser(enc_3_b3_u));
-    axis_sigmoid #(.X_W(12), .M312(97053), .SH312(11), .NSEG(32), .OB(10),
+    axis_sigmoid #(.X_W(12), .M312(70821), .SH312(11), .NSEG(32), .OB(10),
         .SHIFT(15), .C0_FILE("params__sigmoid_pwl.c0.mem"), .C1_FILE("params__sigmoid_pwl.c1.mem"),
         .OUT8(0), .U_W(1)) u_enc_3_sig (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_3_b3__sig_enc_3_sig_d), .s_tvalid(enc_3_b3__sig_enc_3_sig_v), .s_tready(enc_3_b3__sig_enc_3_sig_r), .s_tlast(enc_3_b3__sig_enc_3_sig_l), .s_tuser(enc_3_b3__sig_enc_3_sig_u),
@@ -962,7 +962,7 @@ module blk_enc_0_latent_idx (
     axis_fifo_packed #(.DATA_W(14), .PACK(1), .DEPTH_W(128), .RAM_STYLE("distributed")) u_fifo_enc_3_out_a (
         .clk(clk), .rst_n(rst_n), .s_tdata({enc_3_a2_out__enc_3_out_a_u, enc_3_a2_out__enc_3_out_a_l, enc_3_a2_out__enc_3_out_a_d}), .s_tvalid(enc_3_a2_out__enc_3_out_a_v), .s_tready(enc_3_a2_out__enc_3_out_a_r),
         .m_tdata({q_enc_3_out_a_u, q_enc_3_out_a_l, q_enc_3_out_a_d}), .m_tvalid(q_enc_3_out_a_v), .m_tready(q_enc_3_out_a_r));
-    axis_gate #(.X_W(12), .Y_W(12), .MA(46423), .MB(75099), .SH(16), .U_W(1)) u_enc_3_out (
+    axis_gate #(.X_W(12), .Y_W(12), .MA(53002), .MB(91416), .SH(16), .U_W(1)) u_enc_3_out (
         .clk(clk), .rst_n(rst_n), .x_tdata(q_enc_3_out_x_d), .x_tvalid(q_enc_3_out_x_v), .x_tready(q_enc_3_out_x_r),
         .a_tdata(q_enc_3_out_a_d), .a_tvalid(q_enc_3_out_a_v), .a_tready(q_enc_3_out_a_r), .a_tlast(q_enc_3_out_a_l), .a_tuser(q_enc_3_out_a_u),
         .g_tdata(enc_3_sig__enc_3_out_g_d), .g_tvalid(enc_3_sig__enc_3_out_g_v), .g_tready(enc_3_sig__enc_3_out_g_r),
@@ -974,7 +974,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(32), .COUT(32), .K(3), .P(7), .ACT("leaky"), .ACT2("none"), .ACT_SPLIT(32),
         .WROM_PREFIX("rtl_init__enc.4.conv1__wrom"), .WROM_STYLE("block"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("gear"), .WG_NCOL(5), .RQ_MUL("lut"),
-        .PRE(0), .SH_MIN(24), .SH_BITS(2),
+        .PRE(0), .SH_MIN(25), .SH_BITS(2),
         .BIAS_FILE("rtl_init__enc.4.conv1__bias.mem"), .PRE_FILE("rtl_init__enc.4.conv1__pre.mem"), .M_FILE("rtl_init__enc.4.conv1__m.mem"), .SH_FILE("rtl_init__enc.4.conv1__sh.mem")) u_enc_4_conv1 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_4_conv1__eng_enc_4_conv1_d), .s_in_tvalid(_win_enc_4_conv1__eng_enc_4_conv1_v), .s_in_tready(_win_enc_4_conv1__eng_enc_4_conv1_r), .s_in_tlast(_win_enc_4_conv1__eng_enc_4_conv1_l), .s_in_tuser(_win_enc_4_conv1__eng_enc_4_conv1_u),
         .m_out_tdata(enc_4_conv1_d), .m_out_tvalid(enc_4_conv1_v), .m_out_tready(enc_4_conv1_r), .m_out_tlast(enc_4_conv1_l), .m_out_tuser(enc_4_conv1_u));
@@ -993,7 +993,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_3_out__enc_4_out_b_d), .s_tvalid(enc_3_out__enc_4_out_b_v), .s_tready(enc_3_out__enc_4_out_b_r),
         .m_tdata(q_enc_4_out_b_d), .m_tvalid(q_enc_4_out_b_v), .m_tready(q_enc_4_out_b_r));
     assign q_enc_4_out_b_l = 1'b0; assign q_enc_4_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(91277), .MB(109672), .SH(17), .RELU(0), .U_W(1)) u_enc_4_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(65964), .MB(49893), .SH(16), .RELU(0), .U_W(1)) u_enc_4_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_4_conv2__enc_4_out_a_d), .a_tvalid(enc_4_conv2__enc_4_out_a_v), .a_tready(enc_4_conv2__enc_4_out_a_r), .a_tlast(enc_4_conv2__enc_4_out_a_l), .a_tuser(enc_4_conv2__enc_4_out_a_u),
         .b_tdata(q_enc_4_out_b_d), .b_tvalid(q_enc_4_out_b_v), .b_tready(q_enc_4_out_b_r),
         .m_tdata(enc_4_out_d), .m_tvalid(enc_4_out_v), .m_tready(enc_4_out_r), .m_tlast(enc_4_out_l), .m_tuser(enc_4_out_u));
@@ -1019,8 +1019,8 @@ module blk_enc_0_latent_idx (
         .BIAS_FILE("rtl_init__enc.5.conv2__bias.mem"), .PRE_FILE("rtl_init__enc.5.conv2__pre.mem"), .M_FILE("rtl_init__enc.5.conv2__m.mem"), .SH_FILE("rtl_init__enc.5.conv2__sh.mem")) u_enc_5_conv2 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_5_conv2__eng_enc_5_conv2_d), .s_in_tvalid(_win_enc_5_conv2__eng_enc_5_conv2_v), .s_in_tready(_win_enc_5_conv2__eng_enc_5_conv2_r), .s_in_tlast(_win_enc_5_conv2__eng_enc_5_conv2_l), .s_in_tuser(_win_enc_5_conv2__eng_enc_5_conv2_u),
         .m_out_tdata(enc_5_conv2_d), .m_out_tvalid(enc_5_conv2_v), .m_out_tready(enc_5_conv2_r), .m_out_tlast(enc_5_conv2_l), .m_out_tuser(enc_5_conv2_u));
-    axis_gdn #(.C(32), .LANES(1), .INVERSE(0), .X2_SHIFT(0), .LSH(14), .F(33),
-        .QW(25), .DW(48), .NUNITS(2), .PRE(0), .M(118019), .SH(30),
+    axis_gdn #(.C(32), .LANES(1), .INVERSE(0), .X2_SHIFT(0), .LSH(14), .F(32),
+        .QW(25), .DW(48), .NUNITS(2), .PRE(0), .M(67039), .SH(28),
         .GAMMA_FILE("rtl_init__enc.5.gdn__gamma.mem"), .BETA_FILE("rtl_init__enc.5.gdn__beta.mem")) u_enc_5_gdn (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_5_conv2__gdn_enc_5_gdn_d), .s_tvalid(enc_5_conv2__gdn_enc_5_gdn_v), .s_tready(enc_5_conv2__gdn_enc_5_gdn_r), .s_tlast(enc_5_conv2__gdn_enc_5_gdn_l), .s_tuser(enc_5_conv2__gdn_enc_5_gdn_u),
         .m_tdata(enc_5_gdn_d), .m_tvalid(enc_5_gdn_v), .m_tready(enc_5_gdn_r), .m_tlast(enc_5_gdn_l), .m_tuser(enc_5_gdn_u));
@@ -1028,7 +1028,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_4_out__enc_5_out_b_d), .s_tvalid(enc_4_out__enc_5_out_b_v), .s_tready(enc_4_out__enc_5_out_b_r),
         .m_tdata(q_enc_5_out_b_d), .m_tvalid(q_enc_5_out_b_v), .m_tready(q_enc_5_out_b_r));
     assign q_enc_5_out_b_l = 1'b0; assign q_enc_5_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(35550), .MB(67170), .SH(16), .RELU(0), .U_W(1)) u_enc_5_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(35420), .MB(71124), .SH(16), .RELU(0), .U_W(1)) u_enc_5_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_5_gdn__enc_5_out_a_d), .a_tvalid(enc_5_gdn__enc_5_out_a_v), .a_tready(enc_5_gdn__enc_5_out_a_r), .a_tlast(enc_5_gdn__enc_5_out_a_l), .a_tuser(enc_5_gdn__enc_5_out_a_u),
         .b_tdata(q_enc_5_out_b_d), .b_tvalid(q_enc_5_out_b_v), .b_tready(q_enc_5_out_b_r),
         .m_tdata(enc_5_out_d), .m_tvalid(enc_5_out_v), .m_tready(enc_5_out_r), .m_tlast(enc_5_out_l), .m_tuser(enc_5_out_u));
@@ -1039,7 +1039,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(32), .COUT(32), .K(3), .P(7), .ACT("leaky"), .ACT2("none"), .ACT_SPLIT(32),
         .WROM_PREFIX("rtl_init__enc.6.conv1__wrom"), .WROM_STYLE("block"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("gear"), .WG_NCOL(5), .RQ_MUL("lut"),
-        .PRE(0), .SH_MIN(25), .SH_BITS(2),
+        .PRE(0), .SH_MIN(25), .SH_BITS(1),
         .BIAS_FILE("rtl_init__enc.6.conv1__bias.mem"), .PRE_FILE("rtl_init__enc.6.conv1__pre.mem"), .M_FILE("rtl_init__enc.6.conv1__m.mem"), .SH_FILE("rtl_init__enc.6.conv1__sh.mem")) u_enc_6_conv1 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_6_conv1__eng_enc_6_conv1_d), .s_in_tvalid(_win_enc_6_conv1__eng_enc_6_conv1_v), .s_in_tready(_win_enc_6_conv1__eng_enc_6_conv1_r), .s_in_tlast(_win_enc_6_conv1__eng_enc_6_conv1_l), .s_in_tuser(_win_enc_6_conv1__eng_enc_6_conv1_u),
         .m_out_tdata(enc_6_conv1_d), .m_out_tvalid(enc_6_conv1_v), .m_out_tready(enc_6_conv1_r), .m_out_tlast(enc_6_conv1_l), .m_out_tuser(enc_6_conv1_u));
@@ -1058,7 +1058,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_5_out__enc_6_out_b_d), .s_tvalid(enc_5_out__enc_6_out_b_v), .s_tready(enc_5_out__enc_6_out_b_r),
         .m_tdata(q_enc_6_out_b_d), .m_tvalid(q_enc_6_out_b_v), .m_tready(q_enc_6_out_b_r));
     assign q_enc_6_out_b_l = 1'b0; assign q_enc_6_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(38007), .MB(65546), .SH(16), .RELU(0), .U_W(1)) u_enc_6_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(50207), .MB(66053), .SH(16), .RELU(0), .U_W(1)) u_enc_6_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_6_conv2__enc_6_out_a_d), .a_tvalid(enc_6_conv2__enc_6_out_a_v), .a_tready(enc_6_conv2__enc_6_out_a_r), .a_tlast(enc_6_conv2__enc_6_out_a_l), .a_tuser(enc_6_conv2__enc_6_out_a_u),
         .b_tdata(q_enc_6_out_b_d), .b_tvalid(q_enc_6_out_b_v), .b_tready(q_enc_6_out_b_r),
         .m_tdata(enc_6_out_d), .m_tvalid(enc_6_out_v), .m_tready(enc_6_out_r), .m_tlast(enc_6_out_l), .m_tuser(enc_6_out_u));
@@ -1084,8 +1084,8 @@ module blk_enc_0_latent_idx (
         .BIAS_FILE("rtl_init__enc.7.conv2__bias.mem"), .PRE_FILE("rtl_init__enc.7.conv2__pre.mem"), .M_FILE("rtl_init__enc.7.conv2__m.mem"), .SH_FILE("rtl_init__enc.7.conv2__sh.mem")) u_enc_7_conv2 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_7_conv2__eng_enc_7_conv2_d), .s_in_tvalid(_win_enc_7_conv2__eng_enc_7_conv2_v), .s_in_tready(_win_enc_7_conv2__eng_enc_7_conv2_r), .s_in_tlast(_win_enc_7_conv2__eng_enc_7_conv2_l), .s_in_tuser(_win_enc_7_conv2__eng_enc_7_conv2_u),
         .m_out_tdata(enc_7_conv2_d), .m_out_tvalid(enc_7_conv2_v), .m_out_tready(enc_7_conv2_r), .m_out_tlast(enc_7_conv2_l), .m_out_tuser(enc_7_conv2_u));
-    axis_gdn #(.C(16), .LANES(1), .INVERSE(0), .X2_SHIFT(0), .LSH(14), .F(33),
-        .QW(25), .DW(48), .NUNITS(1), .PRE(0), .M(78016), .SH(28),
+    axis_gdn #(.C(16), .LANES(1), .INVERSE(0), .X2_SHIFT(0), .LSH(14), .F(32),
+        .QW(25), .DW(48), .NUNITS(1), .PRE(0), .M(128313), .SH(28),
         .GAMMA_FILE("rtl_init__enc.7.gdn__gamma.mem"), .BETA_FILE("rtl_init__enc.7.gdn__beta.mem")) u_enc_7_gdn (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_7_conv2__gdn_enc_7_gdn_d), .s_tvalid(enc_7_conv2__gdn_enc_7_gdn_v), .s_tready(enc_7_conv2__gdn_enc_7_gdn_r), .s_tlast(enc_7_conv2__gdn_enc_7_gdn_l), .s_tuser(enc_7_conv2__gdn_enc_7_gdn_u),
         .m_tdata(enc_7_gdn_d), .m_tvalid(enc_7_gdn_v), .m_tready(enc_7_gdn_r), .m_tlast(enc_7_gdn_l), .m_tuser(enc_7_gdn_u));
@@ -1103,7 +1103,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_7_skip__enc_7_out_b_d), .s_tvalid(enc_7_skip__enc_7_out_b_v), .s_tready(enc_7_skip__enc_7_out_b_r),
         .m_tdata(q_enc_7_out_b_d), .m_tvalid(q_enc_7_out_b_v), .m_tready(q_enc_7_out_b_r));
     assign q_enc_7_out_b_l = 1'b0; assign q_enc_7_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(29410), .MB(70933), .SH(16), .RELU(0), .U_W(1)) u_enc_7_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(33725), .MB(93432), .SH(16), .RELU(0), .U_W(1)) u_enc_7_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_7_gdn__enc_7_out_a_d), .a_tvalid(enc_7_gdn__enc_7_out_a_v), .a_tready(enc_7_gdn__enc_7_out_a_r), .a_tlast(enc_7_gdn__enc_7_out_a_l), .a_tuser(enc_7_gdn__enc_7_out_a_u),
         .b_tdata(q_enc_7_out_b_d), .b_tvalid(q_enc_7_out_b_v), .b_tready(q_enc_7_out_b_r),
         .m_tdata(enc_7_out_d), .m_tvalid(enc_7_out_v), .m_tready(enc_7_out_r), .m_tlast(enc_7_out_l), .m_tuser(enc_7_out_u));
@@ -1113,7 +1113,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(16), .COUT(16), .K(1), .P(1), .ACT("relu"), .ACT2("relu"), .ACT_SPLIT(8),
         .WROM_PREFIX("rtl_init__enc.8.ab0.c0__wrom"), .WROM_STYLE("distributed"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("direct"), .WG_NCOL(1), .RQ_MUL("lut"),
-        .PRE(0), .SH_MIN(24), .SH_BITS(1),
+        .PRE(0), .SH_MIN(24), .SH_BITS(2),
         .BIAS_FILE("rtl_init__enc.8.ab0.c0__bias.mem"), .PRE_FILE("rtl_init__enc.8.ab0.c0__pre.mem"), .M_FILE("rtl_init__enc.8.ab0.c0__m.mem"), .SH_FILE("rtl_init__enc.8.ab0.c0__sh.mem")) u_enc_8_ab0_c0 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_8_ab0_c0__eng_enc_8_ab0_c0_d), .s_in_tvalid(_win_enc_8_ab0_c0__eng_enc_8_ab0_c0_v), .s_in_tready(_win_enc_8_ab0_c0__eng_enc_8_ab0_c0_r), .s_in_tlast(_win_enc_8_ab0_c0__eng_enc_8_ab0_c0_l), .s_in_tuser(_win_enc_8_ab0_c0__eng_enc_8_ab0_c0_u),
         .m_out_tdata(o_enc_8_ab0_c0_d), .m_out_tvalid(o_enc_8_ab0_c0_v), .m_out_tready(o_enc_8_ab0_c0_r), .m_out_tlast(o_enc_8_ab0_c0_l), .m_out_tuser(o_enc_8_ab0_c0_u));
@@ -1128,7 +1128,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(8), .COUT(8), .K(3), .P(1), .ACT("relu"), .ACT2("none"), .ACT_SPLIT(8),
         .WROM_PREFIX("rtl_init__enc.8.a0.c1__wrom"), .WROM_STYLE("distributed"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("direct"), .WG_NCOL(1), .RQ_MUL("lut"),
-        .PRE(0), .SH_MIN(25), .SH_BITS(1),
+        .PRE(0), .SH_MIN(25), .SH_BITS(2),
         .BIAS_FILE("rtl_init__enc.8.a0.c1__bias.mem"), .PRE_FILE("rtl_init__enc.8.a0.c1__pre.mem"), .M_FILE("rtl_init__enc.8.a0.c1__m.mem"), .SH_FILE("rtl_init__enc.8.a0.c1__sh.mem")) u_enc_8_a0_c1 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_8_a0_c1__eng_enc_8_a0_c1_d), .s_in_tvalid(_win_enc_8_a0_c1__eng_enc_8_a0_c1_v), .s_in_tready(_win_enc_8_a0_c1__eng_enc_8_a0_c1_r), .s_in_tlast(_win_enc_8_a0_c1__eng_enc_8_a0_c1_l), .s_in_tuser(_win_enc_8_a0_c1__eng_enc_8_a0_c1_u),
         .m_out_tdata(enc_8_a0_c1_d), .m_out_tvalid(enc_8_a0_c1_v), .m_out_tready(enc_8_a0_c1_r), .m_out_tlast(enc_8_a0_c1_l), .m_out_tuser(enc_8_a0_c1_u));
@@ -1146,7 +1146,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_7_out__enc_8_a0_out_b_d), .s_tvalid(enc_7_out__enc_8_a0_out_b_v), .s_tready(enc_7_out__enc_8_a0_out_b_r),
         .m_tdata(q_enc_8_a0_out_b_d), .m_tvalid(q_enc_8_a0_out_b_v), .m_tready(q_enc_8_a0_out_b_r));
     assign q_enc_8_a0_out_b_l = 1'b0; assign q_enc_8_a0_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(29694), .MB(67277), .SH(16), .RELU(1), .U_W(1)) u_enc_8_a0_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(51496), .MB(107621), .SH(17), .RELU(1), .U_W(1)) u_enc_8_a0_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_8_a0_c2__enc_8_a0_out_a_d), .a_tvalid(enc_8_a0_c2__enc_8_a0_out_a_v), .a_tready(enc_8_a0_c2__enc_8_a0_out_a_r), .a_tlast(enc_8_a0_c2__enc_8_a0_out_a_l), .a_tuser(enc_8_a0_c2__enc_8_a0_out_a_u),
         .b_tdata(q_enc_8_a0_out_b_d), .b_tvalid(q_enc_8_a0_out_b_v), .b_tready(q_enc_8_a0_out_b_r),
         .m_tdata(enc_8_a0_out_d), .m_tvalid(enc_8_a0_out_v), .m_tready(enc_8_a0_out_r), .m_tlast(enc_8_a0_out_l), .m_tuser(enc_8_a0_out_u));
@@ -1156,7 +1156,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(16), .COUT(8), .K(1), .P(1), .ACT("relu"), .ACT2("none"), .ACT_SPLIT(8),
         .WROM_PREFIX("rtl_init__enc.8.a1.c0__wrom"), .WROM_STYLE("distributed"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("direct"), .WG_NCOL(1), .RQ_MUL("lut"),
-        .PRE(0), .SH_MIN(23), .SH_BITS(1),
+        .PRE(0), .SH_MIN(23), .SH_BITS(2),
         .BIAS_FILE("rtl_init__enc.8.a1.c0__bias.mem"), .PRE_FILE("rtl_init__enc.8.a1.c0__pre.mem"), .M_FILE("rtl_init__enc.8.a1.c0__m.mem"), .SH_FILE("rtl_init__enc.8.a1.c0__sh.mem")) u_enc_8_a1_c0 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_8_a1_c0__eng_enc_8_a1_c0_d), .s_in_tvalid(_win_enc_8_a1_c0__eng_enc_8_a1_c0_v), .s_in_tready(_win_enc_8_a1_c0__eng_enc_8_a1_c0_r), .s_in_tlast(_win_enc_8_a1_c0__eng_enc_8_a1_c0_l), .s_in_tuser(_win_enc_8_a1_c0__eng_enc_8_a1_c0_u),
         .m_out_tdata(enc_8_a1_c0_d), .m_out_tvalid(enc_8_a1_c0_v), .m_out_tready(enc_8_a1_c0_r), .m_out_tlast(enc_8_a1_c0_l), .m_out_tuser(enc_8_a1_c0_u));
@@ -1167,7 +1167,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(8), .COUT(8), .K(3), .P(1), .ACT("relu"), .ACT2("none"), .ACT_SPLIT(8),
         .WROM_PREFIX("rtl_init__enc.8.a1.c1__wrom"), .WROM_STYLE("distributed"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("direct"), .WG_NCOL(1), .RQ_MUL("lut"),
-        .PRE(0), .SH_MIN(24), .SH_BITS(2),
+        .PRE(0), .SH_MIN(23), .SH_BITS(2),
         .BIAS_FILE("rtl_init__enc.8.a1.c1__bias.mem"), .PRE_FILE("rtl_init__enc.8.a1.c1__pre.mem"), .M_FILE("rtl_init__enc.8.a1.c1__m.mem"), .SH_FILE("rtl_init__enc.8.a1.c1__sh.mem")) u_enc_8_a1_c1 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_8_a1_c1__eng_enc_8_a1_c1_d), .s_in_tvalid(_win_enc_8_a1_c1__eng_enc_8_a1_c1_v), .s_in_tready(_win_enc_8_a1_c1__eng_enc_8_a1_c1_r), .s_in_tlast(_win_enc_8_a1_c1__eng_enc_8_a1_c1_l), .s_in_tuser(_win_enc_8_a1_c1__eng_enc_8_a1_c1_u),
         .m_out_tdata(enc_8_a1_c1_d), .m_out_tvalid(enc_8_a1_c1_v), .m_out_tready(enc_8_a1_c1_r), .m_out_tlast(enc_8_a1_c1_l), .m_out_tuser(enc_8_a1_c1_u));
@@ -1177,7 +1177,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(8), .COUT(16), .K(1), .P(1), .ACT("none"), .ACT2("none"), .ACT_SPLIT(16),
         .WROM_PREFIX("rtl_init__enc.8.a1.c2__wrom"), .WROM_STYLE("distributed"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("direct"), .WG_NCOL(1), .RQ_MUL("dsp"),
-        .PRE(0), .SH_MIN(24), .SH_BITS(1),
+        .PRE(0), .SH_MIN(23), .SH_BITS(2),
         .BIAS_FILE("rtl_init__enc.8.a1.c2__bias.mem"), .PRE_FILE("rtl_init__enc.8.a1.c2__pre.mem"), .M_FILE("rtl_init__enc.8.a1.c2__m.mem"), .SH_FILE("rtl_init__enc.8.a1.c2__sh.mem")) u_enc_8_a1_c2 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_8_a1_c2__eng_enc_8_a1_c2_d), .s_in_tvalid(_win_enc_8_a1_c2__eng_enc_8_a1_c2_v), .s_in_tready(_win_enc_8_a1_c2__eng_enc_8_a1_c2_r), .s_in_tlast(_win_enc_8_a1_c2__eng_enc_8_a1_c2_l), .s_in_tuser(_win_enc_8_a1_c2__eng_enc_8_a1_c2_u),
         .m_out_tdata(enc_8_a1_c2_d), .m_out_tvalid(enc_8_a1_c2_v), .m_out_tready(enc_8_a1_c2_r), .m_out_tlast(enc_8_a1_c2_l), .m_out_tuser(enc_8_a1_c2_u));
@@ -1185,7 +1185,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_8_a0_out__enc_8_a1_out_b_d), .s_tvalid(enc_8_a0_out__enc_8_a1_out_b_v), .s_tready(enc_8_a0_out__enc_8_a1_out_b_r),
         .m_tdata(q_enc_8_a1_out_b_d), .m_tvalid(q_enc_8_a1_out_b_v), .m_tready(q_enc_8_a1_out_b_r));
     assign q_enc_8_a1_out_b_l = 1'b0; assign q_enc_8_a1_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(53652), .MB(110931), .SH(17), .RELU(1), .U_W(1)) u_enc_8_a1_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(63339), .MB(128510), .SH(17), .RELU(1), .U_W(1)) u_enc_8_a1_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_8_a1_c2__enc_8_a1_out_a_d), .a_tvalid(enc_8_a1_c2__enc_8_a1_out_a_v), .a_tready(enc_8_a1_c2__enc_8_a1_out_a_r), .a_tlast(enc_8_a1_c2__enc_8_a1_out_a_l), .a_tuser(enc_8_a1_c2__enc_8_a1_out_a_u),
         .b_tdata(q_enc_8_a1_out_b_d), .b_tvalid(q_enc_8_a1_out_b_v), .b_tready(q_enc_8_a1_out_b_r),
         .m_tdata(enc_8_a1_out_d), .m_tvalid(enc_8_a1_out_v), .m_tready(enc_8_a1_out_r), .m_tlast(enc_8_a1_out_l), .m_tuser(enc_8_a1_out_u));
@@ -1195,7 +1195,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(16), .COUT(8), .K(1), .P(1), .ACT("relu"), .ACT2("none"), .ACT_SPLIT(8),
         .WROM_PREFIX("rtl_init__enc.8.a2.c0__wrom"), .WROM_STYLE("distributed"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("direct"), .WG_NCOL(1), .RQ_MUL("lut"),
-        .PRE(0), .SH_MIN(23), .SH_BITS(2),
+        .PRE(0), .SH_MIN(22), .SH_BITS(2),
         .BIAS_FILE("rtl_init__enc.8.a2.c0__bias.mem"), .PRE_FILE("rtl_init__enc.8.a2.c0__pre.mem"), .M_FILE("rtl_init__enc.8.a2.c0__m.mem"), .SH_FILE("rtl_init__enc.8.a2.c0__sh.mem")) u_enc_8_a2_c0 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_8_a2_c0__eng_enc_8_a2_c0_d), .s_in_tvalid(_win_enc_8_a2_c0__eng_enc_8_a2_c0_v), .s_in_tready(_win_enc_8_a2_c0__eng_enc_8_a2_c0_r), .s_in_tlast(_win_enc_8_a2_c0__eng_enc_8_a2_c0_l), .s_in_tuser(_win_enc_8_a2_c0__eng_enc_8_a2_c0_u),
         .m_out_tdata(enc_8_a2_c0_d), .m_out_tvalid(enc_8_a2_c0_v), .m_out_tready(enc_8_a2_c0_r), .m_out_tlast(enc_8_a2_c0_l), .m_out_tuser(enc_8_a2_c0_u));
@@ -1224,7 +1224,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_8_a1_out__enc_8_a2_out_b_d), .s_tvalid(enc_8_a1_out__enc_8_a2_out_b_v), .s_tready(enc_8_a1_out__enc_8_a2_out_b_r),
         .m_tdata(q_enc_8_a2_out_b_d), .m_tvalid(q_enc_8_a2_out_b_v), .m_tready(q_enc_8_a2_out_b_r));
     assign q_enc_8_a2_out_b_l = 1'b0; assign q_enc_8_a2_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(79327), .MB(104008), .SH(17), .RELU(1), .U_W(1)) u_enc_8_a2_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(73547), .MB(108701), .SH(17), .RELU(1), .U_W(1)) u_enc_8_a2_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_8_a2_c2__enc_8_a2_out_a_d), .a_tvalid(enc_8_a2_c2__enc_8_a2_out_a_v), .a_tready(enc_8_a2_c2__enc_8_a2_out_a_r), .a_tlast(enc_8_a2_c2__enc_8_a2_out_a_l), .a_tuser(enc_8_a2_c2__enc_8_a2_out_a_u),
         .b_tdata(q_enc_8_a2_out_b_d), .b_tvalid(q_enc_8_a2_out_b_v), .b_tready(q_enc_8_a2_out_b_r),
         .m_tdata(enc_8_a2_out_d), .m_tvalid(enc_8_a2_out_v), .m_tready(enc_8_a2_out_r), .m_tlast(enc_8_a2_out_l), .m_tuser(enc_8_a2_out_u));
@@ -1235,7 +1235,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(8), .COUT(8), .K(3), .P(1), .ACT("relu"), .ACT2("none"), .ACT_SPLIT(8),
         .WROM_PREFIX("rtl_init__enc.8.b0.c1__wrom"), .WROM_STYLE("distributed"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("direct"), .WG_NCOL(1), .RQ_MUL("lut"),
-        .PRE(0), .SH_MIN(25), .SH_BITS(1),
+        .PRE(0), .SH_MIN(24), .SH_BITS(2),
         .BIAS_FILE("rtl_init__enc.8.b0.c1__bias.mem"), .PRE_FILE("rtl_init__enc.8.b0.c1__pre.mem"), .M_FILE("rtl_init__enc.8.b0.c1__m.mem"), .SH_FILE("rtl_init__enc.8.b0.c1__sh.mem")) u_enc_8_b0_c1 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_8_b0_c1__eng_enc_8_b0_c1_d), .s_in_tvalid(_win_enc_8_b0_c1__eng_enc_8_b0_c1_v), .s_in_tready(_win_enc_8_b0_c1__eng_enc_8_b0_c1_r), .s_in_tlast(_win_enc_8_b0_c1__eng_enc_8_b0_c1_l), .s_in_tuser(_win_enc_8_b0_c1__eng_enc_8_b0_c1_u),
         .m_out_tdata(enc_8_b0_c1_d), .m_out_tvalid(enc_8_b0_c1_v), .m_out_tready(enc_8_b0_c1_r), .m_out_tlast(enc_8_b0_c1_l), .m_out_tuser(enc_8_b0_c1_u));
@@ -1245,7 +1245,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(8), .COUT(16), .K(1), .P(1), .ACT("none"), .ACT2("none"), .ACT_SPLIT(16),
         .WROM_PREFIX("rtl_init__enc.8.b0.c2__wrom"), .WROM_STYLE("distributed"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("direct"), .WG_NCOL(1), .RQ_MUL("dsp"),
-        .PRE(0), .SH_MIN(24), .SH_BITS(1),
+        .PRE(0), .SH_MIN(24), .SH_BITS(2),
         .BIAS_FILE("rtl_init__enc.8.b0.c2__bias.mem"), .PRE_FILE("rtl_init__enc.8.b0.c2__pre.mem"), .M_FILE("rtl_init__enc.8.b0.c2__m.mem"), .SH_FILE("rtl_init__enc.8.b0.c2__sh.mem")) u_enc_8_b0_c2 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_8_b0_c2__eng_enc_8_b0_c2_d), .s_in_tvalid(_win_enc_8_b0_c2__eng_enc_8_b0_c2_v), .s_in_tready(_win_enc_8_b0_c2__eng_enc_8_b0_c2_r), .s_in_tlast(_win_enc_8_b0_c2__eng_enc_8_b0_c2_l), .s_in_tuser(_win_enc_8_b0_c2__eng_enc_8_b0_c2_u),
         .m_out_tdata(enc_8_b0_c2_d), .m_out_tvalid(enc_8_b0_c2_v), .m_out_tready(enc_8_b0_c2_r), .m_out_tlast(enc_8_b0_c2_l), .m_out_tuser(enc_8_b0_c2_u));
@@ -1253,7 +1253,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_7_out__enc_8_b0_out_b_d), .s_tvalid(enc_7_out__enc_8_b0_out_b_v), .s_tready(enc_7_out__enc_8_b0_out_b_r),
         .m_tdata(q_enc_8_b0_out_b_d), .m_tvalid(q_enc_8_b0_out_b_v), .m_tready(q_enc_8_b0_out_b_r));
     assign q_enc_8_b0_out_b_l = 1'b0; assign q_enc_8_b0_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(49100), .MB(123065), .SH(17), .RELU(1), .U_W(1)) u_enc_8_b0_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(47398), .MB(101188), .SH(17), .RELU(1), .U_W(1)) u_enc_8_b0_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_8_b0_c2__enc_8_b0_out_a_d), .a_tvalid(enc_8_b0_c2__enc_8_b0_out_a_v), .a_tready(enc_8_b0_c2__enc_8_b0_out_a_r), .a_tlast(enc_8_b0_c2__enc_8_b0_out_a_l), .a_tuser(enc_8_b0_c2__enc_8_b0_out_a_u),
         .b_tdata(q_enc_8_b0_out_b_d), .b_tvalid(q_enc_8_b0_out_b_v), .b_tready(q_enc_8_b0_out_b_r),
         .m_tdata(enc_8_b0_out_d), .m_tvalid(enc_8_b0_out_v), .m_tready(enc_8_b0_out_r), .m_tlast(enc_8_b0_out_l), .m_tuser(enc_8_b0_out_u));
@@ -1263,7 +1263,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(16), .COUT(8), .K(1), .P(1), .ACT("relu"), .ACT2("none"), .ACT_SPLIT(8),
         .WROM_PREFIX("rtl_init__enc.8.b1.c0__wrom"), .WROM_STYLE("distributed"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("direct"), .WG_NCOL(1), .RQ_MUL("lut"),
-        .PRE(0), .SH_MIN(22), .SH_BITS(2),
+        .PRE(0), .SH_MIN(22), .SH_BITS(1),
         .BIAS_FILE("rtl_init__enc.8.b1.c0__bias.mem"), .PRE_FILE("rtl_init__enc.8.b1.c0__pre.mem"), .M_FILE("rtl_init__enc.8.b1.c0__m.mem"), .SH_FILE("rtl_init__enc.8.b1.c0__sh.mem")) u_enc_8_b1_c0 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_8_b1_c0__eng_enc_8_b1_c0_d), .s_in_tvalid(_win_enc_8_b1_c0__eng_enc_8_b1_c0_v), .s_in_tready(_win_enc_8_b1_c0__eng_enc_8_b1_c0_r), .s_in_tlast(_win_enc_8_b1_c0__eng_enc_8_b1_c0_l), .s_in_tuser(_win_enc_8_b1_c0__eng_enc_8_b1_c0_u),
         .m_out_tdata(enc_8_b1_c0_d), .m_out_tvalid(enc_8_b1_c0_v), .m_out_tready(enc_8_b1_c0_r), .m_out_tlast(enc_8_b1_c0_l), .m_out_tuser(enc_8_b1_c0_u));
@@ -1292,7 +1292,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_8_b0_out__enc_8_b1_out_b_d), .s_tvalid(enc_8_b0_out__enc_8_b1_out_b_v), .s_tready(enc_8_b0_out__enc_8_b1_out_b_r),
         .m_tdata(q_enc_8_b1_out_b_d), .m_tvalid(q_enc_8_b1_out_b_v), .m_tready(q_enc_8_b1_out_b_r));
     assign q_enc_8_b1_out_b_l = 1'b0; assign q_enc_8_b1_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(95794), .MB(106634), .SH(17), .RELU(1), .U_W(1)) u_enc_8_b1_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(38021), .MB(66950), .SH(16), .RELU(1), .U_W(1)) u_enc_8_b1_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_8_b1_c2__enc_8_b1_out_a_d), .a_tvalid(enc_8_b1_c2__enc_8_b1_out_a_v), .a_tready(enc_8_b1_c2__enc_8_b1_out_a_r), .a_tlast(enc_8_b1_c2__enc_8_b1_out_a_l), .a_tuser(enc_8_b1_c2__enc_8_b1_out_a_u),
         .b_tdata(q_enc_8_b1_out_b_d), .b_tvalid(q_enc_8_b1_out_b_v), .b_tready(q_enc_8_b1_out_b_r),
         .m_tdata(enc_8_b1_out_d), .m_tvalid(enc_8_b1_out_v), .m_tready(enc_8_b1_out_r), .m_tlast(enc_8_b1_out_l), .m_tuser(enc_8_b1_out_u));
@@ -1302,7 +1302,7 @@ module blk_enc_0_latent_idx (
     conv_engine #(.CIN(16), .COUT(8), .K(1), .P(1), .ACT("relu"), .ACT2("none"), .ACT_SPLIT(8),
         .WROM_PREFIX("rtl_init__enc.8.b2.c0__wrom"), .WROM_STYLE("distributed"), .WROM_BANK_DEPTH(0),
         .WROM_MODE("direct"), .WG_NCOL(1), .RQ_MUL("lut"),
-        .PRE(0), .SH_MIN(23), .SH_BITS(1),
+        .PRE(0), .SH_MIN(21), .SH_BITS(2),
         .BIAS_FILE("rtl_init__enc.8.b2.c0__bias.mem"), .PRE_FILE("rtl_init__enc.8.b2.c0__pre.mem"), .M_FILE("rtl_init__enc.8.b2.c0__m.mem"), .SH_FILE("rtl_init__enc.8.b2.c0__sh.mem")) u_enc_8_b2_c0 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_8_b2_c0__eng_enc_8_b2_c0_d), .s_in_tvalid(_win_enc_8_b2_c0__eng_enc_8_b2_c0_v), .s_in_tready(_win_enc_8_b2_c0__eng_enc_8_b2_c0_r), .s_in_tlast(_win_enc_8_b2_c0__eng_enc_8_b2_c0_l), .s_in_tuser(_win_enc_8_b2_c0__eng_enc_8_b2_c0_u),
         .m_out_tdata(enc_8_b2_c0_d), .m_out_tvalid(enc_8_b2_c0_v), .m_out_tready(enc_8_b2_c0_r), .m_out_tlast(enc_8_b2_c0_l), .m_out_tuser(enc_8_b2_c0_u));
@@ -1331,7 +1331,7 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_8_b1_out__enc_8_b2_out_b_d), .s_tvalid(enc_8_b1_out__enc_8_b2_out_b_v), .s_tready(enc_8_b1_out__enc_8_b2_out_b_r),
         .m_tdata(q_enc_8_b2_out_b_d), .m_tvalid(q_enc_8_b2_out_b_v), .m_tready(q_enc_8_b2_out_b_r));
     assign q_enc_8_b2_out_b_l = 1'b0; assign q_enc_8_b2_out_b_u = 1'b0;
-    axis_add #(.A_W(12), .Y_W(12), .MA(68689), .MB(40786), .SH(16), .RELU(1), .U_W(1)) u_enc_8_b2_out (
+    axis_add #(.A_W(12), .Y_W(12), .MA(124083), .MB(96918), .SH(17), .RELU(1), .U_W(1)) u_enc_8_b2_out (
         .clk(clk), .rst_n(rst_n), .a_tdata(enc_8_b2_c2__enc_8_b2_out_a_d), .a_tvalid(enc_8_b2_c2__enc_8_b2_out_a_v), .a_tready(enc_8_b2_c2__enc_8_b2_out_a_r), .a_tlast(enc_8_b2_c2__enc_8_b2_out_a_l), .a_tuser(enc_8_b2_c2__enc_8_b2_out_a_u),
         .b_tdata(q_enc_8_b2_out_b_d), .b_tvalid(q_enc_8_b2_out_b_v), .b_tready(q_enc_8_b2_out_b_r),
         .m_tdata(enc_8_b2_out_d), .m_tvalid(enc_8_b2_out_v), .m_tready(enc_8_b2_out_r), .m_tlast(enc_8_b2_out_l), .m_tuser(enc_8_b2_out_u));
@@ -1345,7 +1345,7 @@ module blk_enc_0_latent_idx (
         .BIAS_FILE("rtl_init__enc.8.b3__bias.mem"), .PRE_FILE("rtl_init__enc.8.b3__pre.mem"), .M_FILE("rtl_init__enc.8.b3__m.mem"), .SH_FILE("rtl_init__enc.8.b3__sh.mem")) u_enc_8_b3 (
         .clk(clk), .rst_n(rst_n), .s_in_tdata(_win_enc_8_b3__eng_enc_8_b3_d), .s_in_tvalid(_win_enc_8_b3__eng_enc_8_b3_v), .s_in_tready(_win_enc_8_b3__eng_enc_8_b3_r), .s_in_tlast(_win_enc_8_b3__eng_enc_8_b3_l), .s_in_tuser(_win_enc_8_b3__eng_enc_8_b3_u),
         .m_out_tdata(enc_8_b3_d), .m_out_tvalid(enc_8_b3_v), .m_out_tready(enc_8_b3_r), .m_out_tlast(enc_8_b3_l), .m_out_tuser(enc_8_b3_u));
-    axis_sigmoid #(.X_W(12), .M312(74220), .SH312(12), .NSEG(32), .OB(10),
+    axis_sigmoid #(.X_W(12), .M312(102260), .SH312(13), .NSEG(32), .OB(10),
         .SHIFT(15), .C0_FILE("params__sigmoid_pwl.c0.mem"), .C1_FILE("params__sigmoid_pwl.c1.mem"),
         .OUT8(0), .U_W(1)) u_enc_8_sig (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_8_b3__sig_enc_8_sig_d), .s_tvalid(enc_8_b3__sig_enc_8_sig_v), .s_tready(enc_8_b3__sig_enc_8_sig_r), .s_tlast(enc_8_b3__sig_enc_8_sig_l), .s_tuser(enc_8_b3__sig_enc_8_sig_u),
@@ -1354,12 +1354,12 @@ module blk_enc_0_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_7_out__enc_8_out_x_d), .s_tvalid(enc_7_out__enc_8_out_x_v), .s_tready(enc_7_out__enc_8_out_x_r),
         .m_tdata(q_enc_8_out_x_d), .m_tvalid(q_enc_8_out_x_v), .m_tready(q_enc_8_out_x_r));
     assign q_enc_8_out_x_l = 1'b0; assign q_enc_8_out_x_u = 1'b0;
-    axis_gate #(.X_W(12), .Y_W(12), .MA(65755), .MB(95376), .SH(16), .U_W(1)) u_enc_8_out (
+    axis_gate #(.X_W(12), .Y_W(12), .MA(59703), .MB(89424), .SH(16), .U_W(1)) u_enc_8_out (
         .clk(clk), .rst_n(rst_n), .x_tdata(q_enc_8_out_x_d), .x_tvalid(q_enc_8_out_x_v), .x_tready(q_enc_8_out_x_r),
         .a_tdata(enc_8_a2_out__enc_8_out_a_d), .a_tvalid(enc_8_a2_out__enc_8_out_a_v), .a_tready(enc_8_a2_out__enc_8_out_a_r), .a_tlast(enc_8_a2_out__enc_8_out_a_l), .a_tuser(enc_8_a2_out__enc_8_out_a_u),
         .g_tdata(enc_8_sig__enc_8_out_g_d), .g_tvalid(enc_8_sig__enc_8_out_g_v), .g_tready(enc_8_sig__enc_8_out_g_r),
         .m_tdata(enc_8_out_d), .m_tvalid(enc_8_out_v), .m_tready(enc_8_out_r), .m_tlast(enc_8_out_l), .m_tuser(enc_8_out_u));
-    qam_tx #(.X_W(12), .C(16), .T0(-343), .T1(-229), .T2(-115), .T3(0), .T4(114), .T5(228), .T6(342)) u_latent_idx (
+    qam_tx #(.X_W(12), .C(16), .T0(-341), .T1(-228), .T2(-114), .T3(0), .T4(113), .T5(227), .T6(340)) u_latent_idx (
         .clk(clk), .rst_n(rst_n), .s_tdata(enc_8_out__qam_latent_idx_d), .s_tvalid(enc_8_out__qam_latent_idx_v), .s_tready(enc_8_out__qam_latent_idx_r),
         .s_tlast(enc_8_out__qam_latent_idx_l), .s_tuser(enc_8_out__qam_latent_idx_u),
         .m_tdata(latent_idx_d), .m_tvalid(latent_idx_v), .m_tready(latent_idx_r), .m_tlast(latent_idx_l), .m_tuser(latent_idx_u));

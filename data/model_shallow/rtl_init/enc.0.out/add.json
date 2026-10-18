@@ -1,0 +1,12 @@
+{
+ "name": "enc.0.out",
+ "MA": 73653,
+ "MB": 51482,
+ "SH": 16,
+ "RELU": 0,
+ "in": [
+  "enc.0.gdn",
+  "enc.0.skip"
+ ],
+ "out": "enc.0.out"
+}

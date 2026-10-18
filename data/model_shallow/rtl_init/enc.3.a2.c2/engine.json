@@ -1,0 +1,43 @@
+{
+ "name": "enc.3.a2.c2",
+ "ops": [
+  "enc.3.a2.c2"
+ ],
+ "CIN": 16,
+ "COUT": 32,
+ "K": 1,
+ "STRIDE": 1,
+ "PAD": 0,
+ "P": 1,
+ "GROUPS": 32,
+ "ACT": "none",
+ "ACT2": "none",
+ "ACT_SPLIT": 32,
+ "WROM_STYLE": "distributed",
+ "WROM_MODE": "direct",
+ "WG_NCOL": 1,
+ "WROM_DEPTH": 512,
+ "WROM_WIDTH": 8,
+ "WROM_BANK_DEPTH": 0,
+ "RQ_MUL": "lut",
+ "PRE": 0,
+ "SH_MIN": 23,
+ "SH_BITS": 2,
+ "in": "enc.3.a2.c1",
+ "in_shape_hwc": [
+  64,
+  64,
+  16
+ ],
+ "out": [
+  "enc.3.a2.c2"
+ ],
+ "out_shape_hwc": [
+  [
+   64,
+   64,
+   32
+  ]
+ ],
+ "note": ""
+}
