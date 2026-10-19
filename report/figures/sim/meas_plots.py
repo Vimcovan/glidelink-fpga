@@ -8,7 +8,6 @@ import os
 
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import gaussian_kde
 
 import plotstyle as S
 
@@ -19,37 +18,36 @@ OUT = os.path.join(HERE, "..", "results")
 S.apply()
 
 # ---------------------------------------------------------------- PSNR vs data-aided SNR
-da = json.load(open(os.path.join(MEAS, "psnr_snr", "k0802_v3_da.json"), encoding="utf-8"))
+da = json.load(open(os.path.join(MEAS, "psnr_snr", "k0802_shallow_da.json"), encoding="utf-8"))
+EDGE = 0.05      # DeepJSCC-Q points at the sync edge (>= 5 % of the snapshots from false syncs) are left out
 fig, ax = plt.subplots(figsize=(4.2, 3.0))
 for mode, name, col, mk in (("jscc", "DeepJSCC-Q", S.BLUE, "o"), ("sscc", "SSCC\n（JPEG + 卷积码 + 64QAM）", S.ORANGE, ">")):
     pts = sorted((r["snr_da_db"], r["psnr_shown"]) for r in da["results"]
-                 if r["mode"] == mode and r.get("snr_da_db") is not None and r.get("psnr_shown") is not None)
+                 if r["mode"] == mode and r.get("snr_da_db") is not None and r.get("psnr_shown") is not None
+                 and not (mode == "jscc" and (r.get("snr_da_excl") or 0) >= EDGE))
     x, y = np.array(pts).T
     ax.plot(x, y, "-" + mk, color=col, lw=1.1, ms=3.6, mfc="white", mew=0.9, label=name)
-ax.set_ylim(19, 33.5); ax.set_yticks(range(19, 34, 2))
-ax.set_xlim(4.5, 33.5); ax.set_xticks(range(6, 34, 3))
+ax.set_ylim(7, 33.5); ax.set_yticks(range(8, 34, 4))
+ax.set_xlim(5.5, 35.5); ax.set_xticks(range(6, 36, 3))
 ax.set_xlabel("数据辅助 SNR / dB"); ax.set_ylabel("PSNR / dB")
 ax.legend(loc="lower right", fontsize=7.5, handlelength=1.6)
 S.finish(ax)
 S.save(fig, os.path.join(OUT, "psnr_snr.png"))
 
-# ---------------------------------------------------------------- frame rate over 10 minutes + PDF
-d = np.genfromtxt(os.path.join(MEAS, "fps", "lat_video_10min_jscc2_jscc_0db.csv"), delimiter=",", names=True)
-t, f = d["t_min"], d["fps"]
-ok = ~np.isnan(f); t, f = t[ok], f[ok]
-fig, (a1, a2) = plt.subplots(1, 2, figsize=(6.3, 2.0), gridspec_kw=dict(width_ratios=[5, 1], wspace=0.06), sharey=True)
-a1.plot(t, f, color=S.BLUE, lw=0.25)
+# ---------------------------------------------------------------- frame rate over 10 minutes (PL frame counter)
+# rx_server logs every 5 s the decoded-image rate from the PL counter IMG_FRAMES (fps/rx_server_10min.csv); the
+# per-frame arrival times at a measurement process on the RX PS (fps_10min_shallow_*.csv) also contain the jitter
+# of that process (CPU shared with the GUI), so the counter is the measure of the link frame rate
+d = np.genfromtxt(os.path.join(MEAS, "fps", "rx_server_10min.csv"), delimiter=",", names=True)
+t, f = d["t_s"] / 60, d["images_per_s"]
+frames = int(d["img_frames"][-1] - d["img_frames"][0]); span = d["t_s"][-1] - d["t_s"][0]
+fig, a1 = plt.subplots(figsize=(6.3, 1.9))
+a1.plot(t, f, color=S.BLUE, lw=0.9, marker="o", ms=1.8)
 a1.axhline(30, color=S.ORANGE, lw=0.8, ls="--")
-a1.set_xlim(0, np.ceil(t.max())); a1.set_ylim(20, 70)
+a1.set_xlim(0, 10); a1.set_ylim(29, 31)
 a1.set_xlabel("时间 / min"); a1.set_ylabel("帧率 / fps")
-yy = np.linspace(20, 70, 600)
-pdf = gaussian_kde(f)(yy)
-a2.plot(pdf, yy, color=S.BLUE, lw=1.1)
-a2.axhline(30, color=S.ORANGE, lw=0.8, ls="--")
-a2.set_xlim(0, 1.1 * pdf.max()); a2.set_xticks([0.1, 0.2]); a2.set_xlabel("概率密度")
-S.finish(a1); S.finish(a2)
-a2.tick_params(axis="y", left=False)
-print(f"fps: mean {f.mean():.2f}, median {np.median(f):.2f}, n {f.size}")
+S.finish(a1)
+print(f"fps: {frames} frames in {span:.0f} s = {frames / span:.2f} fps, 5 s rates {f.min()}..{f.max()}")
 S.save(fig, os.path.join(OUT, "fps_10min.png"))
 
 # ---------------------------------------------------------------- latency CDF of the three PL segments

@@ -14,7 +14,7 @@ function Note($x, $y, $w, $t) { [void](Label $x $y $w 4 $t 6 1 $ST.MUTE) }
 [void](Label 2 3 120 5 '64×64（潜变量分辨率）' 7.5 0 $ST.INK $true)
 [void](Box 2 17 22 16 $ST.GRAY ("接收符号`n64×64×16") $false 7)
 [void](Line 24 25 30 25)
-[void](Box 30 17 22 16 $ST.COMPUTE ("线性3×3`n16→16") $false 7)
+[void](Box 30 17 22 16 $ST.COMPUTE ("线性3×3卷积`n16→16") $false 7)
 Note 30 34 22 '9.4 M'
 [void](Line 52 25 58 25)
 [void](Box 58 11 40 28 $ST.COMPUTE ("残差块×4`n3×3 → PWL → 3×3 → PWL`n+ 恒等支路`n16通道") $false 7)

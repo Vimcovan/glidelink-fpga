@@ -39,3 +39,5 @@
 [19] Analog Devices. HDL libraries and projects[CP/OL]. (2026-10-09)[2026-10-11]. https://github.com/analogdevicesinc/hdl.
 
 [20] AMD. AMD Ross agentic AI assistant[CP/OL]. [2026-10-11]. https://github.com/xilinx/ross-ai-assistant.
+
+[21] Y. Yang, S. Mandt. Computationally-efficient neural image compression with shallow decoders[C]// IEEE/CVF International Conference on Computer Vision (ICCV). Paris, 2023: 530-540. DOI: 10.1109/ICCV51070.2023.00055.

@@ -45,7 +45,7 @@
 
 | 功能 | 位置 | 依据 |
 |---|---|---|
-| DeepJSCC-Q编码器 / 解码器 | PL，250 MHz | 每帧乘累加运算量为0.913 + 1.417 GMAC，30 fps时约70 GMAC/s，A53无法实时完成 |
+| DeepJSCC-Q编码器 / 解码器 | PL，250 MHz | 每帧卷积乘累加量为0.913 + 0.241 GMAC，30 fps时约35 GMAC/s，A53无法实时完成 |
 | OFDM物理层（IFFT/FFT、同步、信道估计、SFO / CPE跟踪） | PL，100 MHz | 20 MSPS连续采样流，时延要确定 |
 | 帧缓存、跨时钟域 | PL（URAM、XPM FIFO） | 神经网络与PHY的速率不同，实时接口一侧必须整帧缓存 |
 | SSCC扰码 / 卷积码 / 交织 / Viterbi | PL | 同样是逐比特 / 逐符号的流式处理 |
