@@ -2,12 +2,11 @@
 
     python int_sweep.py ... --out report/notes/figures/shallow_decoder/int_sweep.json   (first)
     python report_figs.py --ckpt data/model_shallow/checkpoint/best.pt --cache <data/cache>
--> report/notes/figures/shallow_decoder/{interp_stages,pwl_final,noise_stages,psnr_snr_shallow}.png and the numbers
-   printed (path statistics incl. the encoder, PWL shape statistics, stage deviation SNRs).
+-> report/notes/figures/shallow_decoder/{interp_stages,pwl_final,psnr_snr_shallow}.png and the numbers
+   printed (path statistics incl. the encoder, PWL shape statistics); the stage noise figure is in ablation_fig.py.
 """
 import argparse
 import json
-import math
 import sys
 from pathlib import Path
 
@@ -23,7 +22,6 @@ import matplotlib.pyplot as plt                                # noqa: E402
 import quant_shallow as Q                                      # noqa: E402
 from deepjsccq_model import iq_to_latent                       # noqa: E402
 from train_shallow_dec import PWLAct, awgn, tx_iq              # noqa: E402
-from denoise_stages import stages                              # noqa: E402
 from interp_stages import front, tail                          # noqa: E402
 
 OUT = REPO / 'report' / 'notes' / 'figures' / 'shallow_decoder'
@@ -126,41 +124,6 @@ def fig_pwl(enc, dec, val, dev):
           f'negative left slope {np.mean(L < 0) * 100:.0f} %; classes ' +
           ', '.join(f'{names[q]} {int((cls == q).sum())}' for q in range(3)))
 
-@torch.no_grad()
-def fig_noise(enc, dec, val, dev):
-    res = {}
-    for snr in (4.0, 10.0, 20.0):
-        torch.manual_seed(1234)
-        acc_s, acc_d = {}, {}
-        for i in range(0, 100, 20):
-            x = val[i:i + 20].float() / 255
-            iq, shape = tx_iq(enc, x)
-            yc, yn = iq_to_latent(iq, *shape), iq_to_latent(awgn(iq, snr), *shape)
-            zc, zn = stages(dec, yc), stages(dec, yn)
-            for k in zc:
-                z0 = zc[k].double() - zc[k].double().mean(dim=(0, 2, 3), keepdim=True)
-                acc_s[k] = acc_s.get(k, 0.0) + float((z0 ** 2).sum())
-                acc_d[k] = acc_d.get(k, 0.0) + float(((zn[k] - zc[k]).double() ** 2).sum())
-        res[snr] = {k: 10 * math.log10(acc_s[k] / acc_d[k]) for k in acc_s}
-    names = {'input': '接收潜变量', 'lin0': '线性 3×3', 'pre0': '残差块 1', 'pre1': '残差块 2', 'pre2': '残差块 3',
-             'pre3': '残差块 4', 'upsample1 (igdn + skip)': '第一次上采样', 'upsample2 (logits)': '第二次上采样',
-             'output image': '输出图像'}
-    ks = list(names)
-    fig, ax = plt.subplots(figsize=(5.6, 2.6), dpi=300)
-    for snr, c in zip(res, (S.ORANGE, S.BLUE, S.GRAY)):
-        v = [res[snr][k] - res[snr]['input'] for k in ks]
-        ax.plot(range(len(ks)), v, color=c, marker='o', ms=3, lw=1.2, label=f'信道 SNR {snr:g} dB')
-    ax.axvspan(-0.3, 5.3, color=S.SHADE_B, lw=0)
-    ax.text(2.5, 13, '64×64', ha='center', fontsize=7, color=S.INK)
-    ax.set_xticks(range(len(ks))); ax.set_xticklabels([names[k] for k in ks], fontsize=6.5, rotation=30, ha='right')
-    ax.set_ylabel('相对输入的信号 / 偏差 (dB)')
-    ax.legend(fontsize=7, loc='upper left')
-    S.finish(ax)
-    fig.tight_layout(); fig.savefig(OUT / 'noise_stages.png', bbox_inches='tight', pad_inches=0.03)
-    for snr in res:
-        print(f'noise stages {snr:g} dB: ' + ', '.join(f'{k} {res[snr][k] - res[snr]["input"]:+.2f}' for k in ks))
-
-
 def fig_psnr(sweep_path):
     """sweep_path: int_sweep.json (int_sweep.py): float and W8A12 integer PSNR of both models, same noise"""
     d = json.load(open(sweep_path, encoding='utf-8'))['psnr_db']
@@ -198,7 +161,6 @@ def main():
     val = torch.from_numpy(np.load(Path(a.cache) / 'val_center256.npy')).permute(0, 3, 1, 2).to(dev)
     fig_interp(enc, dec, val, dev)
     fig_pwl(enc, dec, val, dev)
-    fig_noise(enc, dec, val, dev)
     fig_psnr(a.sweep)
     print('figures in', OUT)
 

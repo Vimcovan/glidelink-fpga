@@ -1,0 +1,51 @@
+{
+ "dataset": "DIV2K validation, 100 centre crops, float models",
+ "gain_db_vs_input": {
+  "最终解码器": {
+   "0": {
+    "input": 0.0,
+    "lin0": 0.44,
+    "pre0": 0.431,
+    "pre1": 0.24,
+    "pre2": 0.193,
+    "pre3": 0.09,
+    "upsample1 (igdn + skip)": 3.708,
+    "upsample2 (logits)": 9.208,
+    "output image": 10.098
+   },
+   "10": {
+    "input": 0.0,
+    "lin0": 0.44,
+    "pre0": 0.52,
+    "pre1": 0.484,
+    "pre2": 0.409,
+    "pre3": 0.29,
+    "upsample1 (igdn + skip)": 4.788,
+    "upsample2 (logits)": 13.172,
+    "output image": 14.271
+   }
+  },
+  "去掉入口的线性3×3卷积": {
+   "0": {
+    "input": 0.0,
+    "pre0": 0.94,
+    "pre1": 1.282,
+    "pre2": 1.642,
+    "pre3": 1.53,
+    "upsample1 (igdn + skip)": 4.407,
+    "upsample2 (logits)": 8.945,
+    "output image": 9.715
+   },
+   "10": {
+    "input": 0.0,
+    "pre0": 1.053,
+    "pre1": 1.706,
+    "pre2": 2.337,
+    "pre3": 2.261,
+    "upsample1 (igdn + skip)": 5.93,
+    "upsample2 (logits)": 13.236,
+    "output image": 14.195
+   }
+  }
+ }
+}
