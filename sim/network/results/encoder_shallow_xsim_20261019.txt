@@ -1,0 +1,1 @@
+﻿[blk_enc_0_latent_idx sized] frame 0 done at cycle 9553688 | frame 1 done at cycle 17717220 | PASS  256x256x3 -> 1x32768x2: 2 frame(s) bit-exact, 17717420 cycles   (sim 6,083 s)

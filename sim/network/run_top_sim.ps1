@@ -2,11 +2,11 @@
 #   powershell -ExecutionPolicy Bypass -File sim\run_top_sim.ps1 -First enc.3 [-Last enc.3] [-Measure]
 # -Measure: generate with large join FIFOs, simulate, record the peak occupancy of every
 #           join FIFO into src/network/fifo_sizes.json (peak + margin), then regenerate sized.
-# -Export / -GenDir: another export (default data\model) and generated-top directory (default src\network\gen),
-#           relative to the repository, e.g. -Export data\model_shallow -GenDir src\network\gen_shallow.
+# -Export / -GenDir: another export (default data\model_shallow, the deployed model; data\model: symmetric decoder)
+#           and generated-top directory (default src\network\gen), relative to the repository.
 param([string]$First = 'enc.3', [string]$Last = '', [switch]$Measure,
       [string]$Image = 'div2k_val_00', [int]$ValidPct = 90, [int]$ReadyPct = 80, [int]$Frames = 1,
-      [string]$WorkDir = '', [string]$Export = 'data\model', [string]$GenDir = 'src\network\gen')
+      [string]$WorkDir = '', [string]$Export = 'data\model_shallow', [string]$GenDir = 'src\network\gen')
 $ErrorActionPreference = 'Stop'
 $viv  = $(if ($env:XILINX_VIVADO) { Join-Path $env:XILINX_VIVADO 'bin' } else { 'D:\AMDDesignTools\2025.2\Vivado\bin' })
 $py   = $(if ($env:PYTHON) { $env:PYTHON } else { 'python' })

@@ -1,7 +1,8 @@
 # DeepJSCC-Q 模型：训练、量化导出、链路评估
 
 本目录是板上运行的神经网络的软件部分：浮点模型定义与训练、W8A12 整数量化与导出（供 `src/network/` 生成 RTL），
-以及 OFDM 链路模型下的评估。
+以及 OFDM 链路模型下的评估。板上运行的是 DeepJSCC-Q 编码器 + 浅层解码器（第 4 节，`data/model_shallow/`）；
+第 1–3 节的对称模型（`data/model/`）是它的第一段训练，其编码器是浅层解码器联合训练的起点。
 
 ## 1. 原模型：DeepJSCC-Q
 
@@ -68,9 +69,34 @@
 平均发射功率 1.00，星座熵 6.00 bit（64 个点基本均匀使用）。论文在相同工作点（Kodak、64QAM、λ = 0.05、
 训练与测试 SNR 均为 10 dB、带宽比 1/6）上的原网络约为 34.9 dB，差距来自网络缩小和训练数据规模（ImageNet 约 120 万张）。
 
-## 4. 量化导出
+## 4. 浅层解码器（部署版）
 
-训练后量化，不再训练：
+第 3 节的解码器与编码器对称，每帧 1.417 GMAC，是整个系统中最大的模块。部署版把解码器换成非对称的浅层结构
+（`train_shallow_dec.py --subpixel --k1 3 --n 24 --k2 3 --pre 4 --pre-act pwl --pre-lin 1`）：
+
+- 64×64 上：线性 3×3 卷积（16→16）+ 4 个残差块（3×3 卷积 → PWL → 3×3 卷积 → PWL，加恒等支路）；PWL 为每通道
+  可学习的分段线性激活，9 个折点均匀分布在 [−2, 2]，以 LeakyReLU 初始化；
+- 第一级上采样：3×3 卷积 16→192（主路与线性旁路各 96 通道）+ PixelShuffle，主路接 IGDN，两路相加；
+- 第二级上采样：3×3 卷积 24→12 + PixelShuffle + sigmoid。
+
+每帧 0.250 GMAC（卷积 0.241 GMAC），参数 53 332 个。设计依据（Yang 与 Mandt 的非对称思路、直线插值的线性程度、
+消融实验）见 `report/notes/shallow_decoder_design.md`，分析脚本在 `shallow_analysis/`。
+
+训练（`train_shallow_dec.py`，`--encoder` 默认取 `data/model/checkpoint/best.pt`）：
+
+1. 冻结编码器，以无噪声的接收符号训练解码器 300 轮（学习率 1×10⁻³）；
+2. 编码器与解码器在 10 dB AWGN 下联合训练 800 轮（`--joint`，解码器 3×10⁻⁴、编码器 1×10⁻⁴，验证集 PSNR 30 轮
+   不提高时减半，KL 权重 0.05），再续训 600 轮（`--resume-joint`）；
+3. 8 位权重的量化感知训练 200 轮（`--qat-wbits 8`），第 172 轮为部署检查点。
+
+各段的每轮记录在 `data/model_shallow/checkpoint/training_{clean,joint,cont,qat}.csv`。部署模型（AWGN 10 dB）：
+DIV2K 验证集浮点 31.13 dB、W8A12 31.13 dB；Kodak 浮点 32.61 dB、W8A12 32.58 dB（逐图平均 33.24 dB）。
+与对称解码器相比，W8A12 整数模型在 10 dB 下低 0.09 dB（DIV2K）/ 0.01 dB（Kodak）。联合训练后编码器星座熵 6.00 bit、
+平均功率 1.00。
+
+## 5. 量化导出
+
+对称模型（`export_fpga.py`）为训练后量化：
 
 - 权重：每个输出通道一个缩放系数，量化为 8 位整数；
 - 激活：每个张量一个缩放系数，量化为 12 位整数。缩放系数由 64 张训练图（经 10 dB AWGN）上统计的最大绝对值
@@ -79,7 +105,11 @@
 
 量化损失：DIV2K 验证集 0.052 dB，Kodak 0.062 dB。
 
-## 5. 文件
+部署模型（`quant_shallow.py`、`export_shallow.py`）沿用同一 W8A12 规则，编码器部分直接使用 `int_ref.py` 的整数实现；
+PWL 输入的定标取 2 的幂次，使折点落在整数上、段宽为 2 的幂次，每通道存 8 位斜率与折点纵坐标：
+acc = Y[c][k] + S[c][s]·(x − T0 − k·2^L)，之后接与卷积相同的重定标。量化损失：DIV2K 0.002 dB，Kodak 0.027 dB。
+
+## 6. 文件
 
 | 文件 | 作用 |
 |---|---|
@@ -91,16 +121,20 @@
 | `export_fpga.py` | 导出 W8A12 整数模型：各层参数文件、网络描述文件、各层中间结果的参考数据 |
 | `arch_compare.py` | 计算原网络与本作品网络的参数量和乘加量 |
 | `eval_kodak_per_image.py` | Kodak 逐图 PSNR 评估 |
+| `train_shallow_dec.py` | 浅层解码器的训练（冻结编码器 / 联合训练 / 量化感知训练）与 SNR 扫描 |
+| `quant_shallow.py` | 浅层解码器的 W8A12 整数模型（含 PWL）与浮点 / 整数对比评估 |
+| `export_shallow.py` | 导出部署模型（编码器 + 浅层解码器）：参数文件、网络描述文件、参考数据 |
+| `shallow_analysis/` | 浅层解码器的分析与报告出图：插值线性度、各级噪声、消融、Yang 与 Mandt 的大核 |
 | `ofdm_channel.py`、`ofdm_eval.py` | 类 802.11a OFDM 链路模型下的评估（PAPR、限幅、频率选择性信道、LTF 信道估计、ZF / MMSE 均衡） |
 | `download_flickr2k.ps1` | 下载 Flickr2K |
 
-`data/model/` 中是部署模型的数据：
+`data/model_shallow/` 中是部署模型（编码器 + 浅层解码器）的数据，`data/model/` 中是对称模型的数据，结构相同：
 
 - `checkpoint/`：浮点模型（`best.pt`）、两段训练的命令行参数、每轮训练曲线和最终评估结果；
 - `manifest.json`：网络描述文件，包括每层的类型、张量形状、量化参数和片上存储规划，RTL 生成器据此生成各层；
 - `params/`：各层的整数权重、偏置和重定标参数；`rtl_init/`：由它们生成的 RTL 存储初始化文件。
 
-## 6. 复现
+## 7. 复现
 
 ```
 # 1. 数据：DIV2K train/valid（https://data.vision.ee.ethz.ch/cvl/DIV2K/）、Flickr2K（download_flickr2k.ps1）、
@@ -112,10 +146,20 @@ python train_v2.py --cache data/cache --output-dir runs/deploy --paper-arch --kl
        --plateau --plateau-patience 20 --channels-last --resume runs/deploy/latest.pt
 # 3. 量化导出（W8A12），输出即 data/model/ 中的 manifest.json 与 params/
 python export_fpga.py --checkpoint runs/deploy/best.pt --out-dir runs/fpga_export --wbits 8 --abits 12
-# 4. 生成 RTL：把第 3 步的输出复制到 data/model，再运行 src/network/regen_hw.py（见根目录 README）
+# 4. 浅层解码器：冻结编码器的无噪声训练、联合训练、续训、量化感知训练，再导出到 data/model_shallow
+S="--subpixel --k1 3 --n 24 --k2 3 --pre 4 --pre-act pwl --pre-lin 1 --cache data/cache --kodak data/Kodak"
+python train_shallow_dec.py $S --output-dir runs/clean --epochs 300 --snr-db inf --lr 1e-3
+python train_shallow_dec.py $S --output-dir runs/joint --epochs 800 --plateau-patience 30 --snr-db 10 --joint \
+       --enc-lr 1e-4 --kl-lambda 0.05 --lr 3e-4 --init-decoder runs/clean/best.pt
+python train_shallow_dec.py $S --output-dir runs/cont --epochs 600 --plateau-patience 30 --snr-db 10 --joint \
+       --enc-lr 5e-5 --lr 1.5e-4 --resume-joint runs/joint/best.pt
+python train_shallow_dec.py $S --output-dir runs/qat --epochs 200 --plateau-patience 20 --snr-db 10 --joint \
+       --enc-lr 2.5e-5 --lr 7.5e-5 --qat-wbits 8 --resume-joint runs/cont/best.pt
+python export_shallow.py --ckpt runs/qat/best.pt --cache data/cache --kodak data/Kodak
+# 5. 生成 RTL：src/network/regen_hw.py（默认读 data/model_shallow，见根目录 README）
 ```
 
-不重新训练时，直接从仓库中的 `data/model/`（部署检查点与它的量化导出）开始：`src/network/regen_hw.py` 重新生成 RTL，`sim/network/make_golden.py` 生成仿真参考数据，只需要 NumPy 与 Pillow。第 3 步需要 CUDA 和第 1 步的校准图像。
+不重新训练时，直接从仓库中的 `data/model_shallow/`（部署检查点与它的量化导出）开始：`src/network/regen_hw.py` 重新生成 RTL，`sim/network/make_golden.py` 生成仿真参考数据，只需要 NumPy 与 Pillow。第 3、4 步需要 CUDA 和第 1 步的校准图像。
 
 `--paper-arch` 选用论文的模块定义（GDN 参数化方式、注意力块内的残差连接、残差块的激活位置）。
 

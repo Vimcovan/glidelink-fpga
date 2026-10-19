@@ -12,7 +12,7 @@ For each conv engine in manifest.json (memory_plan section) writes to
 Merged engines (upsample block main + skip conv) concatenate output channels
 [main | skip]; the skip channels use ACT2.
 
-  python gen_rtl_init.py [--export data/model]
+  python gen_rtl_init.py [--export data/model_shallow]
 """
 from __future__ import annotations
 
@@ -44,7 +44,7 @@ def act_name(a):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--export', default=str(Path(__file__).resolve().parents[2] / 'data' / 'model'))
+    ap.add_argument('--export', default=str(Path(__file__).resolve().parents[2] / 'data' / 'model_shallow'))
     a = ap.parse_args()
     root = Path(a.export)
     m = json.loads((root / 'manifest.json').read_text(encoding='utf-8'))

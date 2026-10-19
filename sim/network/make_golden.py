@@ -2,7 +2,7 @@
 
     python sim/network/make_golden.py [--input image] [--name div2k_val_00] [--snr 10]
 
--> data/model/golden/<name>/<tensor>.mem for every tensor of manifest.json, plus rx_iq24.mem / tx_iq24.mem
+-> <export>/golden/<name>/<tensor>.mem (default export data/model_shallow) for every tensor of manifest.json, plus rx_iq24.mem / tx_iq24.mem
 (24-bit {Q, I} Q10 words of the decoder input / encoder output), in the format of export_fpga.py. The default
 name is the one the simulation scripts use (-Image div2k_val_00).
 
@@ -69,6 +69,8 @@ def forward(g: Golden, img: np.ndarray, snr: float | None, seed: int):
             y = sat(g.add_core(op, x, rsr(a * s, 16)), g.abits)
         elif kind in ('gdn', 'igdn'):
             y = g.gdn(op, T[op['in']])
+        elif kind == 'pwl':
+            y = g.pwl(op, T[op['in']])
         elif kind == 'sigmoid':
             y = g.sigmoid_q16(T[op['in']], op, g.tabs[op['table']])
         elif kind == 'pixel_shuffle':
@@ -88,7 +90,7 @@ def forward(g: Golden, img: np.ndarray, snr: float | None, seed: int):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--export', type=Path, default=REPO / 'data' / 'model')
+    ap.add_argument('--export', type=Path, default=REPO / 'data' / 'model_shallow')
     ap.add_argument('--input', type=Path, default=REPO / 'src' / 'sw' / 'rx' / 'assets' / 'about' / 'hardware.jpg')
     ap.add_argument('--name', default='div2k_val_00')
     ap.add_argument('--snr', type=float, default=10.0, help='AWGN on the unit-power symbols (dB); < 0: no noise')

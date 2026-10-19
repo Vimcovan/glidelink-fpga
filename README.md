@@ -24,9 +24,9 @@
 
 | # | 内容 |
 |---|---|
-| 1 | **全 PL 实现**：DeepJSCC-Q 编码器 / 解码器（W8A12 整数运算）与 OFDM 物理层都在 PL 中，PS 只负责取图、射频控制和显示；30 fps，PL 内单帧时延 71.5 ms |
-| 2 | **面向 FPGA 的网络改造**：保持每幅图 32,768 个信道符号不变，主通道数 256 → 32、下采样 16 → 4 倍，乘加量降为原网络的约 1/51，权重与激活全部放在片上；代价是 Kodak 上 PSNR 约低 1.6 dB |
-| 3 | **逐层流水的卷积引擎**：RTL 由生成器自动产生，106 个卷积引擎各按帧率预算选择最小并行度，权重 ROM 按尺寸在 LUT / 宽字 BRAM / 顺序读 + 位宽转换中选择，大激活缓存放入 URAM。卷积工作量是已发表 FPGA 实现 [3] 的 10.5 倍，编码器 DSP 只用其 15 % |
+| 1 | **全 PL 实现**：DeepJSCC-Q 编码器 / 解码器（W8A12 整数运算）与 OFDM 物理层都在 PL 中，PS 只负责取图、射频控制和显示；30 fps，PL 内单帧时延 67.5 ms |
+| 2 | **面向 FPGA 的网络改造**：编码器保持每幅图 32,768 个信道符号不变，主通道数 256 → 32、下采样 16 → 4 倍；解码器采用与编码器联合训练的非对称浅层结构（线性 3×3 卷积 + 4 个 PWL 残差块 + 两级 3×3 亚像素上采样），乘加量只有对称结构解码器的 1/6，10 dB 下 PSNR 差在 0.1 dB 以内。整网乘加量降为原网络的约 1/102，权重与激活全部放在片上；代价是 Kodak 上 PSNR 约低 1.7 dB |
+| 3 | **逐层流水的卷积引擎**：RTL 由生成器自动产生，64 个卷积引擎各按帧率预算选择最小并行度，权重 ROM 按尺寸在 LUT / 宽字 BRAM / 顺序读 + 位宽转换中选择，大激活缓存放入 URAM。卷积工作量是已发表 FPGA 实现 [3] 的 5.2 倍，编码器 DSP 只用其 15 % |
 | 4 | **面向长帧软符号的 OFDM 接收机**：一幅图 = 683 个 OFDM 符号；按晶振标称偏差（±20 ppm）的最坏情况设计二阶 SFO 跟踪与 CPE 补偿，帧尾 EVM 只比帧头差约 1.7 dB；均衡后的连续 I/Q 直接送入解码器，不做判决；PN 符号翻转消除网络输出相关性带来的 PAPR 升高 |
 | 5 | **同 PHY 空口对比**：SSCC 基线（JPEG + K=7 卷积码 + 64-QAM）与 DeepJSCC-Q 共用同一物理层、同星座电平与 TX 衰减、每幅图同样 32,768 个符号，触摸屏上一键切换 |
 
@@ -34,12 +34,12 @@
 
 | 指标 | 结果 | 数据 |
 |---|---|---|
-| PSNR–SNR（DIV2K 0802） | DeepJSCC-Q：SNR 32 dB 时 32.0 dB，5.5 dB 时仍有 26.5 dB，平缓退化；SSCC 最高 28.2 dB，在 SNR 约 17–20 dB 处悬崖式失效 | `data/measurements/psnr_snr/` |
-| 帧率 | 30 fps：连续 600 s 收到 18000 帧 | `data/measurements/fps/` |
-| 时延（PL 计数器，中位数） | 编码 38.20 ms / 传输 2.87 ms / 解码 30.39 ms，合计 71.47 ms | `data/measurements/latency/` |
-| 资源 / 时序（xczu5eg，布局布线后） | TX：LUT 52,679（45 %）、BRAM36 104.5（73 %）、URAM 10、DSP 243，WNS +0.261 ns；RX：LUT 70,768（60 %）、BRAM36 123.5（86 %）、URAM 25、DSP 394，WNS +0.234 ns | `build/reports/` |
-| 功耗（实测，板载 PMBus 遥测） | TX 3.06 W / RX 3.71 W（PL、PS 与 DDR 电源轨，30 fps）；Vivado 估算 4.51 / 4.94 W | `data/measurements/power/`、`build/reports/*_power.rpt` |
-| 网络精度 | W8A12 比浮点低 0.05 dB（DIV2K）/ 0.06 dB（Kodak）；RTL 与整数参考模型逐比特一致 | `data/model/`、`sim/network/` |
+| PSNR–SNR（DIV2K 0802） | DeepJSCC-Q：SNR 34 dB 时 32.2 dB，6.7 dB 时仍有 28.2 dB，平缓退化；SSCC 最高 28.2 dB，在 SNR 约 17.5–20 dB 处悬崖式失效 | `data/measurements/psnr_snr/` |
+| 帧率 | 30 fps：连续 600 s 解码 18,020 帧（PL 帧计数器） | `data/measurements/fps/` |
+| 时延（PL 计数器，中位数） | 编码 38.20 ms / 传输 2.90 ms / 解码 26.39 ms，合计 67.49 ms | `data/measurements/latency/` |
+| 资源 / 时序（xczu5eg，布局布线后） | TX：LUT 52,903（45 %）、BRAM36 104.5（73 %）、URAM 10、DSP 243，WNS +0.114 ns；RX：LUT 37,533（32 %）、BRAM36 66.5（46 %）、URAM 7、DSP 133，WNS +0.428 ns | `build/reports/` |
+| 功耗（实测，板载 PMBus 遥测） | TX 3.09 W / RX 3.33 W（PL、PS 与 DDR 电源轨，30 fps）；Vivado 估算 4.48 / 3.92 W | `data/measurements/power/`、`build/reports/*_power.rpt` |
+| 网络精度 | W8A12 比浮点低 0.002 dB（DIV2K）/ 0.027 dB（Kodak）；RTL 与整数参考模型逐比特一致 | `data/model_shallow/`、`sim/network/` |
 
 ---
 
@@ -56,21 +56,27 @@
 |---|---|
 | 帧 | 一帧 = 一幅 256×256×3 图 = 32,768 个 64-QAM 符号 = 683 个 OFDM 符号；前导 320 + 683×80 = 54,960 个采样 = 2.748 ms |
 | 物理层 | 64 点 FFT，CP 16，48 个数据子载波 + 4 个导频，20 MSPS，915 MHz |
-| 网络 | 编码器 55 个、解码器 59 个卷积；387k 参数；名义卷积工作量 0.913 + 1.417 = 2.33 GMAC/帧；每像素 0.5 个复符号 |
+| 网络 | 编码器 55 个、浅层解码器 12 个卷积；195k 参数；名义卷积工作量 0.913 + 0.241 = 1.154 GMAC/帧；每像素 0.5 个复符号 |
 | 时钟 | 网络 250 MHz，物理层 100 MHz，二者之间只经过异步 FIFO；AD9361 接口 40 MHz |
 
 ## 关键设计
 
 ### DeepJSCC-Q 模型
 
-按 Tung 等人 DeepJSCC-Q（IEEE JSAIT 2022）的期刊版结构实现：编码器由残差块（GDN）、注意力块组成，输出 64×64×16 的潜变量，
-相邻通道配成 I/Q，量化到 64-QAM 星座；解码器以 PixelShuffle 上采样（IGDN）还原图像。在 10 dB AWGN 下训练，训练目标加入星座分布（KL）
-正则；训练后量化为 8 位权重、12 位激活。
+编码器按 Tung 等人 DeepJSCC-Q（IEEE JSAIT 2022）的期刊版结构实现，由残差块（GDN）、注意力块组成，输出 64×64×16 的潜变量，
+相邻通道配成 I/Q，量化到 64-QAM 星座。在 10 dB AWGN 下训练，训练目标加入星座分布（KL）正则；量化为 8 位权重、12 位激活。
+
+解码器参考 Yang 与 Mandt（ICCV 2023）的非对称思路做成浅层结构：直线插值实验表明 DeepJSCC-Q 编码器的非线性在 64×64 的潜变量上
+就能被反解，上采样部分几乎是线性的，因此线性 3×3 卷积和 4 个可学习分段线性（PWL）激活的残差块放在 64×64 上，之后只用两级 3×3
+亚像素卷积上采样（第一级主路接 IGDN）。编码器与浅层解码器联合训练、做 8 位量化感知训练，解码器乘加量为对称结构的 1/6
+（0.250 对 1.443 GMAC/帧，含 IGDN），W8A12 整数模型在 10 dB 下 PSNR 差 −0.09 dB（DIV2K）/ −0.01 dB（Kodak）。
+设计依据与消融实验见 [`report/notes/shallow_decoder_design.md`](report/notes/shallow_decoder_design.md)；
+与论文同构的对称解码器版本保留在 `backup/original-decoder` 分支。
 
 为了在单片 xczu5eg 上实时运行，网络规模做了取舍：原网络（主通道 256、下采样 16 倍）的编码器权重就有 10.6 MB，远超片上约 2.95 MB 的存储，
 30 fps 所需的乘加量也是全部 DSP 能力的 4.6 倍。本作品把主通道减为 32、下采样减为 4 倍，潜变量仍是 65,536 个元素（信道使用量不变），
-乘加量降为原网络的约 1/51、参数量降为约 1/89；与论文同一工作点（Kodak、64-QAM、SNR 10 dB、ρ = 1/6）相比，PSNR 低约 1.6 dB
-（33.3 dB 对 34.9 dB，差值也包含训练数据规模的差异）。模型来历、修改与训练流程见 [`src/model/README.md`](src/model/README.md)。
+乘加量降为原网络的约 1/102、参数量降为约 1/177；与论文同一工作点（Kodak、64-QAM、SNR 10 dB、ρ = 1/6）相比，PSNR 低约 1.7 dB
+（33.2 dB 对 34.9 dB，差值也包含训练数据规模的差异）。模型来历、修改与训练流程见 [`src/model/README.md`](src/model/README.md)。
 
 <p align="center"><img src="report/figures/network/fig02_network.png" alt="网络结构" width="700"></p>
 
@@ -78,7 +84,7 @@
 
 顶层 RTL 由生成器根据导出的模型文件自动产生。每个卷积层是一个独立引擎：行缓存保存最近几行输入，窗口元素广播到 P 路乘累加，
 输出通道分组重读窗口，结果经偏置、激活、重定标后流向下一层；层间全程 AXI-Stream 反压。并行度 P 按"满足 30 fps 的最小值"逐层选择；
-权重 ROM 只做顺序读，可以紧凑存放并经位宽转换输出，P 不受 BRAM 端口位宽限制；GDN 用迭代开方与除法，sigmoid 用 32 段分段线性，均不用查找表。
+权重 ROM 只做顺序读，可以紧凑存放并经位宽转换输出，P 不受 BRAM 端口位宽限制；GDN 用迭代开方与除法，sigmoid 用 32 段分段线性，PWL 按“折点纵坐标 + 斜率”定点实现、乘法用串行 LUT 乘法器。
 
 <p align="center"><img src="report/figures/network/fig05_conv_engine.png" alt="卷积引擎" width="620"></p>
 
@@ -115,10 +121,10 @@ TX、RX 板上的程序由 systemd 自启动，上电约 1 分钟建立链路，
 
 <p align="center"><img src="report/figures/results/psnr_snr.png" alt="PSNR-SNR" width="520"></p>
 
-同一物理层、每幅图同样 32,768 个符号：DeepJSCC-Q 从 SNR 32 dB 到 5.5 dB 只下降 5.5 dB；SSCC 在 SNR 约 20 → 17 dB 的 3 dB 区间内
-从 27.8 dB 跌到无法解码。高 SNR 时 DeepJSCC-Q 也比 SSCC 高 3.8 dB。横轴为由接收星座与已知参考计算的数据辅助 SNR。
+同一物理层、每幅图同样 32,768 个符号：DeepJSCC-Q 从 SNR 34 dB 到 6.7 dB 只下降 4.0 dB；SSCC 在 SNR 约 20 → 17.5 dB 的 2.4 dB 区间内
+从 27.9 dB 跌到 15.6 dB，再往下无法解码。高 SNR 时 DeepJSCC-Q 也比 SSCC 高 4.0 dB。横轴为由接收星座与已知参考计算的数据辅助 SNR。
 
-<p align="center"><img src="data/measurements/psnr_snr/k0802_v3_visual_h.png" alt="视觉对比" width="900"></p>
+<p align="center"><img src="data/measurements/psnr_snr/k0802_shallow_visual.png" alt="视觉对比" width="900"></p>
 
 上：原图；中：DeepJSCC-Q；下：SSCC。列为同一次衰减扫描中 SNR 递减的各点，图下为 PSNR / SSIM；SSCC 无法解码的帧按中灰图计分。
 
@@ -126,19 +132,19 @@ TX、RX 板上的程序由 systemd 自启动，上电约 1 分钟建立链路，
 
 <p align="center"><img src="report/figures/results/latency_cdf.png" alt="分段时延 CDF" width="820"></p>
 
-两块板的 PS 轮询 PL 帧计数器、按数据流逐帧配对得到的分段时延（中位数）：编码 38.20 ms、传输 2.87 ms（下限 2.748 ms 即一帧的空中时间）、
-解码 30.39 ms。连续 600 s 收到 18000 帧，平均 30.0 fps。
+两块板的 PS 轮询 PL 帧计数器、按数据流逐帧配对得到的分段时延（中位数）：编码 38.20 ms、传输 2.90 ms（下限 2.748 ms 即一帧的空中时间）、
+解码 26.39 ms。连续 600 s 解码 18,020 帧（PL 帧计数器），平均 30.0 fps。
 
 ### 与 FPGA DeepJSCC [3] 的对比
 
 | | Isobe 等 [3]（GLOBECOM 2025） | 本作品 |
 |---|---|---|
-| 网络 | 5 层卷积 / 5 层转置卷积 | DeepJSCC-Q，55 / 59 个卷积（残差、GDN、注意力） |
-| 名义卷积工作量 | 0.22 GMAC/帧 | 2.33 GMAC/帧 |
-| DSP（编码 / 解码） | 1597 / 874 | 233 / 312 |
-| BRAM（编码 / 解码） | 1038.5 / 1011.5 | 100 / 100（另用 URAM 4 / 18） |
-| 时延（编码 / 解码） | 39.6 / 52.9 ms（含 PS 处理） | 38.2 / 30.4 ms（PL） |
-| 功耗 | 编码器 7.757 W / 解码器 5.689 W | TX 3.06 W / RX 3.71 W（实测，含 PS、物理层与 DDR） |
+| 网络 | 5 层卷积 / 5 层转置卷积 | DeepJSCC-Q 编码器 55 个卷积（残差、GDN、注意力）；浅层解码器 12 个卷积（PWL 残差块、IGDN、亚像素卷积） |
+| 名义卷积工作量 | 0.22 GMAC/帧 | 1.15 GMAC/帧 |
+| DSP（编码 / 解码） | 1597 / 874 | 233 / 51 |
+| BRAM（编码 / 解码） | 1038.5 / 1011.5 | 100 / 43（编码器另用 URAM 4） |
+| 时延（编码 / 解码） | 39.6 / 52.9 ms（含 PS 处理） | 38.2 / 26.4 ms（PL） |
+| 功耗 | 编码器 7.757 W / 解码器 5.689 W | TX 3.09 W / RX 3.33 W（实测，含 PS、物理层与 DDR） |
 | 物理层 | 外部 5G 系统 | 自研 OFDM，同在 PL |
 
 器件、数值精度、时延与功耗的测量边界不同，上表只列各自条件下的绝对数值，不是严格的同条件对比（详见设计报告 3.3.6 节）。
@@ -234,21 +240,21 @@ vivado -mode batch -source build/build_hw.tcl -tclargs rx 8
 
 ## 从模型重新生成网络 RTL
 
-仓库里带有部署模型的检查点（`data/model/checkpoint/best.pt`）和它的 W8A12 量化导出（`data/model/manifest.json`、
-`params/`、`rtl_init/`）。从量化导出重新生成两端的网络 RTL 并覆盖 `src/hw/{tx,rx}/rtl/network/`：
+仓库里带有部署模型（编码器 + 浅层解码器）的检查点（`data/model_shallow/checkpoint/best.pt`）和它的 W8A12 量化导出
+（`data/model_shallow/manifest.json`、`params/`、`rtl_init/`）；`data/model/` 是第一段训练得到的编码器与对称解码器。从量化导出重新生成两端的网络 RTL 并覆盖 `src/hw/{tx,rx}/rtl/network/`：
 
 ```
 python src/network/regen_hw.py
 git diff --stat
 ```
 
-`regen_hw.py` 依次运行 `gen_rtl_init.py`（权重、偏置、重定标参数 → `data/model/rtl_init/`）和 `gen_rtl_top.py`
+`regen_hw.py` 依次运行 `gen_rtl_init.py`（权重、偏置、重定标参数 → `data/model_shallow/rtl_init/`）和 `gen_rtl_top.py`
 （按 manifest 与 `src/network/fifo_sizes.json` 生成编码器顶层 `blk_enc_0_latent_idx` 与解码器顶层 `blk_rx_in_output`），
 再把顶层中的 `$readmemh` 路径改为不带目录的唯一文件名（Vivado 工程中只写文件名），并把引用的 `.mem` 拷到
 `src/hw/<side>/rtl/network/mem/`。所有文件以 LF 换行写出，`git diff --stat` 为空即说明入库的 RTL 由入库的模型生成（Windows 上 `git status` 可能把内容相同、只是时间戳变化的文件列为已修改，以 `git diff` 为准）。
 只需要 Python 3 与 NumPy。
 
-从检查点重新做量化导出（`src/model/export_fpga.py`）需要 CUDA 和校准用的 DIV2K / Kodak 图像，训练与导出流程见
+从检查点重新做量化导出（`src/model/export_shallow.py`）需要 CUDA 和校准用的 DIV2K / Kodak 图像，训练与导出流程见
 `src/model/README.md`。RTL 与整数参考模型的逐比特比对见 `sim/README.md`。
 
 ## 实测方法

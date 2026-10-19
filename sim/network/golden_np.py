@@ -90,6 +90,19 @@ class Golden:
         rq = op['rq']
         return sat(rsr(sat(rsr(t, rq['pre']), 27) * rq['M'], rq['sh']), self.abits)
 
+    def pwl(self, op, x):
+        """per-channel piecewise-linear activation (axis_pwl): segment s = clamp(((x - T0) >> L) + 1, 0, NK), left knot
+        k = max(s - 1, 0), acc = Y[c][k] + S[c][s] * (x - T0 - k 2^L), then the per-channel rescale of a convolution"""
+        f = op['files']; c, nk, t0, l = op['channels'], op['NK'], op['T0'], op['STEP_LOG2']
+        slope = self.load(f['slope']).reshape(c, nk + 1)
+        yk = self.load(f['yk']).reshape(c, nk)
+        seg = np.clip(((x - t0) >> l) + 1, 0, nk)
+        k = np.maximum(seg - 1, 0)
+        ch = np.arange(c)
+        acc = yk[ch, k] + slope[ch, seg] * (x - t0 - (k << l))
+        y = rsr(sat(rsr(acc, self.load(f['rq_pre'])), 27) * self.load(f['rq_M']), self.load(f['rq_sh']))
+        return sat(y, self.abits)
+
     def sigmoid_q16(self, z, op, tab):
         u = np.abs(z)
         v = rsr(u * op['to_q312_M'], op['to_q312_sh'])
@@ -142,6 +155,8 @@ class Golden:
                 y = sat(self.add_core(op, x, rsr(a * g, 16)), self.abits)
             elif kind in ('gdn', 'igdn'):
                 y = self.gdn(op, T[op['in']])
+            elif kind == 'pwl':
+                y = self.pwl(op, T[op['in']])
             elif kind == 'sigmoid':
                 y = self.sigmoid_q16(T[op['in']], op, self.tabs[op['table']])
             elif kind == 'pixel_shuffle':
@@ -164,7 +179,7 @@ class Golden:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--export', default='runs/fpga_export_w8a12')
+    ap.add_argument('--export', default=str(Path(__file__).resolve().parents[2] / 'data' / 'model_shallow'))
     ap.add_argument('--image', default=None)
     ap.add_argument('--verbose', action='store_true')
     a = ap.parse_args()

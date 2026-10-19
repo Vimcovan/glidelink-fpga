@@ -1,9 +1,9 @@
 """Regenerate the network RTL from the quantized export and update src/hw.
 
-    python src/network/regen_hw.py
-    python src/network/regen_hw.py --export data/model_shallow --gen src/network/gen_shallow --files-txt
+    python src/network/regen_hw.py                       (deployed model: data/model_shallow, shallow decoder)
+    python src/network/regen_hw.py --export data/model --files-txt   (first-stage model with the symmetric decoder)
 
-1. gen_rtl_init.py: data/model/params + manifest.json -> data/model/rtl_init/<engine>/*.mem, engine.json
+1. gen_rtl_init.py: <export>/params + manifest.json -> <export>/rtl_init/<engine>/*.mem, engine.json
 2. gen_rtl_top.py:  blk_enc_0_latent_idx (TX) and blk_rx_in_output (RX) -> src/network/gen/
 3. the absolute $readmemh paths in the two tops are replaced by unique file names
    (<dir>__<subdir>__<file>.mem, what Vivado projects expect), and the referenced .mem files are copied to
@@ -21,7 +21,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
-EXP = REPO / 'data' / 'model'
+EXP = REPO / 'data' / 'model_shallow'
 GEN = HERE / 'gen'
 TOPS = {'tx': (('enc.0', 'latent_idx'), 'blk_enc_0_latent_idx'),
         'rx': (('rx_in', 'output'), 'blk_rx_in_output')}
@@ -83,7 +83,7 @@ def main():
     global EXP, GEN
     import argparse
     ap = argparse.ArgumentParser()
-    ap.add_argument('--export', type=Path, default=EXP, help='export directory (default data/model)')
+    ap.add_argument('--export', type=Path, default=EXP, help='export directory (default data/model_shallow)')
     ap.add_argument('--gen', type=Path, default=GEN, help='generated-top directory (default src/network/gen)')
     ap.add_argument('--files-txt', action='store_true', help='also update the network entries of src/hw/*/files.txt '
                     'and delete .mem files the new tops do not reference (another network)')

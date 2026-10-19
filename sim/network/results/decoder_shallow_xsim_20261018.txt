@@ -1,0 +1,1 @@
+﻿[blk_rx_in_output sized] frame 0 done at cycle 7273186 | frame 1 done at cycle 13767445 | PASS  1x32768x2 -> 256x256x3: 2 frame(s) bit-exact, 13767645 cycles   (sim 957 s)

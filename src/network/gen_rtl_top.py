@@ -15,7 +15,7 @@ Ports of the generated module (name blk_<first>_<last>):
 
   python gen_rtl_top.py enc.3                 -> gen/blk_enc_3.sv
   python gen_rtl_top.py enc.0 enc.8 --measure
-Paths default to the repository layout (--export data/model, --fifo-sizes src/network/fifo_sizes.json,
+Paths default to the repository layout (--export data/model_shallow, --fifo-sizes src/network/fifo_sizes.json,
 --out src/network/gen); regen_hw.py runs the whole flow and updates src/hw.
 """
 from __future__ import annotations
@@ -27,7 +27,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-EXP = ROOT.parents[1] / 'data' / 'model'          # export: manifest.json, params/, rtl_init/
+EXP = ROOT.parents[1] / 'data' / 'model_shallow'  # export: manifest.json, params/, rtl_init/ (data/model: symmetric decoder)
 INIT = EXP / 'rtl_init'
 SIZES = ROOT / 'fifo_sizes.json'                  # measured join-FIFO depths (sim/network/fifo_sizes.py)
 MEASURE_DEPTH = 16384            # elements per join FIFO in --measure mode
