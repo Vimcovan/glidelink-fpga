@@ -21,6 +21,13 @@ def prop(parent,name,**attrs):
     node=child(parent,name)
     for k,v in attrs.items(): node.set(tag(k),str(v))
     return node
+def keep_next(para):
+    # w:keepNext sits right after w:pStyle in the schema order of w:pPr
+    pp=para.find(tag('pPr'))
+    if pp is None: pp=E.Element(tag('pPr'));para.insert(0,pp)
+    if pp.find(tag('keepNext')) is None:
+        style=pp.find(tag('pStyle'))
+        pp.insert(0 if style is None else 1,E.Element(tag('keepNext')))
 def text(node): return ''.join(node.xpath('.//w:t/text()',namespaces=NS))
 
 path=Path(sys.argv[1])
@@ -29,11 +36,15 @@ root=E.fromstring(parts['word/document.xml'])
 row_count=0
 resource_count=0
 for table in root.xpath('//w:tbl',namespaces=NS):
-    for row in table.findall(tag('tr')):
+    rows=table.findall(tag('tr'))
+    for k,row in enumerate(rows):
         trpr=row.find(tag('trPr'))
         if trpr is None:
             trpr=E.Element(tag('trPr')); row.insert(0,trpr)
         prop(trpr,'cantSplit',val='1')
+        if k==0: prop(trpr,'tblHeader',val='1')   # repeated if a table is still taller than a page
+        if k<len(rows)-1:                          # keep the whole table on one page
+            for para in row.xpath('.//w:p',namespaces=NS): keep_next(para)
         row_count+=1
     first=table.find(tag('tr'))
     headers=[text(cell) for cell in first.findall(tag('tc'))] if first is not None else []
@@ -68,9 +79,7 @@ for previous,current in zip(list(body),list(body)[1:]):
     if previous.tag!=tag('p') or current.tag!=tag('p'): continue
     style=current.find('w:pPr/w:pStyle',NS)
     if style is not None and style.get(tag('val'))=='SourceCode' and text(previous).rstrip().endswith(('：',':')):
-        pp=previous.find(tag('pPr'))
-        if pp is None: pp=E.Element(tag('pPr'));previous.insert(0,pp)
-        prop(pp,'keepNext',val='1');code_count+=1
+        keep_next(previous);code_count+=1
 
 parts['word/document.xml']=E.tostring(root,xml_declaration=True,encoding='UTF-8',standalone=True)
 with ZipFile(path,'w',ZIP_DEFLATED) as z:

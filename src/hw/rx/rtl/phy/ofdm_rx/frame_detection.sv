@@ -21,8 +21,9 @@
 
 
 module frame_detection#(
-    // STF 16-sample energy gate: sum(|x|^2/1024) > ENERGY_THRESH. was 1000 (rms>253); 250 -> rms>126 (AGC lock-level headroom)
-    parameter ENERGY_THRESH = 250,
+    // STF 16-sample energy gate: sum(|x|^2/1024) > ENERGY_THRESH: 160 -> rms > 101, 2.6x the noise energy at the gain
+    // the AGC settles at near the sensitivity limit (index ~56, noise rms ~63); the normalised test |P| > E/2 rejects noise
+    parameter ENERGY_THRESH = 160,
     parameter SYMBOL_PER_FRAME = 20
 )
 (
@@ -184,17 +185,19 @@ module frame_detection#(
     logic[17:0] energy_data_o;
     logic energy_valid_o;
     logic energy_ready_o;
+    // the 16-sample correlation sums travel with the energy (same stream position) for the CFO accumulator
+    logic signed[17:0] corr_re_al, corr_im_al;
     axis_forward_register # (
         .STAGE(8),
-        .WIDTH(18)
+        .WIDTH(54)
     )
     u_energy_reg (
         .clk(clk),
         .rst_n(rst_n),
-        .s_in_tdata(sum_energy_o),
+        .s_in_tdata({sum_corr_imag_o, sum_corr_real_o, sum_energy_o}),
         .s_in_tvalid(energy_valid_i),
         .s_in_tready(energy_ready_i),
-        .m_out_tdata(energy_data_o),
+        .m_out_tdata({corr_im_al, corr_re_al, energy_data_o}),
         .m_out_tvalid(energy_valid_o),
         .m_out_tready(energy_ready_o)
     );
@@ -285,19 +288,55 @@ module frame_detection#(
             align_ready = sync_ready_o;
         end
     end
-    //ÆµÆ«¾ÀÕý
+    // CFO estimate: the 16-sample correlation sums of the 64 confirming samples are accumulated (complex, i.e. the
+    // products of ~80 STF samples instead of 16: rms error 26 -> 9 kHz at 6 dB SNR, 9 -> 3.5 kHz at 15 dB) and the
+    // angle of the sum (second CORDIC, ~5 samples later; only STF samples pass the DDS before the update) sets the DDS.
+    // Bounds: |corr| < 2^17, 64 terms -> |acc| < 2^23; the CORDIC takes 18-bit inputs (low 18 bits of each 24-bit
+    // field), so the mean (acc >>> 6) is passed, which has the same angle.
+    logic signed[23:0] cfo_acc_re, cfo_acc_im, cfo_sum_re, cfo_sum_im;
+    assign cfo_sum_re = cfo_acc_re + corr_re_al;
+    assign cfo_sum_im = cfo_acc_im + corr_im_al;
+    always_ff@(posedge clk or negedge rst_n) begin
+        if(~rst_n) begin cfo_acc_re <= '0; cfo_acc_im <= '0; end
+        else if(align_fire && current_state == HOLD) begin
+            if(synced) begin cfo_acc_re <= cfo_sum_re; cfo_acc_im <= cfo_sum_im; end
+            else begin cfo_acc_re <= '0; cfo_acc_im <= '0; end
+        end
+        else if(current_state == OUTPUT) begin cfo_acc_re <= '0; cfo_acc_im <= '0; end
+    end
+    logic cfo_cordic_valid_i;
+    logic signed[17:0] cfo_in_re, cfo_in_im;
+    always_ff@(posedge clk or negedge rst_n) begin
+        if(~rst_n) begin cfo_cordic_valid_i <= 1'b0; cfo_in_re <= '0; cfo_in_im <= '0; end
+        else begin
+            cfo_cordic_valid_i <= align_fire && current_state == HOLD && sample_cnt == 63;
+            if(align_fire && current_state == HOLD && sample_cnt == 63) begin cfo_in_re <= 18'(cfo_sum_re >>> 6); cfo_in_im <= 18'(cfo_sum_im >>> 6); end
+        end
+    end
+    logic cfo_cordic_valid_o;
+    logic[47:0] cfo_cordic_data_o;
+    cordic_block u_cordic_cfo (
+        .aclk(clk),
+        .aresetn(rst_n),
+        .s_axis_cartesian_tvalid(cfo_cordic_valid_i),
+        .s_axis_cartesian_tready(),
+        .s_axis_cartesian_tdata({24'(cfo_in_im), 24'(cfo_in_re)}),
+        .m_axis_dout_tvalid(cfo_cordic_valid_o),
+        .m_axis_dout_tready(1'b1),
+        .m_axis_dout_tdata(cfo_cordic_data_o)
+    );
     logic dds_valid_i;
     logic dds_ready_i;
     logic[31:0] dds_data_o;
     logic dds_valid_o;
     logic dds_ready_o;
-    assign dds_valid_i = align_fire&&(sample_cnt==63);
+    assign dds_valid_i = cfo_cordic_valid_o;
     dds_freq_correct u_dds (
         .aclk(clk),                                  // input wire aclk
         .aresetn(rst_n),                             // input wire aresetn
         .s_axis_config_tvalid(dds_valid_i),  // input wire s_axis_config_tvalid
         .s_axis_config_tready(dds_ready_i),  // output wire s_axis_config_tready
-        .s_axis_config_tdata(($signed(-cordic_phase[15:0])>>>4)),    // input wire [15 : 0] s_axis_config_tdata
+        .s_axis_config_tdata(($signed(-cfo_cordic_data_o[39:24])>>>4)),    // phase [41:24] (low 16 bits, as before)
         .m_axis_data_tvalid(dds_valid_o),      // output wire m_axis_data_tvalid
         .m_axis_data_tready(dds_ready_o),      // input wire m_axis_data_tready
         .m_axis_data_tdata(dds_data_o)        // output wire [31 : 0] m_axis_data_tdata

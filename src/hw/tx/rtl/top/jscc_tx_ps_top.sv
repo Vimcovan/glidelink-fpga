@@ -11,8 +11,8 @@
 // PS build (OFDM_JSCC_PS_TX, PYNQ-ZU): the image comes from the PS (img_dma MM2S -> axis_unpack8 -> CDC ->
 //   encoder); a frame-aligned mux selects the encoder or a PRBS 64-QAM self-test source (register CTRL[0]);
 //   status / counters in tx_ps_regs (AXI4-Lite at 0x8002_0000). AXI side on clk_100M; 250 MHz domain unchanged.
-//   SSCC baseline (CTRL[2] = 1): the PS bytes (JPEG packets, 12272 bytes per frame) go to sscc_tx (scrambler,
-//   K=7 convolutional code, interleaver, 64-QAM, 100 MHz) instead of the encoder, and a second frame-aligned mux
+//   SSCC baseline (CTRL[2] = 1): the PS bytes (JPEG packets, 16360 bytes per frame) go to sscc_tx (scrambler,
+//   802.11n LDPC rate 2/3, 64-QAM, 100 MHz) instead of the encoder, and a second frame-aligned mux
 //   at 100 MHz hands its symbols to the same OFDM baseband (same frame, same constellation, same power).
 ////////////////////////////////////////////////////////////////////////////////
 module jscc_tx_ps_top #(
@@ -186,7 +186,7 @@ module jscc_tx_ps_top #(
     //------------------------------------------------------------------ SSCC baseline (100 MHz)
     wire [23:0] sx_tdata;
     wire        sx_tvalid, sx_tready, sx_tlast;
-    sscc_tx #(.PAY_BYTES(12272), .FRAME_SYMS(FRAME_SYMS)) u_sscc (
+    sscc_tx #(.PAY_BYTES(16360), .FRAME_SYMS(FRAME_SYMS)) u_sscc (
         .clk      (clk100),
         .rst_n    (rst100_n),
         .s_tdata  (ub_tdata), .s_tvalid (ub_tvalid & sscc_sel), .s_tready (us_tready),

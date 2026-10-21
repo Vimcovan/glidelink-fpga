@@ -1,0 +1,4 @@
+prj/
+stim_*.txt
+truth_*.txt
+log_*.txt

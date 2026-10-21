@@ -18,7 +18,7 @@ REG_BASE = 0x8002_0000
 IMG_BYTES = 256 * 256 * 3
 R = dict(ID=0x00, VERSION=0x04, CTRL=0x08, SRC_ACTIVE=0x0C, IMG_BYTES=0x10, SYMS=0x14, SYM_FRAMES=0x18,
          TX_FRAMES=0x1C, FB_FRAMES=0x20, TLAST_ERR=0x24, STATUS=0x28, SPI_CMD=0x2C, SPI_STAT=0x30, SSCC_FRAMES=0x34)
-SSCC_BYTES = 12272                               # SSCC packet per PHY frame (sscc_pkt.py, VERSION >= 3)
+SSCC_BYTES = 16360                               # SSCC packet per PHY frame (sscc_pkt.py; LDPC bitstream)
 COUNTERS = ["IMG_BYTES", "SYMS", "SYM_FRAMES", "TX_FRAMES", "FB_FRAMES", "TLAST_ERR"]
 
 

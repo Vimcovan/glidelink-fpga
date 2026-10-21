@@ -41,3 +41,5 @@
 [20] AMD. AMD Ross agentic AI assistant[CP/OL]. [2026-10-11]. https://github.com/xilinx/ross-ai-assistant.
 
 [21] Y. Yang, S. Mandt. Computationally-efficient neural image compression with shallow decoders[C]// IEEE/CVF International Conference on Computer Vision (ICCV). Paris, 2023: 530-540. DOI: 10.1109/ICCV51070.2023.00055.
+
+[22] F. Tosato, P. Bisaglia. Simplified soft-output demapper for binary interleaved COFDM with application to HIPERLAN/2[C]// IEEE International Conference on Communications (ICC). New York, 2002: 664-668.

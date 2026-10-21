@@ -1,12 +1,23 @@
-== FRAMES:1 SNR:16
-SSCC sim: 1 frames, SNR 16.0 dB (sigma 114.8 per dimension)
-frame 0: 0 byte errors of 12272 (fifo overflow 0) at 2796326000
-SSCC_RESULT frames 1 byte_errors 0 tx_symbols 32768
-== FRAMES:1 SNR:13
-SSCC sim: 1 frames, SNR 13.0 dB (sigma 162.1 per dimension)
-frame 0: 7 byte errors of 12272 (fifo overflow 0) at 2796326000
-SSCC_RESULT frames 1 byte_errors 7 tx_symbols 32768
-== FRAMES:1 SNR:11
-SSCC sim: 1 frames, SNR 11.0 dB (sigma 204.1 per dimension)
-frame 0: 559 byte errors of 12272 (fifo overflow 0) at 2796326000
-SSCC_RESULT frames 1 byte_errors 559 tx_symbols 32768
+# SSCC (LDPC) TX -> AWGN -> RX xsim runs, 2026-10-21 (vivado -mode batch -source run_sim.tcl -tclargs ...), then python sscc_ref.py
+
+## "FRAMES:1 DUMP:1"
+SSCC sim: 1 frames, SNR 0.0 dB (sigma 0.0 per dimension)
+frame 0: 0 byte errors of 16360 (fifo overflow 0) at 2837156000
+SSCC_RESULT frames 1 byte_errors 0 tx_symbols 32768 codewords_failed 0 iterations 101
+
+## "FRAMES:2 SNR:15.5 DUMP:1"
+SSCC sim: 2 frames, SNR 15.5 dB (sigma 121.6 per dimension)
+frame 0: 0 byte errors of 16360 (fifo overflow 0) at 2840996000
+frame 1: 0 byte errors of 16360 (fifo overflow 0) at 5573316000
+SSCC_RESULT frames 2 byte_errors 0 tx_symbols 65536 codewords_failed 0 iterations 933
+
+## "FRAMES:2 SNR:14.5 DUMP:1"
+SSCC sim: 2 frames, SNR 14.5 dB (sigma 136.4 per dimension)
+frame 0: 0 byte errors of 16360 (fifo overflow 0) at 2843556000
+frame 1: 54 byte errors of 16360 (fifo overflow 0) at 5575876000
+SSCC_RESULT frames 2 byte_errors 54 tx_symbols 65536 codewords_failed 3 iterations 1493
+
+## sscc_ref.py after each run
+FRAMES:1 DUMP:1   TX: reference 32768 symbols, RTL 32768: 0 mismatches; DEC: 101 codewords, 0 differ from the reference (iterations mean 1.00 max 1)
+FRAMES:2 SNR:15.5 DUMP:1   DEC: 202 codewords, 0 differ from the reference (reference: 0 not converged, iterations mean 4.62 max 7)
+FRAMES:2 SNR:14.5 DUMP:1   DEC: 202 codewords, 0 differ from the reference (reference: 3 not converged, iterations mean 7.39 max 16)

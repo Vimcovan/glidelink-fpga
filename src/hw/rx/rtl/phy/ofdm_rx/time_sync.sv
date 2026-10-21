@@ -22,12 +22,14 @@
 
 module time_sync#(
     parameter SYMBOL_PER_FRAME = 20,
-    // LTF 64-sample energy gate: sum(|x|^2/1024) > ENERGY_THRESH. was 10000 (rms>400); 2500 -> rms>200
+    // LTF 64-sample energy gate: sum(|x|^2/1024) > ENERGY_THRESH: 750 -> rms > 110, 3x the noise energy at the gain the
+    // AGC settles at near the sensitivity limit. A gate near the preamble level (2500, rms > 200) let the LTF1 peak fail and
+    // LTF2 pass (+64 samples) when the energy fluctuated around it.
     // FFT window back-off: the LTF correlator coefficients (coe/ltf_cplx_bo8.coe) are the LTF matched filter
     // circularly shifted by BACKOFF+1 = 9 taps, so the sync fires 9 samples before LTF1 (LTF GI is cyclic: same
     // peak) and the output starting at the next sample puts every FFT window (LTF1, LTF2, data) 8 samples into
     // the CP/GI. The constant offset is absorbed by the channel estimate; it leaves margin for SFO drift.
-    parameter ENERGY_THRESH = 2500
+    parameter ENERGY_THRESH = 750
 )
 (
     input logic           clk             ,
@@ -151,7 +153,18 @@ module time_sync#(
     logic cmpy_valid_o;
     logic cmpy_ready_o;
     logic[24:0] xcorr_abs_square;
-    assign xcorr_abs_square = cmpy_data_o[30:6];
+    // two-point metric |X(n-1)|^2 + |X(n)|^2: the sampling phases of the two boards are unrelated, and at a half-sample
+    // offset the LTF1 peak splits over two samples with half the energy each; at low SNR neither crossed the threshold
+    // and the sync fell to LTF2 (+64) or missed the frame (6 dB: 3.4 % +64, 2.8 % missed -> 0). Fires on the same or
+    // the next sample (within the 8-sample back-off). Saturated to 24 bits (the comparison below is signed).
+    logic[24:0] xcorr_prev;
+    logic[25:0] xcorr_pair;
+    always_ff@(posedge clk or negedge rst_n) begin
+        if(~rst_n) xcorr_prev <= '0;
+        else if(cmpy_valid_o & cmpy_ready_o) xcorr_prev <= cmpy_data_o[30:6];
+    end
+    assign xcorr_pair = cmpy_data_o[30:6] + xcorr_prev;
+    assign xcorr_abs_square = (xcorr_pair[25:24] != 2'b00) ? 25'h0FFFFFF : xcorr_pair[24:0];
     assign cmpy_real_data_i = 15'($signed(xcorr_k1_data_o[13:0])) - 15'($signed(xcorr_k2_data_o[13:0]));
     assign cmpy_imag_data_i = 15'($signed(xcorr_k3_data_o[13:0])) - 15'($signed(xcorr_k1_data_o[13:0])) - 15'($signed(xcorr_k2_data_o[13:0]));
     complex_multiplier # (

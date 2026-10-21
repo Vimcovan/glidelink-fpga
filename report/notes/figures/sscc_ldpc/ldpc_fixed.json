@@ -1,0 +1,722 @@
+{
+ "2/3 ref": {
+  "13.5": {
+   "cer": 0.72264,
+   "errors": 72264,
+   "iter_mean": 40.0,
+   "iter_max": 40
+  },
+  "13.75": {
+   "cer": 0.4133,
+   "errors": 41330,
+   "iter_mean": 40.0,
+   "iter_max": 40
+  },
+  "14": {
+   "cer": 0.15169,
+   "errors": 15169,
+   "iter_mean": 40.0,
+   "iter_max": 40
+  },
+  "14.25": {
+   "cer": 0.03207,
+   "errors": 3207,
+   "iter_mean": 40.0,
+   "iter_max": 40
+  },
+  "14.5": {
+   "cer": 0.00337,
+   "errors": 337,
+   "iter_mean": 40.0,
+   "iter_max": 40
+  },
+  "14.75": {
+   "cer": 0.00033,
+   "errors": 33,
+   "iter_mean": 40.0,
+   "iter_max": 40
+  },
+  "15": {
+   "cer": 2e-05,
+   "errors": 2,
+   "iter_mean": 40.0,
+   "iter_max": 40
+  },
+  "15.25": {
+   "cer": 1e-05,
+   "errors": 1,
+   "iter_mean": 40.0,
+   "iter_max": 40
+  },
+  "15.5": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 40.0,
+   "iter_max": 40
+  },
+  "15.75": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 40.0,
+   "iter_max": 40
+  },
+  "16": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 40.0,
+   "iter_max": 40
+  },
+  "16.25": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 40.0,
+   "iter_max": 40
+  },
+  "16.5": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 40.0,
+   "iter_max": 40
+  }
+ },
+ "2/3 fl8": {
+  "13.5": {
+   "cer": 0.95617,
+   "errors": 95617,
+   "iter_mean": 7.984,
+   "iter_max": 8
+  },
+  "13.75": {
+   "cer": 0.82212,
+   "errors": 82212,
+   "iter_mean": 7.898,
+   "iter_max": 8
+  },
+  "14": {
+   "cer": 0.5458,
+   "errors": 54580,
+   "iter_mean": 7.596,
+   "iter_max": 8
+  },
+  "14.25": {
+   "cer": 0.24544,
+   "errors": 24544,
+   "iter_mean": 6.961,
+   "iter_max": 8
+  },
+  "14.5": {
+   "cer": 0.06751,
+   "errors": 6751,
+   "iter_mean": 6.103,
+   "iter_max": 8
+  },
+  "14.75": {
+   "cer": 0.01113,
+   "errors": 1113,
+   "iter_mean": 5.269,
+   "iter_max": 8
+  },
+  "15": {
+   "cer": 0.00139,
+   "errors": 139,
+   "iter_mean": 4.598,
+   "iter_max": 8
+  },
+  "15.25": {
+   "cer": 0.00019,
+   "errors": 19,
+   "iter_mean": 4.085,
+   "iter_max": 8
+  },
+  "15.5": {
+   "cer": 1e-05,
+   "errors": 1,
+   "iter_mean": 3.676,
+   "iter_max": 8
+  },
+  "15.75": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 3.353,
+   "iter_max": 8
+  },
+  "16": {
+   "cer": 1e-05,
+   "errors": 1,
+   "iter_mean": 3.09,
+   "iter_max": 8
+  },
+  "16.25": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 2.854,
+   "iter_max": 8
+  },
+  "16.5": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 2.629,
+   "iter_max": 6
+  }
+ },
+ "2/3 fl12": {
+  "13.5": {
+   "cer": 0.84742,
+   "errors": 84742,
+   "iter_mean": 11.722,
+   "iter_max": 12
+  },
+  "13.75": {
+   "cer": 0.58532,
+   "errors": 58532,
+   "iter_mean": 10.97,
+   "iter_max": 12
+  },
+  "14": {
+   "cer": 0.27266,
+   "errors": 27266,
+   "iter_mean": 9.514,
+   "iter_max": 12
+  },
+  "14.25": {
+   "cer": 0.07604,
+   "errors": 7604,
+   "iter_mean": 7.772,
+   "iter_max": 12
+  },
+  "14.5": {
+   "cer": 0.01129,
+   "errors": 1129,
+   "iter_mean": 6.319,
+   "iter_max": 12
+  },
+  "14.75": {
+   "cer": 0.00115,
+   "errors": 115,
+   "iter_mean": 5.308,
+   "iter_max": 12
+  },
+  "15": {
+   "cer": 0.0001,
+   "errors": 10,
+   "iter_mean": 4.603,
+   "iter_max": 12
+  },
+  "15.25": {
+   "cer": 1e-05,
+   "errors": 1,
+   "iter_mean": 4.086,
+   "iter_max": 12
+  },
+  "15.5": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 3.676,
+   "iter_max": 11
+  },
+  "15.75": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 3.353,
+   "iter_max": 12
+  },
+  "16": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 3.09,
+   "iter_max": 12
+  },
+  "16.25": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 2.855,
+   "iter_max": 12
+  },
+  "16.5": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 2.629,
+   "iter_max": 6
+  }
+ },
+ "2/3 fl20": {
+  "13.5": {
+   "cer": 0.71655,
+   "errors": 71655,
+   "iter_mean": 18.079,
+   "iter_max": 20
+  },
+  "13.75": {
+   "cer": 0.40722,
+   "errors": 40722,
+   "iter_mean": 15.049,
+   "iter_max": 20
+  },
+  "14": {
+   "cer": 0.14862,
+   "errors": 14862,
+   "iter_mean": 11.25,
+   "iter_max": 20
+  },
+  "14.25": {
+   "cer": 0.03115,
+   "errors": 3115,
+   "iter_mean": 8.213,
+   "iter_max": 20
+  },
+  "14.5": {
+   "cer": 0.00337,
+   "errors": 337,
+   "iter_mean": 6.378,
+   "iter_max": 20
+  },
+  "14.75": {
+   "cer": 0.00033,
+   "errors": 33,
+   "iter_mean": 5.314,
+   "iter_max": 20
+  },
+  "15": {
+   "cer": 2e-05,
+   "errors": 2,
+   "iter_mean": 4.603,
+   "iter_max": 20
+  },
+  "15.25": {
+   "cer": 1e-05,
+   "errors": 1,
+   "iter_mean": 4.086,
+   "iter_max": 20
+  },
+  "15.5": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 3.676,
+   "iter_max": 11
+  },
+  "15.75": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 3.353,
+   "iter_max": 20
+  },
+  "16": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 3.09,
+   "iter_max": 13
+  },
+  "16.25": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 2.855,
+   "iter_max": 12
+  },
+  "16.5": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 2.629,
+   "iter_max": 6
+  }
+ },
+ "2/3 q6s4a10m8i8": {
+  "13.5": {
+   "cer": 0.97244,
+   "errors": 97244,
+   "iter_mean": 7.989,
+   "iter_max": 8
+  },
+  "13.75": {
+   "cer": 0.86766,
+   "errors": 86766,
+   "iter_mean": 7.92,
+   "iter_max": 8
+  },
+  "14": {
+   "cer": 0.62136,
+   "errors": 62136,
+   "iter_mean": 7.658,
+   "iter_max": 8
+  },
+  "14.25": {
+   "cer": 0.30998,
+   "errors": 30998,
+   "iter_mean": 7.055,
+   "iter_max": 8
+  },
+  "14.5": {
+   "cer": 0.09512,
+   "errors": 9512,
+   "iter_mean": 6.184,
+   "iter_max": 8
+  },
+  "14.75": {
+   "cer": 0.01693,
+   "errors": 1693,
+   "iter_mean": 5.305,
+   "iter_max": 8
+  },
+  "15": {
+   "cer": 0.00198,
+   "errors": 198,
+   "iter_mean": 4.6,
+   "iter_max": 8
+  },
+  "15.25": {
+   "cer": 0.00026,
+   "errors": 26,
+   "iter_mean": 4.07,
+   "iter_max": 8
+  },
+  "15.5": {
+   "cer": 1e-05,
+   "errors": 1,
+   "iter_mean": 3.654,
+   "iter_max": 8
+  },
+  "15.75": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 3.33,
+   "iter_max": 8
+  },
+  "16": {
+   "cer": 1e-05,
+   "errors": 1,
+   "iter_mean": 3.069,
+   "iter_max": 8
+  },
+  "16.25": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 2.833,
+   "iter_max": 8
+  },
+  "16.5": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 2.609,
+   "iter_max": 6
+  }
+ },
+ "2/3 q7s3a11m9i8": {
+  "13.5": {
+   "cer": 0.96196,
+   "errors": 96196,
+   "iter_mean": 7.985,
+   "iter_max": 8
+  },
+  "13.75": {
+   "cer": 0.83738,
+   "errors": 83738,
+   "iter_mean": 7.902,
+   "iter_max": 8
+  },
+  "14": {
+   "cer": 0.56965,
+   "errors": 56965,
+   "iter_mean": 7.609,
+   "iter_max": 8
+  },
+  "14.25": {
+   "cer": 0.26347,
+   "errors": 26347,
+   "iter_mean": 6.973,
+   "iter_max": 8
+  },
+  "14.5": {
+   "cer": 0.07413,
+   "errors": 7413,
+   "iter_mean": 6.101,
+   "iter_max": 8
+  },
+  "14.75": {
+   "cer": 0.01223,
+   "errors": 1223,
+   "iter_mean": 5.249,
+   "iter_max": 8
+  },
+  "15": {
+   "cer": 0.00145,
+   "errors": 145,
+   "iter_mean": 4.567,
+   "iter_max": 8
+  },
+  "15.25": {
+   "cer": 0.00017,
+   "errors": 17,
+   "iter_mean": 4.052,
+   "iter_max": 8
+  },
+  "15.5": {
+   "cer": 1e-05,
+   "errors": 1,
+   "iter_mean": 3.646,
+   "iter_max": 8
+  },
+  "15.75": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 3.327,
+   "iter_max": 8
+  },
+  "16": {
+   "cer": 1e-05,
+   "errors": 1,
+   "iter_mean": 3.065,
+   "iter_max": 8
+  },
+  "16.25": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 2.832,
+   "iter_max": 8
+  },
+  "16.5": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 2.607,
+   "iter_max": 6
+  }
+ },
+ "2/3 q7s3a11m9i10": {
+  "13.5": {
+   "cer": 0.9159,
+   "errors": 91590,
+   "iter_mean": 9.915,
+   "iter_max": 10
+  },
+  "13.75": {
+   "cer": 0.71552,
+   "errors": 71552,
+   "iter_mean": 9.595,
+   "iter_max": 10
+  },
+  "14": {
+   "cer": 0.40076,
+   "errors": 40076,
+   "iter_mean": 8.783,
+   "iter_max": 10
+  },
+  "14.25": {
+   "cer": 0.14088,
+   "errors": 14088,
+   "iter_mean": 7.536,
+   "iter_max": 10
+  },
+  "14.5": {
+   "cer": 0.02836,
+   "errors": 2836,
+   "iter_mean": 6.269,
+   "iter_max": 10
+  },
+  "14.75": {
+   "cer": 0.00343,
+   "errors": 343,
+   "iter_mean": 5.281,
+   "iter_max": 10
+  },
+  "15": {
+   "cer": 0.00034,
+   "errors": 34,
+   "iter_mean": 4.572,
+   "iter_max": 10
+  },
+  "15.25": {
+   "cer": 2e-05,
+   "errors": 2,
+   "iter_mean": 4.053,
+   "iter_max": 10
+  },
+  "15.5": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 3.646,
+   "iter_max": 10
+  },
+  "15.75": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 3.327,
+   "iter_max": 10
+  },
+  "16": {
+   "cer": 1e-05,
+   "errors": 1,
+   "iter_mean": 3.065,
+   "iter_max": 10
+  },
+  "16.25": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 2.832,
+   "iter_max": 10
+  },
+  "16.5": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 2.607,
+   "iter_max": 6
+  }
+ },
+ "2/3 q7s3a11m9i12": {
+  "13.5": {
+   "cer": 0.86865,
+   "errors": 86865,
+   "iter_mean": 11.756,
+   "iter_max": 12
+  },
+  "13.75": {
+   "cer": 0.6214,
+   "errors": 62140,
+   "iter_mean": 11.049,
+   "iter_max": 12
+  },
+  "14": {
+   "cer": 0.30437,
+   "errors": 30437,
+   "iter_mean": 9.613,
+   "iter_max": 12
+  },
+  "14.25": {
+   "cer": 0.0898,
+   "errors": 8980,
+   "iter_mean": 7.837,
+   "iter_max": 12
+  },
+  "14.5": {
+   "cer": 0.01454,
+   "errors": 1454,
+   "iter_mean": 6.331,
+   "iter_max": 12
+  },
+  "14.75": {
+   "cer": 0.00143,
+   "errors": 143,
+   "iter_mean": 5.29,
+   "iter_max": 12
+  },
+  "15": {
+   "cer": 0.00014,
+   "errors": 14,
+   "iter_mean": 4.572,
+   "iter_max": 12
+  },
+  "15.25": {
+   "cer": 1e-05,
+   "errors": 1,
+   "iter_mean": 4.053,
+   "iter_max": 12
+  },
+  "15.5": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 3.646,
+   "iter_max": 10
+  },
+  "15.75": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 3.327,
+   "iter_max": 12
+  },
+  "16": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 3.065,
+   "iter_max": 12
+  },
+  "16.25": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 2.832,
+   "iter_max": 11
+  },
+  "16.5": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 2.607,
+   "iter_max": 6
+  }
+ },
+ "2/3 q7s3a11m9i16": {
+  "13.5": {
+   "cer": 0.79726,
+   "errors": 79726,
+   "iter_mean": 15.171,
+   "iter_max": 16
+  },
+  "13.75": {
+   "cer": 0.50826,
+   "errors": 50826,
+   "iter_mean": 13.439,
+   "iter_max": 16
+  },
+  "14": {
+   "cer": 0.21429,
+   "errors": 21429,
+   "iter_mean": 10.75,
+   "iter_max": 16
+  },
+  "14.25": {
+   "cer": 0.05224,
+   "errors": 5224,
+   "iter_mean": 8.163,
+   "iter_max": 16
+  },
+  "14.5": {
+   "cer": 0.00664,
+   "errors": 664,
+   "iter_mean": 6.382,
+   "iter_max": 16
+  },
+  "14.75": {
+   "cer": 0.00067,
+   "errors": 67,
+   "iter_mean": 5.295,
+   "iter_max": 16
+  },
+  "15": {
+   "cer": 3e-05,
+   "errors": 3,
+   "iter_mean": 4.573,
+   "iter_max": 16
+  },
+  "15.25": {
+   "cer": 1e-05,
+   "errors": 1,
+   "iter_mean": 4.053,
+   "iter_max": 16
+  },
+  "15.5": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 3.646,
+   "iter_max": 10
+  },
+  "15.75": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 3.327,
+   "iter_max": 16
+  },
+  "16": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 3.065,
+   "iter_max": 13
+  },
+  "16.25": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 2.832,
+   "iter_max": 11
+  },
+  "16.5": {
+   "cer": 0.0,
+   "errors": 0,
+   "iter_mean": 2.607,
+   "iter_max": 6
+  }
+ }
+}

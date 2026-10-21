@@ -6,7 +6,7 @@
       "redraw/design_flow.svg",
       "redraw/design_flow.drawio"
     ],
-    "sha256": "3d90809bf4d83590a9dc5631e113c86f8f3e0642e5a71ed410dbdcd04eddf95d"
+    "sha256": "e9dc81262d8e76525e82c17119d13ff61de3c5277094971aaef328671db5e165"
   },
   {
     "figure": "2-5",
@@ -63,7 +63,7 @@
     "sha256": "41f8315f6eece4348429a6dabba1bf0da952044195824068efc7d1c67f7864e4"
   },
   {
-    "figure": "2-20",
+    "figure": "2-24",
     "png": "sw/sw_arch.png",
     "editable": [
       "redraw/fig2_18_software_arch.svg",
@@ -72,16 +72,16 @@
     "sha256": "c3b90453652d951e9db52d140ee787b69dac03d648d8b3f3513e588ca229f99c"
   },
   {
-    "figure": "2-21",
+    "figure": "2-25",
     "png": "sw/tx_flow.png",
     "editable": [
       "redraw/fig2_19_tx_main_flow.svg",
       "redraw/fig2_19_tx_main_flow.drawio"
     ],
-    "sha256": "3db92269c498a06519fc76b82e76d803097ad0cabd1e6a7fcc09e6cf0c2ff246"
+    "sha256": "eefaaf0730a776e62301cb80120e201e597cb21e369b2cf71a97ac47182ad09a"
   },
   {
-    "figure": "2-22",
+    "figure": "2-26",
     "png": "sw/agc_flow.png",
     "editable": [
       "redraw/fig2_20_ad9361_ps_agc.svg",
@@ -90,7 +90,7 @@
     "sha256": "3d7d72fa16a37315e18acd90734d6a81a9cbdd8347ca8fdac3ebdf2fb3e6beb2"
   },
   {
-    "figure": "2-25",
+    "figure": "2-29",
     "png": "sw/gpu_pipeline.png",
     "editable": [
       "redraw/fig2_23_mali_pipeline.svg",
@@ -99,7 +99,7 @@
     "sha256": "218b9e4dc294b1587c3e23559f84a8a55712198a62d2f76729160b0f721d86e0"
   },
   {
-    "figure": "2-26",
+    "figure": "2-30",
     "png": "sw/pc_toolchain.png",
     "editable": [
       "redraw/fig2_24_pc_toolchain.svg",

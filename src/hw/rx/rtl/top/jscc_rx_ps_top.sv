@@ -17,7 +17,7 @@
 //   * raw ADC IQ (adc_capture -> cap_dma), immediate or at the next PHY frame start, 2048 samples pre-trigger
 //   * telemetry snapshots of the RX equalizer stages (telemetry.sv, AXI4 slave at 0x8004_0000)
 //   * control / status registers (rx_ps_regs.sv, AXI4-Lite at 0x8002_0000)
-//   * SSCC baseline packets: sscc_rx (64-QAM soft demap, deinterleaver, Viterbi, descrambler) decodes every PHY frame
+//   * SSCC baseline packets: sscc_rx (64-QAM soft demap, LDPC decoder, descrambler) decodes every PHY frame
 //     as an SSCC frame too; the PS reads the packets through the telemetry slave (0x5000 / 0x6000) and keeps the
 //     ones of the mode the TX is in (CRC)
 //   AXI side on clk_100M of the PL MMCM; the 250 MHz network domain is unchanged.
@@ -288,9 +288,9 @@ module jscc_rx_ps_top #(
 
     // SSCC baseline decoder on the PHY output (100 MHz, never back-pressures the PHY)
     wire [12:0] sscc_rd_addr;
-    wire [31:0] sscc_rd_q, sscc_seq, sscc_ovf;
+    wire [31:0] sscc_rd_q, sscc_seq, sscc_ovf, sscc_cw_fail, sscc_cw_iters;
     wire        sscc_last_buf;
-    sscc_rx #(.PAY_BYTES(12272), .FRAME_SYMS(FRAME_SYMS)) u_sscc (
+    sscc_rx #(.PAY_BYTES(16360), .FRAME_SYMS(FRAME_SYMS)) u_sscc (
         .clk      (clk100),
         .rst_n    (rxb_rst_n),
         .s_tdata  (phy_tdata),
@@ -299,6 +299,8 @@ module jscc_rx_ps_top #(
         .seq      (sscc_seq),
         .last_buf (sscc_last_buf),
         .fifo_ovf (sscc_ovf),
+        .cw_fail  (sscc_cw_fail),
+        .cw_iters (sscc_cw_iters),
         .rd_addr  (sscc_rd_addr),
         .rd_q     (sscc_rd_q)
     );
@@ -425,7 +427,9 @@ module jscc_rx_ps_top #(
         .sscc_seq       (sscc_seq),
         .sscc_last_buf  (sscc_last_buf),
         .sscc_ovf       (sscc_ovf),
-        .sscc_bytes     (16'd12272),
+        .sscc_bytes     (16'd16360),
+        .sscc_cw_fail   (sscc_cw_fail),
+        .sscc_cw_iters  (sscc_cw_iters),
         .s_axi_awaddr   (tel_awaddr), .s_axi_awlen (tel_awlen), .s_axi_awvalid (tel_awvalid), .s_axi_awready (tel_awready),
         .s_axi_wdata    (tel_wdata),  .s_axi_wlast (tel_wlast), .s_axi_wvalid  (tel_wvalid),  .s_axi_wready  (tel_wready),
         .s_axi_bresp    (tel_bresp),  .s_axi_bvalid (tel_bvalid), .s_axi_bready (tel_bready),

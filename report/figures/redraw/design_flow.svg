@@ -61,7 +61,7 @@
 <polyline points="330,460 330,488" fill="none" stroke="#000000" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
 <polygon points="330,488 335.0,477.0 325.0,477.0" fill="#000000"/>
 <rect x="60" y="626" width="540" height="110" rx="13" fill="#FFF2CC" stroke="#7F6000" stroke-width="2"/>
-<text x="371.0" y="659" xml:space="preserve" text-anchor="middle" font-size="27" font-weight="400" fill="#000000"><tspan font-family="SimSun">手写参数化</tspan><tspan font-family="Times New Roman"> RTL </tspan><tspan font-family="SimSun">模块</tspan></text>
+<text x="371.0" y="659" xml:space="preserve" text-anchor="middle" font-size="27" font-weight="400" fill="#000000"><tspan font-family="SimSun">子模块</tspan><tspan font-family="Times New Roman"> RTL </tspan><tspan font-family="SimSun">编写与仿真</tspan></text>
 <text x="371.0" y="692" xml:space="preserve" text-anchor="middle" font-size="24" font-weight="400" fill="#000000"><tspan font-family="SimSun">卷积、行缓存、</tspan><tspan font-family="Times New Roman">GDN </tspan><tspan font-family="SimSun">等模块</tspan></text>
 <text x="371.0" y="721" xml:space="preserve" text-anchor="middle" font-size="24" font-weight="400" fill="#000000"><tspan font-family="SimSun">逐模块与整数参考模型逐比特比对</tspan></text>
 <g id="icon_nn3" fill="none" stroke="#7F6000" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
@@ -226,7 +226,7 @@
 <text x="681.0" y="1252" xml:space="preserve" text-anchor="middle" font-size="27" font-weight="400" fill="#000000"><tspan font-family="SimSun">系统集成</tspan></text>
 <text x="681.0" y="1285" xml:space="preserve" text-anchor="middle" font-size="24" font-weight="400" fill="#000000"><tspan font-family="SimSun">编解码器与</tspan><tspan font-family="Times New Roman"> PHY </tspan><tspan font-family="SimSun">按接口约定对接</tspan></text>
 <text x="681.0" y="1316" xml:space="preserve" text-anchor="middle" font-size="24" font-weight="400" fill="#000000"><tspan font-family="SimSun">加入</tspan><tspan font-family="Times New Roman"> PS </tspan><tspan font-family="SimSun">软件与</tspan><tspan font-family="Times New Roman"> GUI</tspan><tspan font-family="SimSun">、</tspan><tspan font-family="Times New Roman">SSCC </tspan><tspan font-family="SimSun">对比基线</tspan></text>
-<text x="681.0" y="1347" xml:space="preserve" text-anchor="middle" font-size="24" font-weight="400" fill="#000000"><tspan font-family="Times New Roman">JPEG + </tspan><tspan font-family="SimSun">卷积码</tspan><tspan font-family="Times New Roman"> · </tspan><tspan font-family="SimSun">同一</tspan><tspan font-family="Times New Roman"> PHY</tspan><tspan font-family="SimSun">、同样符号数</tspan></text>
+<text x="681.0" y="1347" xml:space="preserve" text-anchor="middle" font-size="24" font-weight="400" fill="#000000"><tspan font-family="Times New Roman">JPEG + </tspan><tspan font-family="Times New Roman">LDPC</tspan><tspan font-family="Times New Roman"> · </tspan><tspan font-family="SimSun">同一</tspan><tspan font-family="Times New Roman"> PHY</tspan><tspan font-family="SimSun">、同样符号数</tspan></text>
 <g id="icon_integration" fill="none" stroke="#50632A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
 <polyline points="238.000,1271.000 260.000,1291.000"/>
 <polyline points="282.000,1271.000 260.000,1291.000"/>

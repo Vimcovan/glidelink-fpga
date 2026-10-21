@@ -8,14 +8,15 @@
     8   4  CRC32 of bytes 0..7 + the JPEG
     12  .. JPEG (256 x 256 RGB centre crop, quality chosen per frame to fill the packet), zero padding
 
-PAY_BYTES = 12272 = the 98304 information bits of a frame (32768 64-QAM symbols, rate 1/2) minus the 128-bit
-zero tail: the same channel symbols per image as the DeepJSCC link.
+PAY_BYTES = 16360: a frame carries 101 LDPC codewords (802.11n, n = 1944, rate 2/3) = 130896 information bits
+(16362 bytes; the last 16 bits are a zero tail) in 32768 64-QAM symbols: the same channel symbols per image as the
+DeepJSCC link.
 """
 import struct
 import zlib
 import numpy as np
 
-PAY_BYTES = 12272
+PAY_BYTES = 16360
 HDR = struct.Struct("<2sHHBBI")
 MAX_JPEG = PAY_BYTES - HDR.size
 

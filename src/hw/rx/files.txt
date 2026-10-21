@@ -175,6 +175,8 @@ rtl/network/rtl/sdp_ram.sv
 rtl/phy/ofdm_rx/sfo_residual.sv
 rtl/phy/ofdm_rx/sfo_rotator.sv
 rtl/phy/ofdm_rx/slide_win_sum.sv
+rtl/ps/ldpc_r23_pkg.sv
+rtl/ps/ldpc_dec.sv
 rtl/ps/sscc_rx.sv
 rtl/phy/ofdm_rx/synchronizer_top.sv
 rtl/phy/telemetry/telemetry.sv
@@ -195,4 +197,3 @@ ip/div_block/div_block.xci
 ip/dds_freq_correct/dds_freq_correct.xci
 ip/cordic_block/cordic_block.xci
 ip/clk_gen/clk_gen.xci
-ip/viterbi/viterbi.xci

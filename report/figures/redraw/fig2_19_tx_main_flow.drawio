@@ -180,7 +180,7 @@
         <mxCell id="cell44" value="&lt;span style=&quot;font-family:Times New Roman&quot;&gt;JPEG &lt;/span&gt;&lt;span style=&quot;font-family:SimSun&quot;&gt;自适应压缩（见右图）&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=nowrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=SimSun;fontSize=29;fontColor=#000000;" vertex="1" parent="1">
           <mxGeometry x="165.33333333333334" y="1450.86" width="369.3333333333333" height="39" as="geometry" />
         </mxCell>
-        <mxCell id="cell45" value="&lt;span style=&quot;font-family:SimSun&quot;&gt;打包：&lt;/span&gt;&lt;span style=&quot;font-family:Times New Roman&quot;&gt;12272 B&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=nowrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=SimSun;fontSize=29;fontColor=#000000;" vertex="1" parent="1">
+        <mxCell id="cell45" value="&lt;span style=&quot;font-family:SimSun&quot;&gt;打包：&lt;/span&gt;&lt;span style=&quot;font-family:Times New Roman&quot;&gt;16360 B&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=nowrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=SimSun;fontSize=29;fontColor=#000000;" vertex="1" parent="1">
           <mxGeometry x="253.5" y="1492.86" width="193.0" height="39" as="geometry" />
         </mxCell>
         <mxCell id="cell46" value="&lt;span style=&quot;font-family:Times New Roman&quot;&gt;send_packet(pkt) → &lt;/span&gt;&lt;span style=&quot;font-family:SimSun&quot;&gt;图像&lt;/span&gt;&lt;span style=&quot;font-family:Times New Roman&quot;&gt; DMA&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=nowrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=SimSun;fontSize=29;fontColor=#000000;" vertex="1" parent="1">
@@ -295,7 +295,7 @@
         <mxCell id="cell70" value="" style="rhombus;fillColor=#FFF2CC;strokeColor=#7F6000;strokeWidth=2;" vertex="1" parent="1">
           <mxGeometry x="1500.0" y="392.5" width="650" height="155" as="geometry" />
         </mxCell>
-        <mxCell id="cell71" value="&lt;span style=&quot;font-family:Times New Roman&quot;&gt;len(buf) ≤ 12260 B&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=nowrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=SimSun;fontSize=31;fontColor=#000000;" vertex="1" parent="1">
+        <mxCell id="cell71" value="&lt;span style=&quot;font-family:Times New Roman&quot;&gt;len(buf) ≤ 16348 B&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=nowrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=SimSun;fontSize=31;fontColor=#000000;" vertex="1" parent="1">
           <mxGeometry x="1702.3333333333333" y="426.54" width="245.33333333333334" height="41" as="geometry" />
         </mxCell>
         <mxCell id="cell72" value="&lt;span style=&quot;font-family:SimSun&quot;&gt;或&lt;/span&gt;&lt;span style=&quot;font-family:Times New Roman&quot;&gt; q ≤ 5&lt;/span&gt;&lt;span style=&quot;font-family:SimSun&quot;&gt;？&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=nowrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=SimSun;fontSize=31;fontColor=#000000;" vertex="1" parent="1">
@@ -426,7 +426,7 @@
         <mxCell id="cell103" value="&lt;span style=&quot;font-family:Times New Roman&quot;&gt;JPEG &lt;/span&gt;&lt;span style=&quot;font-family:SimSun&quot;&gt;数据&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=nowrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=SimSun;fontSize=30;fontColor=#000000;" vertex="1" parent="1">
           <mxGeometry x="1729.0" y="1497" width="142.0" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="cell104" value="&lt;span style=&quot;font-family:Times New Roman&quot;&gt;≤ 12260 B&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=nowrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=SimSun;fontSize=29;fontColor=#000000;" vertex="1" parent="1">
+        <mxCell id="cell104" value="&lt;span style=&quot;font-family:Times New Roman&quot;&gt;≤ 16348 B&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=nowrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=SimSun;fontSize=29;fontColor=#000000;" vertex="1" parent="1">
           <mxGeometry x="1735.3333333333333" y="1541" width="129.33333333333331" height="39" as="geometry" />
         </mxCell>
         <mxCell id="cell105" value="" style="rounded=0;arcSize=10;html=1;fillColor=#F2F2F2;strokeColor=#595959;strokeWidth=2;dashed=0;dashPattern=10 7;" vertex="1" parent="1">
@@ -448,7 +448,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell109" value="&lt;span style=&quot;font-family:SimSun&quot;&gt;合计&lt;/span&gt;&lt;span style=&quot;font-family:Times New Roman&quot;&gt; 12272 B&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=nowrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=SimSun;fontSize=31;fontColor=#000000;" vertex="1" parent="1">
+        <mxCell id="cell109" value="&lt;span style=&quot;font-family:SimSun&quot;&gt;合计&lt;/span&gt;&lt;span style=&quot;font-family:Times New Roman&quot;&gt; 16360 B&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=nowrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=SimSun;fontSize=31;fontColor=#000000;" vertex="1" parent="1">
           <mxGeometry x="1733.8333333333333" y="1636" width="182.33333333333334" height="41" as="geometry" />
         </mxCell>
         <mxCell id="cell110" value="&lt;span style=&quot;font-family:SimSun&quot;&gt;包头：&lt;/span&gt;&lt;span style=&quot;font-family:Times New Roman&quot;&gt;SC&lt;/span&gt;&lt;span style=&quot;font-family:SimSun&quot;&gt;、帧号、&lt;/span&gt;&lt;span style=&quot;font-family:Times New Roman&quot;&gt;JPEG &lt;/span&gt;&lt;span style=&quot;font-family:SimSun&quot;&gt;长度、&lt;/span&gt;&lt;span style=&quot;font-family:Times New Roman&quot;&gt;q&lt;/span&gt;&lt;span style=&quot;font-family:SimSun&quot;&gt;、保留字节、&lt;/span&gt;&lt;span style=&quot;font-family:Times New Roman&quot;&gt;CRC32&lt;/span&gt;&lt;span style=&quot;font-family:SimSun&quot;&gt;。&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=nowrap;strokeColor=none;fillColor=none;spacing=0;fontFamily=SimSun;fontSize=28;fontColor=#000000;" vertex="1" parent="1">

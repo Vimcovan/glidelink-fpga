@@ -418,6 +418,8 @@ rtl/network/rtl/qam_tx.sv
 rtl/network/rtl/rom.sv
 rtl/network/rtl/rom_banked.sv
 rtl/network/rtl/sdp_ram.sv
+rtl/ps/ldpc_r23_pkg.sv
+rtl/ps/ldpc_enc.sv
 rtl/ps/sscc_tx.sv
 rtl/phy/ofdm_tx/truncation_and_saturation.sv
 rtl/phy/ofdm_tx/tx_baseband_jscc.sv

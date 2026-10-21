@@ -10,7 +10,7 @@
 | 快速 AGC 寄存器取值 | `ad9361_rx_init.json` 中 0x0FA、0x101–0x11B 等 | 参考 openwifi `agc_settings.sh` 的数值（0x101 锁定电平已改为 −14 dBFS，见下） | openwifi（AGPL-3.0）**未包含在本仓库**，只借用了寄存器数值并在此注明 |
 | GDN 层的参数化方式 | `src/model/deepjsccq_model.py`（`gdn_param='compressai'`） | CompressAI（InterDigital） | BSD-3-Clause-Clear；本仓库为自行实现，未包含 CompressAI 代码 |
 | DeepJSCC-Q 方法 | `src/model/` | Tung, Kurka, Jankowski, Gündüz, "DeepJSCC-Q: Constellation constrained deep joint source-channel coding", IEEE JSAIT 2022 | 论文方法的复现与 FPGA 化实现 |
-| Vivado IP 配置 | `src/hw/{tx,rx}/ip/*/*.xci` | AMD / Xilinx Vivado IP（FFT、FIFO、DDS、CORDIC、除法器、Viterbi、Clocking Wizard、VIO 等） | 仅为 IP 配置文件，IP 本身随 Vivado 提供，受 AMD 许可约束 |
+| Vivado IP 配置 | `src/hw/{tx,rx}/ip/*/*.xci` | AMD / Xilinx Vivado IP（FFT、FIFO、DDS、CORDIC、除法器、Clocking Wizard、VIO 等） | 仅为 IP 配置文件，IP 本身随 Vivado 提供，受 AMD 许可约束 |
 | PYNQ-ZU PS 配置 | `src/hw/ps_config_list.txt` | PYNQ-ZU 板卡的 Zynq UltraScale+ PS 预设 | 板卡厂商 / PYNQ 项目提供 |
 | 二维码生成 | `src/sw/rx/qrcodegen.py` | Project Nayuki QR Code generator library（Python 版 1.8.0，PyPI `qrcodegen`），未修改；RX 触摸屏“手机”页用它显示控制页地址 | MIT（Copyright Project Nayuki），文件头保留原声明 |
 | TX 演示视频 | `src/sw/tx/media/colorful_256.mp4` | 本项目提供 | 经确认可随本仓库（MIT）分发 |

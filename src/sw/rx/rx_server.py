@@ -7,7 +7,8 @@
              (pre = LTF1 + LTF2 + 20 symbols with the layout-3 bitstream: the GUI estimates SNR from LTF1 - LTF2)
              + RX spectrum from the raw ADC capture (~2 Hz): PSD inside a PHY frame and of the noise just before it
   SSCC       every PHY frame is also decoded as an SSCC baseline frame in the PL (sscc_rx, telemetry layout >= 4):
-             new packets (12272 bytes, sscc_pkt.py) are read from the telemetry slave and sent as MT_SSCC
+             new packets (sscc_pkt.PAY_BYTES, the length is read from the bitstream) are read from the telemetry
+             slave and sent as MT_SSCC; LDPC codewords not converged / iterations are logged every 5 s
 Run as root:  bash -lc 'source /etc/profile.d/pynq_venv.sh && python3 rx_server.py'
 """
 import argparse
@@ -154,7 +155,7 @@ def spec_loop():
 
 
 # ------------------------------------------------------------------ SSCC baseline packets (PL sscc_rx)
-SSCC_WORDS = 12272 // 4
+SSCC_WORDS = 16360 // 4                             # set from telemetry word 11 (packet bytes) at start
 
 
 def sscc_loop():
@@ -175,6 +176,26 @@ def sscc_loop():
         except Exception as e:
             print("sscc:", e, flush=True)
             time.sleep(1.0)
+
+
+_ldpc_last = None
+
+
+def ldpc_report():
+    """LDPC decoder counters (telemetry words 12 / 13, cumulative): codewords not converged and mean iterations
+    since the last report (101 codewords per PHY frame)"""
+    global _ldpc_last
+    if not sscc_ok or SSCC_WORDS * 4 != 16360:
+        return ""
+    try:
+        cur = (int(rx._tr(12, 1)[0]), int(rx._tr(13, 1)[0]), int(rx.status().get("PHY_FRAMES", 0)))
+    except Exception:
+        return ""
+    last, _ldpc_last = _ldpc_last, cur
+    if last is None or cur[2] <= last[2]:
+        return ""
+    ncw = 101 * (cur[2] - last[2])
+    return f", ldpc fail {cur[0] - last[0]}/{ncw} cw, iter {(cur[1] - last[1]) / ncw:.2f}"
 
 
 # ------------------------------------------------------------------ telemetry
@@ -274,6 +295,9 @@ def agc_guard_loop():
 
 
 sscc_ok = int(rx._tr(6, 1)[0]) >= 4                  # telemetry layout 4: SSCC packet buffers
+if sscc_ok:
+    SSCC_WORDS = int(rx._tr(11, 1)[0]) // 4           # 3068 (convolutional code) or 4090 (LDPC)
+    print("SSCC packet", 4 * SSCC_WORDS, "bytes", flush=True)
 print("SSCC baseline decoder", "present" if sscc_ok else "not in this bitstream", flush=True)
 for f in (ctrl_loop, image_loop, sender_loop, tel_loop) + ((spec_loop,) if args.spec_hz > 0 else ()) + ((sscc_loop,) if sscc_ok else ()) + (agc_watch,) + \
         ((agc_guard_loop,) if args.agc_guard_hz > 0 and rx.rf is not None else ()):
@@ -288,7 +312,7 @@ try:
         print(f"{time.strftime('%H:%M:%S')} images {(stats['img_rx'] - last['img_rx']) / dt:.1f}/s, "
               f"sent {(stats['img_sent'] - last['img_sent']) / dt:.1f}/s, timeouts {stats['img_timeouts']}, "
               f"peers {live_peers()}, frame-gap {spec.get('frame_db', 0) - spec.get('gap_db', 0):.1f} dB "
-              f"(gap {spec.get('gap_db', 0):.1f} dBFS), status {rx.status()}", flush=True)
+              f"(gap {spec.get('gap_db', 0):.1f} dBFS), status {rx.status()}{ldpc_report()}", flush=True)
         last, t_rep = dict(stats), time.time()
 finally:
     rx.wr("IMG_CTRL", 0)

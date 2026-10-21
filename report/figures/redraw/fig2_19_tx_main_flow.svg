@@ -53,7 +53,7 @@
 <polygon points="620,1257.5 625.0,1245.5 615.0,1245.5" fill="#000000"/>
 <rect x="125.0" y="1440" width="450" height="150" rx="12" fill="#F2DEDA" stroke="#843C35" stroke-width="2"/>
 <text x="350" y="1482.86" xml:space="preserve" text-anchor="middle" font-size="29" fill="#000000"><tspan font-family="Times New Roman">JPEG </tspan><tspan font-family="SimSun">自适应压缩（见右图）</tspan></text>
-<text x="350" y="1524.86" xml:space="preserve" text-anchor="middle" font-size="29" fill="#000000"><tspan font-family="SimSun">打包：</tspan><tspan font-family="Times New Roman">12272 B</tspan></text>
+<text x="350" y="1524.86" xml:space="preserve" text-anchor="middle" font-size="29" fill="#000000"><tspan font-family="SimSun">打包：</tspan><tspan font-family="Times New Roman">16360 B</tspan></text>
 <text x="350" y="1566.86" xml:space="preserve" text-anchor="middle" font-size="29" fill="#000000"><tspan font-family="Times New Roman">send_packet(pkt) → </tspan><tspan font-family="SimSun">图像</tspan><tspan font-family="Times New Roman"> DMA</tspan></text>
 <rect x="700.0" y="1440" width="470" height="150" rx="12" fill="#DBEEF3" stroke="#205867" stroke-width="2"/>
 <text x="935" y="1482.86" xml:space="preserve" text-anchor="middle" font-size="29" fill="#000000"><tspan font-family="Times New Roman">send_image(img)</tspan></text>
@@ -84,7 +84,7 @@
 <polyline points="1825,216 1825,255" fill="none" stroke="#000000" stroke-width="2.2" stroke-linejoin="round"/>
 <polygon points="1825,255 1830.0,243.0 1820.0,243.0" fill="#000000"/>
 <polygon points="1825,392.5 2150.0,470 1825,547.5 1500.0,470" fill="#FFF2CC" stroke="#7F6000" stroke-width="2"/>
-<text x="1825" y="460.54" xml:space="preserve" text-anchor="middle" font-size="31" fill="#000000"><tspan font-family="Times New Roman">len(buf) ≤ 12260 B</tspan></text>
+<text x="1825" y="460.54" xml:space="preserve" text-anchor="middle" font-size="31" fill="#000000"><tspan font-family="Times New Roman">len(buf) ≤ 16348 B</tspan></text>
 <text x="1825" y="500.54" xml:space="preserve" text-anchor="middle" font-size="31" fill="#000000"><tspan font-family="SimSun">或</tspan><tspan font-family="Times New Roman"> q ≤ 5</tspan><tspan font-family="SimSun">？</tspan></text>
 <polyline points="1825,343 1825,392.5" fill="none" stroke="#000000" stroke-width="2.2" stroke-linejoin="round"/>
 <polygon points="1825,392.5 1830.0,380.5 1820.0,380.5" fill="#000000"/>
@@ -122,12 +122,12 @@
 <text x="1500.0" y="1573" xml:space="preserve" text-anchor="middle" font-size="29" fill="#000000"><tspan font-family="Times New Roman">12 B</tspan></text>
 <rect x="1590" y="1490" width="420" height="106" rx="0" fill="#EBF1DF" stroke="#50632A" stroke-width="2"/>
 <text x="1800.0" y="1530" xml:space="preserve" text-anchor="middle" font-size="30" fill="#000000"><tspan font-family="Times New Roman">JPEG </tspan><tspan font-family="SimSun">数据</tspan></text>
-<text x="1800.0" y="1573" xml:space="preserve" text-anchor="middle" font-size="29" fill="#000000"><tspan font-family="Times New Roman">≤ 12260 B</tspan></text>
+<text x="1800.0" y="1573" xml:space="preserve" text-anchor="middle" font-size="29" fill="#000000"><tspan font-family="Times New Roman">≤ 16348 B</tspan></text>
 <rect x="2010" y="1490" width="230" height="106" rx="0" fill="#F2F2F2" stroke="#595959" stroke-width="2"/>
 <text x="2125.0" y="1530" xml:space="preserve" text-anchor="middle" font-size="30" fill="#000000"><tspan font-family="SimSun">零填充</tspan></text>
 <text x="2125.0" y="1573" xml:space="preserve" text-anchor="middle" font-size="29" fill="#000000"><tspan font-family="SimSun">补满一包</tspan></text>
 <polyline points="1410,1610 1410,1626 2240,1626 2240,1610" fill="none" stroke="#595959" stroke-width="1.4" stroke-linejoin="round"/>
-<text x="1825" y="1670" xml:space="preserve" text-anchor="middle" font-size="31" fill="#000000"><tspan font-family="SimSun">合计</tspan><tspan font-family="Times New Roman"> 12272 B</tspan></text>
+<text x="1825" y="1670" xml:space="preserve" text-anchor="middle" font-size="31" fill="#000000"><tspan font-family="SimSun">合计</tspan><tspan font-family="Times New Roman"> 16360 B</tspan></text>
 <text x="1410" y="1735" xml:space="preserve" text-anchor="start" font-size="28" fill="#000000"><tspan font-family="SimSun">包头：</tspan><tspan font-family="Times New Roman">SC</tspan><tspan font-family="SimSun">、帧号、</tspan><tspan font-family="Times New Roman">JPEG </tspan><tspan font-family="SimSun">长度、</tspan><tspan font-family="Times New Roman">q</tspan><tspan font-family="SimSun">、保留字节、</tspan><tspan font-family="Times New Roman">CRC32</tspan><tspan font-family="SimSun">。</tspan></text>
 <text x="1410" y="1780" xml:space="preserve" text-anchor="start" font-size="28" fill="#595959"><tspan font-family="SimSun">字段宽度依次为</tspan><tspan font-family="Times New Roman"> 2</tspan><tspan font-family="SimSun">、</tspan><tspan font-family="Times New Roman">2</tspan><tspan font-family="SimSun">、</tspan><tspan font-family="Times New Roman">2</tspan><tspan font-family="SimSun">、</tspan><tspan font-family="Times New Roman">1</tspan><tspan font-family="SimSun">、</tspan><tspan font-family="Times New Roman">1</tspan><tspan font-family="SimSun">、</tspan><tspan font-family="Times New Roman">4 B</tspan><tspan font-family="SimSun">。</tspan></text>
 </svg>

@@ -5,8 +5,9 @@ idle gap; channel = worst-case CFO of two boards (+-20 ppm crystals -> 40 ppm at
 of half a sample (the sampling phases of the two boards are unrelated) and AWGN at 10 dB SNR.
 
   (a) frame detection: 16-lag autocorrelation P_n and energy E_n over 16 samples, metric |P_n| / E_n vs 0.5
-  (b) LTF timing: normalised cross-correlation with the LTF, rho^2 = |X_n|^2 / (E_n E_c), integer vs half-sample offset;
-      the RTL test |X|^2 > 0.375 E corresponds to rho^2 ~ 0.375 / 0.81 = 0.46 (RTL scaling, see time_sync.sv)
+  (b) LTF timing: normalised cross-correlation with the LTF, rho^2 = |X_n|^2 / (E_n E_c), integer vs half-sample offset,
+      and the two-point sum rho^2(n-1) + rho^2(n) used by the RTL; the RTL test |X(n-1)|^2 + |X(n)|^2 > 0.375 E
+      corresponds to rho^2 ~ 0.375 / 0.81 = 0.46 (RTL scaling, see time_sync.sv)
 
     python sync_sim.py      -> ../hw/fd_sim.png, ../hw/ts_sim.png
 """
@@ -74,7 +75,7 @@ prod = x[16:] * np.conj(x[:-16])
 P = np.r_[np.zeros(16 + 15), slide(prod, 16)[: len(x) - 31]]
 E = np.r_[np.zeros(16 + 15), slide(abs(x[:-16]) ** 2, 16)[: len(x) - 31]]
 m = np.where(E > 1e-9, abs(P) / np.maximum(E, 1e-12), 0)
-E_THR = 16 * (126 / 1024) ** 2           # RTL energy gate: sum(|x|^2/1024) > 250 over 16 samples, i.e. rms > 126 of 2048
+E_THR = 16 * (101 / 1024) ** 2           # RTL energy gate: sum(|x|^2/1024) > 160 over 16 samples, i.e. rms > 101 of 2048
 ok = (m > 0.5) & (E > E_THR)
 run = np.zeros(len(x), int)
 for i in range(1, len(x)):
@@ -117,27 +118,32 @@ def rho2(sig):
 
 r_int = rho2(channel(tx, 0.0, 10, cfo))
 r_half = rho2(x)
+r_pair = r_half + np.r_[0.0, r_half[:-1]]                       # rho^2(n-1) + rho^2(n)
 thr = 0.375 / 0.81
 fig, ax = plt.subplots(figsize=(6.3, 2.5), dpi=300)
 ax.plot(n, r_int, color=INK, lw=0.7, alpha=0.6, label="整数采样对齐")
 ax.plot(n, r_half, color=ACC, lw=0.9, label="偏移半个采样（最坏情况）")
-ax.axhline(thr, color=ACC2, lw=0.8, ls="--", label="RTL 门限 |X|² > 0.375E（≈ ρ² 0.46）")
+ax.plot(n, r_pair, color="#2e8b57", lw=0.9, label="偏移半个采样，相邻两点之和（RTL判决量）")
+ax.axhline(thr, color=ACC2, lw=0.8, label="门限 0.375E（≈ ρ² 0.46）")
 ax.axvspan(160, 320, color=S.SHADE_B, zorder=0)
 for k, lab in ((255, "LTF1 末点"), (319, "LTF2 末点")):
     ax.annotate(lab, xy=(k, r_half[k + GAP]), xytext=(k + 25, 0.9), fontsize=8,
                 arrowprops=dict(arrowstyle="->", lw=0.6, color=INK))
 ax.set_xlim(100, 700); ax.set_ylim(0, 1.1)
 ax.set_xlabel("采样序号（相对帧起点）"); ax.set_ylabel("ρ² = |X(n)|² / (E(n)·Ec)")
-ax.grid(color=GRID, lw=0.4); ax.legend(loc="upper right", fontsize=7.5, frameon=False)
+ax.grid(color=GRID, lw=0.4)
+ax.legend(loc="lower left", bbox_to_anchor=(0.0, 1.0), ncol=2, fontsize=7.5, frameon=False)
 # zoom on the LTF1 peak: sample by sample
 z = ax.inset_axes([0.60, 0.17, 0.37, 0.43])
 zs = slice(GAP + 248, GAP + 264)
 z.plot(n[zs], r_int[zs], "o-", color=INK, lw=0.7, ms=2.5, alpha=0.7)
 z.plot(n[zs], r_half[zs], "s-", color=ACC, lw=0.8, ms=2.5)
-z.axhline(thr, color=ACC2, lw=0.7, ls="--")
+z.plot(n[zs], r_pair[zs], "^-", color="#2e8b57", lw=0.8, ms=2.5)
+z.axhline(thr, color=ACC2, lw=0.7)
 z.set_xlim(248, 263); z.set_ylim(0, 1.05); z.set_xticks(range(248, 264, 3))
 pk = GAP + 255
-z.annotate(f"{r_int[pk]:.2f}", xy=(255, r_int[pk]), xytext=(256.2, 0.88), fontsize=6.5, color=INK)
+z.annotate(f"{r_int[pk]:.2f}", xy=(255, r_int[pk]), xytext=(252.9, 0.86), fontsize=6.5, color=INK)
+z.annotate(f"{r_pair[pk + 1]:.2f}", xy=(256, r_pair[pk + 1]), xytext=(256.5, 0.93), fontsize=6.5, color="#2e8b57")
 z.annotate(f"{r_half[pk]:.2f}", xy=(255, r_half[pk]), xytext=(252.3, 0.60), fontsize=6.5, color=ACC)
 z.annotate(f"{r_half[pk + 1]:.2f}", xy=(256, r_half[pk + 1]), xytext=(256.6, 0.50), fontsize=6.5, color=ACC)
 z.tick_params(labelsize=6.5); z.grid(color=GRID, lw=0.3)
@@ -147,4 +153,4 @@ S.finish(ax, grid=None)
 fig.tight_layout(); fig.savefig(os.path.join(OUT, "ts_sim.png")); plt.close(fig)
 print(f"detect at {det - GAP}, cfo est {cfo_est:.0f} Hz / {cfo:.0f} Hz, "
       f"LTF1 peak rho2 int {r_int[255 + GAP]:.2f} half {r_half[255 + GAP]:.2f} (max near {r_half[GAP + 240:GAP + 270].max():.2f}), "
-      f"data max {r_half[GAP + 330:].max():.2f}")
+      f"data max {r_half[GAP + 330:].max():.2f}, pair: peak {r_pair[GAP + 240:GAP + 270].max():.2f} data max {r_pair[GAP + 330:].max():.2f}")

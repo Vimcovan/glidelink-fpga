@@ -1,7 +1,7 @@
 """Visual comparison grid (Original | DeepJSCC-Q | SSCC) at several over-the-air channel conditions, from a
 measure_link.py --save-img run (one decoded image per point: the frame whose PSNR is closest to the point mean).
 Rows: TX attenuation points (same for both schemes); row label: constellation SNR of the point (data-aided,
-analyze_const.py; mean of the two schemes' passes). Under each image: PSNR / SSIM against the TX image.
+analyze_const.py; mean of the two schemes' passes, leaving out estimates with >= 5 % false-sync snapshots). Under each image: PSNR / SSIM against the TX image.
 SSIM: Wang et al. 2004 (11x11 Gaussian window, sigma 1.5, K1 0.01, K2 0.03, L 255), mean over R, G, B.
 A point where no SSCC frame could be decoded shows the mid-gray image the receiver displays.
 
@@ -45,12 +45,14 @@ ref = np.asarray(Image.open(os.path.join(imgdir, "tx_reference.png")).convert("R
 gray = np.full_like(ref, 128)
 
 plt.rcParams.update({"font.family": "serif", "font.serif": ["Times New Roman", "DejaVu Serif"], "font.size": 11})
-names = ("Original", "DeepJSCC-Q", "SSCC (JPEG + CC)")
+names = ("Original", "DeepJSCC-Q", "SSCC (JPEG + LDPC)")
 n = len(atts)
 fig, axs = plt.subplots(3, n, figsize=(2.0 * n, 6.75), dpi=200) if H else plt.subplots(n, 3, figsize=(6.3, 2.18 * n), dpi=200)
 cell = (lambda i, j: axs[j, i]) if H else (lambda i, j: axs[i, j])        # i: SNR point, j: scheme
 for i, att in enumerate(atts):
-    snrs = [R[(m, att)]["snr_da_db"] for m in ("jscc", "sscc") if R.get((m, att), {}).get("snr_da_db") is not None]
+    # SNR estimates with >= 5 % of the snapshots from false syncs are unreliable (same rule as the PSNR-SNR plot)
+    snrs = [R[(m, att)]["snr_da_db"] for m in ("jscc", "sscc") if R.get((m, att), {}).get("snr_da_db") is not None
+            and (R[(m, att)].get("snr_da_excl") or 0) < 0.05]
     for j, mode in enumerate((None, "jscc", "sscc")):
         ax = cell(i, j)
         if mode is None:

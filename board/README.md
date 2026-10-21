@@ -39,6 +39,8 @@
 | `power_rails.py` | 板载 PMBus 遥测（三片 IRPS5401）读各电源轨电压、电流、功率，按时间平均；PL / PS / DDR 分组 |
 | `agc_guard_test.py` | AGC 看门狗验收：静置误复位、衰减跳变恢复、无信号恢复 |
 | `agc_trace.py`、`adc_frames.py`、`pl_counters.py` | 诊断：原始 ADC 抓取与 AD9361 `CTRL_OUT`（状态输出引脚，此处为 AGC 状态）同步记录、帧间隔、PL 计数器 |
+| `adc_edge.py` | 诊断：链路边缘处各衰减点的原始 ADC 采样（含 TX 衰减最大时的噪声底）、同步率与增益，供离线同步分析和 `sim/phy/sync/` 的 RTL 回放 |
+| `agc_edge_probe.py` | 诊断：在线改写一个快速 AGC 寄存器（如 0x110、0x118），比较各衰减点的同步率、解码帧率与增益，结束时恢复原值 |
 
 ## 常见问题
 

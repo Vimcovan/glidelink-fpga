@@ -18,17 +18,18 @@ OUT = os.path.join(HERE, "..", "results")
 S.apply()
 
 # ---------------------------------------------------------------- PSNR vs data-aided SNR
-da = json.load(open(os.path.join(MEAS, "psnr_snr", "k0802_shallow_da.json"), encoding="utf-8"))
-EDGE = 0.05      # DeepJSCC-Q points at the sync edge (>= 5 % of the snapshots from false syncs) are left out
+da = json.load(open(os.path.join(MEAS, "psnr_snr", "k0802_final_da.json"), encoding="utf-8"))
+EDGE = 0.05      # points at the sync edge (>= 5 % of the snapshots from false syncs: the data-aided SNR is unreliable)
+FPS_MIN = 25     # DeepJSCC-Q points with fewer decoded frames (sync edge) are left out as well
 fig, ax = plt.subplots(figsize=(4.2, 3.0))
-for mode, name, col, mk in (("jscc", "DeepJSCC-Q", S.BLUE, "o"), ("sscc", "SSCC\n（JPEG + 卷积码 + 64QAM）", S.ORANGE, ">")):
+for mode, name, col, mk in (("jscc", "DeepJSCC-Q", S.BLUE, "o"), ("sscc", "SSCC\n（JPEG + LDPC + 64QAM）", S.ORANGE, ">")):
     pts = sorted((r["snr_da_db"], r["psnr_shown"]) for r in da["results"]
                  if r["mode"] == mode and r.get("snr_da_db") is not None and r.get("psnr_shown") is not None
-                 and not (mode == "jscc" and (r.get("snr_da_excl") or 0) >= EDGE))
+                 and (r.get("snr_da_excl") or 0) < EDGE and not (mode == "jscc" and (r.get("rx_fps") or 0) < FPS_MIN))
     x, y = np.array(pts).T
     ax.plot(x, y, "-" + mk, color=col, lw=1.1, ms=3.6, mfc="white", mew=0.9, label=name)
 ax.set_ylim(7, 33.5); ax.set_yticks(range(8, 34, 4))
-ax.set_xlim(5.5, 35.5); ax.set_xticks(range(6, 36, 3))
+ax.set_xlim(1.5, 37.5); ax.set_xticks(range(3, 37, 3))
 ax.set_xlabel("数据辅助 SNR / dB"); ax.set_ylabel("PSNR / dB")
 ax.legend(loc="lower right", fontsize=7.5, handlelength=1.6)
 S.finish(ax)

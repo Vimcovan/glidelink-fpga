@@ -62,8 +62,12 @@ def build_styles():
         pstyle("TableCaption", "TableCaption", '<w:keepNext/><w:spacing w:before="160" w:after="60" w:line="240" '
                'w:lineRule="auto"/><w:ind w:firstLine="0" w:firstLineChars="0"/><w:jc w:val="center"/>',
                '<w:sz w:val="21"/><w:szCs w:val="21"/>'),
-        pstyle("SourceCode", "Source Code", '<w:spacing w:before="60" w:after="60" w:line="240" w:lineRule="auto"/>'
-               '<w:ind w:firstLine="0" w:firstLineChars="0" w:left="420"/><w:jc w:val="left"/>',
+        # code / pseudocode: thin grey frame and light fill so that it stands apart from the body text
+        pstyle("SourceCode", "Source Code", '<w:pBdr>' + ''.join(
+                   f'<w:{e} w:val="single" w:sz="4" w:space="4" w:color="808080"/>' for e in ('top', 'left', 'bottom', 'right'))
+               + '</w:pBdr><w:shd w:val="clear" w:color="auto" w:fill="F5F5F5"/>'
+               '<w:spacing w:before="60" w:after="60" w:line="240" w:lineRule="auto"/>'
+               '<w:ind w:firstLine="0" w:firstLineChars="0" w:left="420" w:right="420"/><w:jc w:val="left"/>',
                rfonts(CJK, "Consolas") + '<w:sz w:val="18"/><w:szCs w:val="18"/>'),
         # Greek letters in body text: Word would otherwise draw them with the East Asian font (SimSun)
         '<w:style w:type="character" w:styleId="Greek"><w:name w:val="Greek"/>'

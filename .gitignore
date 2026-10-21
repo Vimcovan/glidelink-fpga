@@ -22,7 +22,7 @@ dfx_runtime.txt
 report/build/
 src/network/gen/
 data/model/golden/
-# Vivado IP output of the SSCC simulation (the Viterbi xci keeps the output path of the original project)
+# Vivado IP output of simulation projects
 sim/*.gen/
 src/network/vivado_projects/
 sim/network/work*/

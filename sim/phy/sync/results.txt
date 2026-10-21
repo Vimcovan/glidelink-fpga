@@ -1,0 +1,16 @@
+# check_sync.py output (RTL: frame_detection ENERGY_THRESH 160, time_sync ENERGY_THRESH 750)
+
+## s20: python gen_stim.py 20 20 s20
+all: 20 frames, timing ok (|off| <= 2) 20, LTF2 (+64) 0, other 0, no sync 0, CFO error rms 1.1 kHz
+sync events matching no frame (false triggers): 0
+
+## s4: python gen_stim.py 4 60 s4
+all: 60 frames, timing ok (|off| <= 2) 59, LTF2 (+64) 0, other 0, no sync 1, CFO error rms 12.5 kHz
+sync events matching no frame (false triggers): 0
+
+## board: python gen_replay.py adc_edge_20261021.npz board 48,46,45,44  (board/tests/adc_edge.py, 2026-10-21)
+48.0: 9 frames, timing ok (|off| <= 2) 9, LTF2 (+64) 0, other 0, no sync 0
+46.0: 9 frames, timing ok (|off| <= 2) 9, LTF2 (+64) 0, other 0, no sync 0
+45.0: 9 frames, timing ok (|off| <= 2) 9, LTF2 (+64) 0, other 0, no sync 0
+44.0: 9 frames, timing ok (|off| <= 2) 9, LTF2 (+64) 0, other 0, no sync 0
+sync events matching no frame (false triggers): 0

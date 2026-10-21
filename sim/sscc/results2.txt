@@ -1,9 +1,0 @@
-== FRAMES:1 DUMP:1
-SSCC sim: 1 frames, SNR 0.0 dB (sigma 0.0 per dimension)
-frame 0: 0 byte errors of 12272 (fifo overflow 0) at 2796326000
-SSCC_RESULT frames 1 byte_errors 0 tx_symbols 32768
-reference 32768 symbols, RTL 32768: 0 mismatches
-== FRAMES:1 SNR:13 HARD:1
-SSCC sim: 1 frames, SNR 13.0 dB (sigma 162.1 per dimension)
-frame 0: 2100 byte errors of 12272 (fifo overflow 0) at 2796326000
-SSCC_RESULT frames 1 byte_errors 2100 tx_symbols 32768

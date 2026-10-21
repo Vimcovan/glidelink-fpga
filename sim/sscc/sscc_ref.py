@@ -1,17 +1,24 @@
-"""Python reference of the SSCC TX chain (sscc_tx.sv), independent of the RTL:
-    bytes -> 802.11 scrambler (x^7 + x^4 + 1, seed 1011101, per frame) + zero tail -> K=7 (171,133) rate 1/2
-    -> 802.11a interleaver N_CBPS = 384, s = 3 -> Gray 64-QAM 158 * {+-1..+-7}
-Used to check tx_syms.txt / tx_bytes.txt dumped by tb_sscc (+DUMP=1), and by the PS side (pack / unpack).
+"""Python reference of the SSCC chain (sscc_tx.sv / sscc_rx.sv), independent of the RTL:
+    TX: bytes -> 802.11 scrambler (x^7 + x^4 + 1, seed 1011101, per frame) + zero tail -> 802.11n LDPC n = 1944 rate 2/3
+        (101 codewords) + 264 zero bits -> Gray 64-QAM 158 * {+-1..+-7}
+    RX: the LDPC decoder model of src/model/ldpc_ref.py, run on the LLRs the RTL decoder received
+Checks the files dumped by tb_sscc (+DUMP=1):
+    tx_bytes.txt / tx_syms.txt      first frame: RTL symbols vs reference
+    dec_llr.txt / dec_out.txt       decoder input LLRs and, per codeword, ok / iterations / 1296 output bits
 
     python sscc_ref.py [sim dir]      (default: the xsim run directory of run_sim.tcl, prj/sscc_sim.sim/sim_1/behav/xsim)
 """
 import os
 import sys
+from pathlib import Path
+
 import numpy as np
 
-PAY_BYTES, FRAME_SYMS = 12272, 32768
-FRAME_BITS = FRAME_SYMS * 3
-N, S = 384, 3
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src' / 'model'))
+import ldpc_ref as L                                          # noqa: E402
+
+PAY_BYTES, FRAME_SYMS, CW = 16360, 32768, 101
+FRAME_BITS = CW * L.K
 
 
 def scramble(bits, seed=0b1011101):
@@ -24,58 +31,39 @@ def scramble(bits, seed=0b1011101):
     return out
 
 
-def conv(bits):
-    sr = [0] * 6                                              # sr[0] = previous input
-    out = np.empty(2 * len(bits), np.uint8)
-    for n, b in enumerate(bits):
-        w = [b] + sr                                          # w[0] = input, w[6] = 6 delays
-        g0 = [1, 1, 1, 1, 0, 0, 1]                            # 171 (MSB = input)
-        g1 = [1, 0, 1, 1, 0, 1, 1]                            # 133
-        out[2 * n] = sum(x & g for x, g in zip(w, g0)) & 1
-        out[2 * n + 1] = sum(x & g for x, g in zip(w, g1)) & 1
-        sr = [b] + sr[:5]
-    return out
-
-
-def perm(k):
-    i = (N // 16) * (k % 16) + k // 16
-    return S * (i // S) + (i + N - (16 * i) // N) % S
-
-
-P = np.array([perm(k) for k in range(N)])
-assert sorted(P) == list(range(N))
-
-
-def interleave(cb):
-    out = np.empty_like(cb)
-    for b in range(len(cb) // N):
-        blk = cb[b * N:(b + 1) * N]
-        o = np.empty_like(blk); o[P] = blk
-        out[b * N:(b + 1) * N] = o
-    return out
-
-
-def lvl(g):                                                  # g = (msb, mid, lsb) Gray -> 158 (2k - 7)
-    g = [int(x) for x in g]
-    k2 = g[0]; k1 = g[0] ^ g[1]; k0 = g[0] ^ g[1] ^ g[2]
-    return 158 * (2 * (4 * k2 + 2 * k1 + k0) - 7)
-
-
-def tx(payload):
+def tx(payload, S):
     assert len(payload) == PAY_BYTES
     bits = np.unpackbits(np.frombuffer(payload, np.uint8))  # MSB first
     bits = np.concatenate([scramble(bits), np.zeros(FRAME_BITS - len(bits), np.uint8)])
-    cb = interleave(conv(bits))
-    sb = cb.reshape(-1, 6)
-    return np.array([[lvl(r[0:3]), lvl(r[3:6])] for r in sb])     # (I, Q)
+    cb = np.concatenate([L.encode(S, bits[c * L.K:(c + 1) * L.K]) for c in range(CW)]
+                        + [np.zeros(FRAME_SYMS * 6 - CW * L.N, np.uint8)])
+    return L.qam_map(cb)                                      # (I, Q)
 
 
 if __name__ == "__main__":
     d = sys.argv[1] if len(sys.argv) > 1 else f"{os.path.dirname(os.path.abspath(__file__))}/prj/sscc_sim.sim/sim_1/behav/xsim"
-    pay = bytes(int(l, 16) for l in open(f"{d}/tx_bytes.txt"))
-    rtl = np.loadtxt(f"{d}/tx_syms.txt", dtype=int)
-    ref = tx(pay)
-    n = min(len(rtl), len(ref))
-    bad = np.flatnonzero(np.any(rtl[:n] != ref[:n], axis=1))
-    print(f"reference {len(ref)} symbols, RTL {len(rtl)}: {len(bad)} mismatches"
-          + (f", first at {bad[0]}: rtl {rtl[bad[0]]} ref {ref[bad[0]]}" if len(bad) else ""))
+    S = L.base_matrix()
+    if os.path.exists(f"{d}/tx_syms.txt"):
+        pay = bytes(int(l, 16) for l in open(f"{d}/tx_bytes.txt"))
+        rtl = np.loadtxt(f"{d}/tx_syms.txt", dtype=int)
+        ref = tx(pay, S)
+        n = min(len(rtl), len(ref))
+        bad = np.flatnonzero(np.any(rtl[:n] != ref[:n], axis=1))
+        print(f"TX: reference {len(ref)} symbols, RTL {len(rtl)}: {len(bad)} mismatches"
+              + (f", first at {bad[0]}: rtl {rtl[bad[0]]} ref {ref[bad[0]]}" if len(bad) else ""))
+    if os.path.exists(f"{d}/dec_out.txt"):
+        llr = np.loadtxt(f"{d}/dec_llr.txt", dtype=int)
+        outs = [l.split() for l in open(f"{d}/dec_out.txt")]
+        nbad = nfail = 0; its = []
+        for c, (ok, it, bits) in enumerate(outs):
+            if (c + 1) * L.N > len(llr):
+                break
+            h, rok, rit = L.decode(S, llr[c * L.N:(c + 1) * L.N])
+            rb = ''.join(str(b) for b in h[:L.K])
+            same = (rb == bits) and (int(ok) == int(rok)) and (int(it) == rit)
+            nbad += not same; nfail += not rok; its.append(rit)
+            if not same and nbad <= 3:
+                print(f"  codeword {c}: RTL ok {ok} it {it}, ref ok {int(rok)} it {rit}, "
+                      f"bit mismatches {sum(a != b for a, b in zip(rb, bits))}")
+        print(f"DEC: {len(its)} codewords, {nbad} differ from the reference "
+              f"(reference: {nfail} not converged, iterations mean {np.mean(its):.2f} max {max(its)})")

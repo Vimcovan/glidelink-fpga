@@ -44,7 +44,7 @@ MT_TX_IMG = 3             # camera frame handed to the encoder, 196608 bytes
 #   GUI -> TX port   SRC + b" camera" | b" video" | b" preset:<name>" | b" preset"   input: USB camera, the demo video
 #                    (looped) or a still test image (tx_camera --presets, 30 fps); " preset" steps
 #                    video -> preset 1 .. n -> video (from the camera: video)
-#   GUI -> TX port   MODE + b" jscc" | b" sscc"   DeepJSCC or the SSCC baseline (JPEG + conv. code + 64-QAM)
+#   GUI -> TX port   MODE + b" jscc" | b" sscc"   DeepJSCC or the SSCC baseline (JPEG + LDPC + 64-QAM)
 #   TX  -> GUI       TS + b" <frame id> <t>"    with every preview: TX time.time() when the frame was taken from its
 #                    source (before JPEG / encoder); not starting with MAGIC, so receivers that do not know it drop it
 #   GUI -> TX port   TIME                     -> TX answers TIME_R + b" <t>" (its time.time(), for clock offset)
@@ -55,7 +55,7 @@ ATTN = b"JSCC-ATTN"
 ATTS = b"JSCC-ATTS"
 MODE = b"JSCC-MODE"
 SRC = b"JSCC-SRC"
-MT_SSCC = 4               # SSCC packet decoded by the RX PL (12272 bytes, sscc_pkt.py), RX board -> GUI
+MT_SSCC = 4               # SSCC packet decoded by the RX PL (sscc_pkt.PAY_BYTES), RX board -> GUI
 MT_RX_JPG = 5             # decoded image as JPEG (HELLO ... jpg subscribers)
 #   any -> TX port   STAT                       -> TX answers ATTS as for ATTN, without subscribing (also as UDP
 #                                                broadcast: web_server.py finds the TX board's WiFi address this way)

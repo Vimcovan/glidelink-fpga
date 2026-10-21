@@ -1,8 +1,9 @@
 `timescale 1ns / 1ps
 // SSCC TX -> AWGN -> RX loopback. Plusargs: +FRAMES=n +SNR=dB (Es/N0, 0 = no noise) +DUMP=1 (TX bytes / symbols
-// to tx_bytes.txt / tx_syms.txt for the python reference model)
+// of the first frame to tx_bytes.txt / tx_syms.txt, LDPC decoder input LLRs / per-codeword outputs to dec_llr.txt /
+// dec_out.txt, for sscc_ref.py)
 module tb_sscc;
-    localparam int PAY_BYTES = 12272, FRAME_SYMS = 32768;
+    localparam int PAY_BYTES = 16360, FRAME_SYMS = 32768;
     logic clk = 0, rst_n = 0;
     always #5 clk = ~clk;
 
@@ -49,11 +50,27 @@ module tb_sscc;
 
     // ---------------- channel + RX (PHY pacing: 48 symbols back to back every 400 clocks)
     logic [23:0] r_tdata; logic r_tlast, r_fire;
-    logic [31:0] seq, ovf; logic last_buf;
+    logic [31:0] seq, ovf, cw_fail, cw_iters; logic last_buf;
     logic [12:0] rd_addr; logic [31:0] rd_q;
     sscc_rx #(.PAY_BYTES(PAY_BYTES), .FRAME_SYMS(FRAME_SYMS)) dut_rx (
         .clk, .rst_n, .s_tdata(r_tdata), .s_tlast(r_tlast), .s_fire(r_fire),
-        .seq, .last_buf, .fifo_ovf(ovf), .rd_addr, .rd_q);
+        .seq, .last_buf, .fifo_ovf(ovf), .cw_fail, .cw_iters, .rd_addr, .rd_q);
+    // decoder I/O dump
+    int fd_l, fd_o, obits = 0;
+    string ob;
+    logic signed [6:0] d_llr; logic d_v, d_r, d_bit, d_bv, d_done, d_ok; logic [4:0] d_it;
+    assign d_llr = dut_rx.u_dec.s_llr;  assign d_v = dut_rx.u_dec.s_valid; assign d_r = dut_rx.u_dec.s_ready;
+    assign d_bit = dut_rx.u_dec.m_bit;  assign d_bv = dut_rx.u_dec.m_valid;
+    assign d_done = dut_rx.u_dec.cw_done; assign d_ok = dut_rx.u_dec.cw_ok; assign d_it = dut_rx.u_dec.cw_iter;
+    logic st_ok; logic [4:0] st_it;
+    always @(posedge clk) if (dump && rst_n) begin
+        if (d_v && d_r) $fdisplay(fd_l, "%0d", d_llr);
+        if (d_done) begin st_ok = d_ok; st_it = d_it; ob = ""; end
+        if (d_bv) begin
+            ob = {ob, d_bit ? "1" : "0"};
+            if (ob.len() == 1296) $fdisplay(fd_o, "%0d %0d %s", st_ok, st_it, ob);
+        end
+    end
     real sigma;
     int  seed = 7;
     function automatic logic [11:0] noisy(input logic [11:0] v);
@@ -71,6 +88,8 @@ module tb_sscc;
         r_fire = 0; r_tdata = 0; r_tlast = 0;
         if (dump) begin
             fd_s = $fopen("tx_syms.txt", "w");
+            fd_l = $fopen("dec_llr.txt", "w");
+            fd_o = $fopen("dec_out.txt", "w");
             begin
                 int fd_b = $fopen("tx_bytes.txt", "w");
                 foreach (txb[0][i]) $fdisplay(fd_b, "%02x", txb[0][i]);
@@ -113,8 +132,9 @@ module tb_sscc;
                 total_err += errs; checked++;
             end
         end
-        if (dump) $fclose(fd_s);
-        $display("SSCC_RESULT frames %0d byte_errors %0d tx_symbols %0d", frames, total_err, nsym);
+        if (dump) begin $fclose(fd_s); $fclose(fd_l); $fclose(fd_o); end
+        $display("SSCC_RESULT frames %0d byte_errors %0d tx_symbols %0d codewords_failed %0d iterations %0d",
+                 frames, total_err, nsym, cw_fail, cw_iters);
         $finish;
     end
     initial begin #50ms; $display("SSCC_RESULT TIMEOUT seq %0d", seq); $finish; end

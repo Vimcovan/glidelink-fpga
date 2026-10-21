@@ -3,8 +3,8 @@
 | 目录 | 验证对象 | 方法 | 结果 |
 |---|---|---|---|
 | `network/` | DeepJSCC-Q 编码器（256×256×3 → 32768 个复符号）与浅层解码器（反向）RTL | xsim（XPM，断言打开），输入 DIV2K 验证图，AXI-Stream 输入 valid、输出 ready 随机拉低（占空比 90 % / 80 %），与整数参考模型（`src/model/int_ref.py`，及其 NumPy 独立实现 `golden_np.py`）导出的各层结果逐比特比对 | 编码器、解码器各连续 2 帧比特精确（`results/encoder_xsim_20260930.log`：17 717 420 周期；`results/decoder_xsim_20260930.log`：14 803 719 周期） |
-| `phy/` | OFDM TX 基带（长帧、帧缓存不欠载）、OFDM RX（同步、双 LTF 信道估计、SFO / CPE 跟踪）、两板实采数据回放 | TX 测试平台生成并导出帧，RX 测试平台读入激励并导出星座、相位斜率和输出 | 激励与输出文件体积大，未入库，测试平台需在含 FFT / IFFT 等 IP 的 Vivado 工程中运行，不在克隆后即可运行的范围内（见下） |
-| `sscc/` | SSCC 基线：发射（扰码、K=7 卷积码、交织、64QAM）→ AWGN → 接收（Viterbi IP） | xsim，`sscc_ref.py` 为 Python 参考 | 无噪声时 0 字节错误，32768 个符号与参考完全一致；各 SNR 与软 / 硬判决下的字节错误数 |
+| `phy/` | OFDM TX 基带（长帧、帧缓存不欠载）、OFDM RX（同步、双 LTF 信道估计、SFO / CPE 跟踪）、两板实采数据回放；同步模块的合成激励与实采回放（`phy/sync/`） | TX 测试平台生成并导出帧，RX 测试平台读入激励并导出星座、相位斜率和输出 | 激励与输出文件体积大，未入库，测试平台需在含 FFT / IFFT 等 IP 的 Vivado 工程中运行，不在克隆后即可运行的范围内（见下） |
+| `sscc/` | SSCC 基线：发射（扰码、802.11n LDPC 编码、64QAM）→ AWGN → 接收（软解映射、分层最小和 LDPC 译码） | xsim，`sscc_ref.py` + `src/model/ldpc_ref.py` 为 Python 参考 | 无噪声时 0 字节错误，32768 个符号与参考完全一致；15.5 / 14.5 dB 下各 202 个码字的译码输出与逐位参考模型完全一致 |
 
 ## `network/`：神经网络
 
@@ -57,27 +57,44 @@ powershell -ExecutionPolicy Bypass -File sim\network\run_top_sim.ps1 -First rx_i
 | `tb_tx_long.sv`、`tb_tx_jscc.sv` | OFDM 发射基带（后者为 DeepJSCC-Q 帧格式，PRBS 64QAM 源），按 20 MSPS 读出，检查帧开始后不欠载，导出采样供 RX 仿真 |
 | `tb_rx_long.sv`、`tb_rx_jscc.sv` | OFDM 接收基带：两帧分别加正、负 SFO，再加 CFO、多径、AWGN，检查同步、信道估计与 SFO / CPE 跟踪 |
 | `tb_cap_2board.sv` | 把两板空口实测的 ADC 采样回放进接收基带 |
+| `sync/` | 同步模块（帧检测、频偏纠正、LTF 定时）的文件激励仿真：合成激励与板上实采采样回放，一键脚本见下 |
 
 这几个测试平台在开发时的 Vivado 工程中运行（OFDM 块用到 FFT / IFFT、CORDIC、DDS 等 IP），激励来自 `tb_tx_*` 的导出或
 `board/tests/adc_frames.py` 的实采数据，仓库中不带一键脚本。要运行它们，先用 `build/build_hw.tcl` 建出 RX / TX 工程，
 把测试平台加入 `sim_1`，再按测试平台开头的说明准备激励文件。
 
+### `phy/sync/`：同步模块
+
+```
+python gen_stim.py 4 60 s4                 # 合成激励：随机半采样定时偏移、±36.6 kHz 频偏、AWGN，数据电平 −14 dBFS
+python gen_replay.py <adc_edge.npz> board 48,46,45,44   # 板上实采采样回放（board/tests/adc_edge.py 的输出）
+vivado -mode batch -source run.tcl -tclargs s4
+python check_sync.py s4
+```
+
+`run.tcl` 第一次运行时在 `sim/phy/sync/prj/` 建工程（含 CORDIC、DDS、FIR Compiler IP），之后复用。`check_sync.py` 逐帧给出
+`time_sync` 进入数据段的位置相对 LTF1 起点的偏差（+64 即锁到 LTF2）、未同步的帧、不对应任何帧的同步（误触发），合成激励还给出频偏估计误差。
+结果（`results.txt`）：20 dB 下 20 帧全部定时正确，频偏误差均方根 1.1 kHz；4 dB 下 60 帧中 59 帧正确、1 帧帧检测漏检，频偏误差 12.5 kHz；
+板上实采回放（TX 额外衰减 44～48 dB，共 36 帧）全部定在 LTF1，5 万个只含噪声的采样中没有误触发。
+
 ## `sscc/`：SSCC 基线
 
 ```
-vivado -mode batch -source run_sim.tcl -tclargs "FRAMES:1 SNR:13"
+vivado -mode batch -source run_sim.tcl -tclargs "FRAMES:2 SNR:15.5 DUMP:1"
+python sscc_ref.py
 ```
 
-参数：`FRAMES` 帧数，`SNR` 信噪比（dB，省略为无噪声），`HARD:1` 改为硬判决 Viterbi 输入，`DUMP:1` 导出发射符号供 `sscc_ref.py` 比对。
-第一次运行在 `sim/sscc/prj/` 建工程并生成 Viterbi IP；每次运行都会重新编译（`HARD` 通过编译宏切换）。
-Viterbi IP 的 xci 沿用原工程的输出路径，运行后 `sim/` 下会出现 `OFDM_RX_JSCC.gen/`（已在 `.gitignore` 中），属预期。
+参数：`FRAMES` 帧数，`SNR` 信噪比（dB，省略为无噪声），`DUMP:1` 导出第一帧的发射字节与符号（`tx_bytes.txt`、`tx_syms.txt`）以及 LDPC
+译码器的输入 LLR 与每个码字的输出（`dec_llr.txt`、`dec_out.txt`）。`sscc_ref.py` 用 Python 参考（`src/model/ldpc_ref.py`，逐位模型）
+核对：发射符号逐个比较；对 RTL 译码器收到的同一组 LLR 重新译码，比较译出比特、收敛标志与迭代次数。第一次运行在 `sim/sscc/prj/` 建工程，
+每次运行都会重新编译。码表包 `ldpc_r23_pkg.sv` 由 `python src/model/ldpc_ref.py --gen-pkg` 从 Vivado LDPC IP 自带的码表生成（TX、RX 各一份）。
 
-| 命令参数 | 结果（每帧 12 272 字节） | 记录 |
-|---|---|---|
-| `"FRAMES:1 SNR:16"` | 0 字节错误 | `results.txt` |
-| `"FRAMES:1 SNR:13"` | 7 | `results.txt` |
-| `"FRAMES:1 SNR:11"` | 559 | `results.txt` |
-| `"FRAMES:1 DUMP:1"`，再运行 `python sscc_ref.py`（默认读取仿真目录 `prj/sscc_sim.sim/sim_1/behav/xsim/` 中导出的文件） | 0 字节错误；32 768 个符号与 Python 参考逐个相同 | `results2.txt` |
-| `"FRAMES:1 SNR:13 HARD:1"` | 2100 | `results2.txt` |
+| 命令参数 | 结果（每帧 16 360 字节，101 个码字） |
+|---|---|
+| `"FRAMES:1 DUMP:1"` | 0 字节错误；32 768 个符号与 Python 参考逐个相同；101 个码字均 1 次迭代收敛，与参考一致 |
+| `"FRAMES:2 SNR:15.5 DUMP:1"` | 0 字节错误；202 个码字与参考完全一致（平均 4.62 次迭代，最多 7 次） |
+| `"FRAMES:2 SNR:14.5 DUMP:1"` | 54 字节错误（3 个码字未收敛）；202 个码字与参考完全一致（平均 7.39 次迭代，最多 16 次）；输入 FIFO 无溢出 |
+
+记录见 `sscc/results.txt`。
 
 上板后的端到端验证（空口 PSNR–SNR、帧率、分段时延）见 `board/tests/` 与 `data/measurements/`。

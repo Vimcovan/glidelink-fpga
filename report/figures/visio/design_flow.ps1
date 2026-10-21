@@ -29,7 +29,7 @@ function Lane($y, $fill, $steps) {
 [void](Lane 8 $ST.COMPUTE @(
   "浮点模型训练`n期刊版DeepJSCC-Q`n10 dB AWGN",
   "W8A12整数量化`n整数参考模型`n量化损失≤0.07 dB",
-  "手写参数化RTL`n卷积、行缓存、GDN`n逐模块逐比特比对",
+  "子模块RTL编写与仿真`n卷积、行缓存、GDN`n逐模块逐比特比对",
   "并行度与存储规划`n每层取最小P`nBRAM36≤100块",
   "脚本顶层例化`n例化、传参、连线`n权重.mem文件",
   "整网仿真与综合`n与参考模型逐比特一致`n250 MHz时序收敛"))
@@ -49,7 +49,7 @@ function Lane($y, $fill, $steps) {
 [void](Lane 64 $ST.GREEN @(
   "编解码器与PHY对接`n按接口约定直接连接`n编码 → 空口 → 解码",
   "PS软件与GUI`n取图送图、AGC看门狗`n触摸屏、手机控制页",
-  "SSCC基线`nJPEG + 卷积码`n同一PHY、同样符号数",
+  "SSCC基线`nJPEG + LDPC`n同一PHY、同样符号数",
   "空口实测`nPSNR曲线、帧率`n时延、功耗"))
 
 Save-Figure (Join-Path $here 'design_flow.vsdx') (Join-Path $repo 'report\figures\design_flow.png')

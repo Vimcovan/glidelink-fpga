@@ -55,6 +55,8 @@ module telemetry #(
     input  logic        sscc_last_buf,
     input  logic [31:0] sscc_ovf,
     input  logic [15:0] sscc_bytes,
+    input  logic [31:0] sscc_cw_fail,       // LDPC codewords not converged (cumulative)
+    input  logic [31:0] sscc_cw_iters,      // LDPC decoder iterations (cumulative)
     // AXI4 slave (from jtag_axi)
     input  logic [31:0] s_axi_awaddr,  input logic [7:0] s_axi_awlen, input logic s_axi_awvalid, output logic s_axi_awready,
     input  logic [31:0] s_axi_wdata,   input logic s_axi_wlast,       input logic s_axi_wvalid,  output logic s_axi_wready,
@@ -225,6 +227,8 @@ module telemetry #(
                        6'd9: q_misc <= {31'd0, sscc_last_buf};
                        6'd10: q_misc <= sscc_ovf;
                        6'd11: q_misc <= {16'd0, sscc_bytes};
+                       6'd12: q_misc <= sscc_cw_fail;
+                       6'd13: q_misc <= sscc_cw_iters;
                        default: q_misc <= 32'd0;
                    endcase
             10'd1: q_misc <= (rword[5:4] == 2'd0) ? hdr[0][rword[3:0]] : 32'd0;

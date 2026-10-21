@@ -28,17 +28,17 @@
 | 2 | **面向 FPGA 的网络改造**：编码器保持每幅图 32,768 个信道符号不变，主通道数 256 → 32、下采样 16 → 4 倍；解码器采用与编码器联合训练的非对称浅层结构（线性 3×3 卷积 + 4 个 PWL 残差块 + 两级 3×3 亚像素上采样），乘加量只有对称结构解码器的 1/6，10 dB 下 PSNR 差在 0.1 dB 以内。整网乘加量降为原网络的约 1/102，权重与激活全部放在片上；代价是 Kodak 上 PSNR 约低 1.7 dB |
 | 3 | **逐层流水的卷积引擎**：RTL 由生成器自动产生，64 个卷积引擎各按帧率预算选择最小并行度，权重 ROM 按尺寸在 LUT / 宽字 BRAM / 顺序读 + 位宽转换中选择，大激活缓存放入 URAM。卷积工作量是已发表 FPGA 实现 [3] 的 5.2 倍，编码器 DSP 只用其 15 % |
 | 4 | **面向长帧软符号的 OFDM 接收机**：一幅图 = 683 个 OFDM 符号；按晶振标称偏差（±20 ppm）的最坏情况设计二阶 SFO 跟踪与 CPE 补偿，帧尾 EVM 只比帧头差约 1.7 dB；均衡后的连续 I/Q 直接送入解码器，不做判决；PN 符号翻转消除网络输出相关性带来的 PAPR 升高 |
-| 5 | **同 PHY 空口对比**：SSCC 基线（JPEG + K=7 卷积码 + 64-QAM）与 DeepJSCC-Q 共用同一物理层、同星座电平与 TX 衰减、每幅图同样 32,768 个符号，触摸屏上一键切换 |
+| 5 | **同 PHY 空口对比**：SSCC 基线（JPEG + 802.11n LDPC 2/3 + 64-QAM，编译码器自行设计）与 DeepJSCC-Q 共用同一物理层、同星座电平与 TX 衰减、每幅图同样 32,768 个符号，触摸屏上一键切换 |
 
 ## 主要结果（实测，空口）
 
 | 指标 | 结果 | 数据 |
 |---|---|---|
-| PSNR–SNR（DIV2K 0802） | DeepJSCC-Q：SNR 34 dB 时 32.2 dB，6.7 dB 时仍有 28.2 dB，平缓退化；SSCC 最高 28.2 dB，在 SNR 约 17.5–20 dB 处悬崖式失效 | `data/measurements/psnr_snr/` |
+| PSNR–SNR（DIV2K 0802） | DeepJSCC-Q：SNR 36 dB 时 32.2 dB，2.9 dB 时仍有 23.5 dB，平缓退化；SSCC（JPEG + LDPC）最高 29.4 dB，在 SNR 约 16–19.5 dB 处悬崖式失效 | `data/measurements/psnr_snr/` |
 | 帧率 | 30 fps：连续 600 s 解码 18,020 帧（PL 帧计数器） | `data/measurements/fps/` |
 | 时延（PL 计数器，中位数） | 编码 38.20 ms / 传输 2.90 ms / 解码 26.39 ms，合计 67.49 ms | `data/measurements/latency/` |
-| 资源 / 时序（xczu5eg，布局布线后） | TX：LUT 52,903（45 %）、BRAM36 104.5（73 %）、URAM 10、DSP 243，WNS +0.114 ns；RX：LUT 37,533（32 %）、BRAM36 66.5（46 %）、URAM 7、DSP 133，WNS +0.428 ns | `build/reports/` |
-| 功耗（实测，板载 PMBus 遥测） | TX 3.09 W / RX 3.33 W（PL、PS 与 DDR 电源轨，30 fps）；Vivado 估算 4.48 / 3.92 W | `data/measurements/power/`、`build/reports/*_power.rpt` |
+| 资源 / 时序（xczu5eg，布局布线后） | TX：LUT 54,246（46 %）、BRAM36 104.5（73 %）、URAM 10、DSP 243，WNS +0.261 ns；RX：LUT 63,691（54 %）、BRAM36 65.5（45 %）、URAM 7、DSP 133，WNS +0.437 ns | `build/reports/` |
+| 功耗（实测，板载 PMBus 遥测） | TX 3.07 W / RX 3.44 W（PL、PS 与 DDR 电源轨，30 fps）；Vivado 估算 4.49 / 4.28 W | `data/measurements/power/`、`build/reports/*_power.rpt` |
 | 网络精度 | W8A12 比浮点低 0.002 dB（DIV2K）/ 0.027 dB（Kodak）；RTL 与整数参考模型逐比特一致 | `data/model_shallow/`、`sim/network/` |
 
 ---
@@ -90,8 +90,9 @@
 
 ### OFDM 物理层与射频前端
 
-- **同步**：STF 延迟自相关检测帧并估计 CFO；LTF 匹配滤波定时（Gauss 复数乘法，3 个实数 FIR），门限按"半采样偏移"的最坏情况取 0.375，
-  只需移位相加；FFT 窗口提前 8 个采样落在 CP 内，给 SFO 漂移留余量。
+- **同步**：STF 延迟自相关检测帧，在确认检测的 64 个采样上累加自相关估计 CFO；LTF 匹配滤波定时（Gauss 复数乘法，3 个实数 FIR），
+  判决量取相邻两个采样的相关能量之和，与两板的采样相位无关，门限 0.375 只需移位相加；两级能量门限只比链路边缘处的噪声高 4–5 dB，
+  弱信号时不漏检、不锁到 LTF2；FFT 窗口提前 8 个采样落在 CP 内，给 SFO 漂移留余量。
 - **均衡与跟踪**：双 LTF 平均信道估计；每个 OFDM 符号用 4 个导频测残余相位斜率，二阶环在 CPE 补偿之前旋转，整个跟踪环只用一个 CORDIC 和一个复乘。
 - **PN 符号翻转**：网络输出沿 NHWC 顺序相关，直接上子载波会使 PAPR 升高 1–2 dB；TX / RX 用 802.11 扰码多项式对 I、Q 分别翻转符号，
   PAPR 回到随机 64-QAM 水平，对网络完全透明。
@@ -121,10 +122,10 @@ TX、RX 板上的程序由 systemd 自启动，上电约 1 分钟建立链路，
 
 <p align="center"><img src="report/figures/results/psnr_snr.png" alt="PSNR-SNR" width="520"></p>
 
-同一物理层、每幅图同样 32,768 个符号：DeepJSCC-Q 从 SNR 34 dB 到 6.7 dB 只下降 4.0 dB；SSCC 在 SNR 约 20 → 17.5 dB 的 2.4 dB 区间内
-从 27.9 dB 跌到 15.6 dB，再往下无法解码。高 SNR 时 DeepJSCC-Q 也比 SSCC 高 4.0 dB。横轴为由接收星座与已知参考计算的数据辅助 SNR。
+同一物理层、每幅图同样 32,768 个符号：DeepJSCC-Q 从 SNR 36 dB 到 2.9 dB 平缓下降 8.7 dB；SSCC（JPEG + 802.11n LDPC 2/3）在 SNR 约
+19.6 → 16.2 dB 的区间内从 29.0 dB 跌到 9.1 dB，再往下无法解码。高 SNR 时 DeepJSCC-Q 也比 SSCC 高 2.8 dB。横轴为由接收星座与已知参考计算的数据辅助 SNR。
 
-<p align="center"><img src="data/measurements/psnr_snr/k0802_shallow_visual.png" alt="视觉对比" width="900"></p>
+<p align="center"><img src="data/measurements/psnr_snr/k0802_final_visual.png" alt="视觉对比" width="900"></p>
 
 上：原图；中：DeepJSCC-Q；下：SSCC。列为同一次衰减扫描中 SNR 递减的各点，图下为 PSNR / SSIM；SSCC 无法解码的帧按中灰图计分。
 
@@ -144,7 +145,7 @@ TX、RX 板上的程序由 systemd 自启动，上电约 1 分钟建立链路，
 | DSP（编码 / 解码） | 1597 / 874 | 233 / 51 |
 | BRAM（编码 / 解码） | 1038.5 / 1011.5 | 100 / 43（编码器另用 URAM 4） |
 | 时延（编码 / 解码） | 39.6 / 52.9 ms（含 PS 处理） | 38.2 / 26.4 ms（PL） |
-| 功耗 | 编码器 7.757 W / 解码器 5.689 W | TX 3.09 W / RX 3.33 W（实测，含 PS、物理层与 DDR） |
+| 功耗 | 编码器 7.757 W / 解码器 5.689 W | TX 3.07 W / RX 3.44 W（实测，含 PS、物理层与 DDR） |
 | 物理层 | 外部 5G 系统 | 自研 OFDM，同在 PL |
 
 器件、数值精度、时延与功耗的测量边界不同，上表只列各自条件下的绝对数值，不是严格的同条件对比（详见设计报告 3.3.6 节）。

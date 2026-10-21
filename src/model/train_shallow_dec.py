@@ -68,10 +68,10 @@ class SubPixel(nn.Module):
 
 
 class PreBlock(nn.Module):
-    """residual 3x3 block on the latent (64x64): act(conv(act(conv(x)))) + x"""
-    def __init__(self, c, act='leaky'):
+    """residual block on the latent (64x64): act(conv(act(conv(x)))) + x, k x k convolutions (default 3x3)"""
+    def __init__(self, c, act='leaky', k=3):
         super().__init__()
-        self.c1, self.c2 = nn.Conv2d(c, c, 3, padding=1), nn.Conv2d(c, c, 3, padding=1)
+        self.c1, self.c2 = nn.Conv2d(c, c, k, padding=k // 2), nn.Conv2d(c, c, k, padding=k // 2)
         self.act1, self.act2 = make_act(act, c), make_act(act, c)
 
     def forward(self, x):
@@ -187,7 +187,7 @@ class MidLayer(nn.Module):
 class ShallowDecoder(nn.Module):
     def __init__(self, cin=16, n=24, k1=7, s1=2, k2=5, act="igdn", res=True, pre=0, jpeg_like=False, subpixel=False,
                  pre_ch=0, mid=0, tail=0, in_igdn=False, pw=0, pw_mid=0, pw_act='leaky', pre_lin=0, glu_mid=0,
-                 pre_act='leaky', bneck_mid=0, bneck_act='pwl'):
+                 pre_act='leaky', bneck_mid=0, bneck_act='pwl', pre_k=''):
         super().__init__()
         up = SubPixel if subpixel else tconv
         self.head = nn.Sequential(*([GDN(cin, inverse=True)] if in_igdn else []),   # cheap nonlinearities on the
@@ -198,7 +198,8 @@ class ShallowDecoder(nn.Module):
                                      *[PreBlock(pre_ch) for _ in range(pre)])
             cin = pre_ch
         else:
-            self.pre = nn.Sequential(*[PreBlock(cin, pre_act) for _ in range(pre)])
+            ks = [int(v) for v in str(pre_k).split(',') if v] or [3]      # per-block kernel size (last one repeats)
+            self.pre = nn.Sequential(*[PreBlock(cin, pre_act, ks[min(i, len(ks) - 1)]) for i in range(pre)])
         self.jpeg_like = jpeg_like
         if jpeg_like:
             self.conv1 = up(cin, 3, k1, 4)
@@ -361,7 +362,7 @@ def build(a):
                           a.get("subpixel", False), a.get("pre_ch", 0), a.get("mid", 0), a.get("tail", 0),
                           a.get("in_igdn", False), a.get("pw", 0), a.get("pw_mid", 0), a.get("pw_act", "leaky"),
                           a.get("pre_lin", 0), a.get("glu_mid", 0), a.get("pre_act", "leaky"),
-                          a.get("bneck_mid", 0), a.get("bneck_act", "pwl"))
+                          a.get("bneck_mid", 0), a.get("bneck_act", "pwl"), a.get("pre_k", ""))
 
 
 def report(model, dec, val, a, device, out, enc=None):
@@ -412,6 +413,7 @@ def main():
     ap.add_argument("--bneck-mid", type=int, default=0, help="residual bottleneck blocks after the first upsampling "
                     "(128x128): 1x1 N->N/2, act, 3x3, act, 1x1 N/2->N")
     ap.add_argument("--bneck-act", default="pwl", choices=["leaky", "pwl", "gate", "abs", "swl"])
+    ap.add_argument("--pre-k", default="", help="kernel size of the residual blocks, per block (comma list, the last value repeats), e.g. 3,1,1,1 or 9; default 3")
     ap.add_argument("--glu-mid", type=int, default=0, help="SwiGLU blocks after the first upsampling: "
                     "x + W3[(W1 x) * SiLU(W2 x)], hidden 32 (cross-channel products)")
     ap.add_argument("--pre-act", default="leaky", choices=["leaky", "pwl", "gate", "abs", "swl"],

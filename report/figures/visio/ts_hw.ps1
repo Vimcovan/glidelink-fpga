@@ -6,7 +6,7 @@ $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repo = Resolve-Path (Join-Path $here '..\..\..')
 $ROUND = '2 mm'
 
-Open-Visio 172 92
+Open-Visio 180 92
 
 function Mul($cx, $cy, $r = 4) {
   # complex multiplier: yellow circle with a cross
@@ -61,10 +61,17 @@ for ($k = 0; $k -lt 3; $k++) {
 Tag 84 17 8 'X(n)'
 [void](Dot 89 22)
 [void](Path @(89, 22, 89, 31, 100, 31, 100, 26))
-[void](Label 101 26.5 4 4 '*' 8 0)
+[void](Label 96 26.5 4 4 '*' 8 0)
 Mul 100 22
-[void](Line 104 22 116 22)
-Tag 104 17 12 '|X(n)|²'
+# two-point metric |X(n-1)|^2 + |X(n)|^2 (the LTF peak splits over two samples at a half-sample offset)
+[void](Line 104 22 112 22)
+Tag 103 17 10 '|X(n)|²'
+[void](Dot 108 22)
+[void](Line 108 22 108 27.5)
+$z = Box 104 27.5 8 6 $ST.STORE 'Z-1' $false 7; Sup $z 1 3
+[void](Path @(112, 30.5, 116, 30.5, 116, 26))
+Add 116 22
+[void](Line 120 22 124 22)
 
 # ---------------------------------------------------------------- energy E = sum over 64 samples of |r(n)|^2
 [void](Line 17 50 26 50)
@@ -89,24 +96,24 @@ Add 80 50
 [void](Line 92 50 92 54.5)
 $z = Box 88 54.5 8 6 $ST.STORE 'Z-1' $false 7; Sup $z 1 3
 [void](Path @(88, 57.5, 85.5, 57.5, 82.8, 52.8))
-[void](Path @(110, 50, 110, 36, 116, 36))
+[void](Path @(110, 50, 110, 38, 124, 38))
 Tag 99 45 8 'E'
 
 # ---------------------------------------------------------------- data FIFO
 [void](Line 17 72 60 72)
 [void](Box 60 67.5 30 9 $ST.STORE ("FIFO 128`n（等待定时判决）") $false 6.5)
-[void](Line 90 72 129 72)
+[void](Line 90 72 137 72)
 
 # ---------------------------------------------------------------- decision and output
-[void](Box 116 12 36 30 $ST.COMPUTE ("判决`n|X|² > E/4 + E/8，E > 2500`n`n状态机：空闲 / 放行`n放行 2×64 + 683×80 个采样") $false 6.5)
-Demux 129 10 72 10 18 'DEMUX'
-[void](Line 134 42 134 65)
-[void](Line 139 67.5 152 67.5); Tag 139 62.5 13 '放行'
-[void](Label 152 64.5 20 6 '去 CP → FFT' 7 0)
-[void](Line 139 76.5 152 76.5); Tag 139 71.5 13 '空闲'
-[void](Box 152 72.5 12 8 $ST.STORE '丢弃' $false 7)
+[void](Box 124 12 36 30 $ST.COMPUTE ("判决`n|X(n−1)|² + |X(n)|² > E/4 + E/8`nE > 2500`n状态机：空闲 / 放行`n放行 2×64 + 683×80 个采样") $false 6.5)
+Demux 137 10 72 10 18 'DEMUX'
+[void](Line 142 42 142 65)
+[void](Line 147 67.5 160 67.5); Tag 147 62.5 13 '放行'
+[void](Label 160 64.5 20 6 '去 CP → FFT' 7 0)
+[void](Line 147 76.5 160 76.5); Tag 147 71.5 13 '空闲'
+[void](Box 160 72.5 12 8 $ST.STORE '丢弃' $false 7)
 
-[void](Label 2 84 170 6 ("* 表示取共轭；FIR 系数为 LTF 匹配滤波器循环移位 9 个抽头，使 FFT 窗口落在 CP 内 8 个采样处；三个 FIR 共用一个 FIR Compiler（3 组系数）。") 6.5 0 $ST.MUTE)
+[void](Label 2 84 178 6 ("* 表示取共轭；FIR 系数为 LTF 匹配滤波器循环移位 9 个抽头，使 FFT 窗口落在 CP 内 8 个采样处；三个 FIR 共用一个 FIR Compiler（3 组系数）。") 6.5 0 $ST.MUTE)
 
 Save-Figure (Join-Path $here 'sync_hw_ts.vsdx') (Join-Path $repo 'report\figures\hw\ts_hw.png')
 'saved'

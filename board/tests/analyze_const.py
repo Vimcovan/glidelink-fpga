@@ -1,11 +1,11 @@
 """Data-aided constellation SNR for measure_link.py runs with a fixed TX image (--src preset:..., --save-const).
 
 With a still image every frame carries the same symbols (DeepJSCC: deterministic encoder, PN scrambler restarted
-per frame; SSCC: scrambler restarted per frame, interleaver within 64-symbol blocks, only the packet header -
+per frame; SSCC: scrambler restarted per frame, only the packet header -
 frame number, CRC - changes). Reference = 64-QAM decision of the mean of all snapshots at the strongest point
 (lowest attenuation, EVM ~ -34 dB: no decision errors); positions whose decision differs between snapshots there
-are excluded, and for SSCC the first HDR_ROWS OFDM symbols (packet header: frame number / CRC, its interleaver
-blocks). Snapshots of a frame with other content (rare TX frames with different SSCC packet bytes, false syncs:
+are excluded, and for SSCC the first HDR_ROWS OFDM symbols (packet header: frame number / CRC, and the parity of
+its LDPC codeword). Snapshots of a frame with other content (rare TX frames with different SSCC packet bytes, false syncs:
 correlation with the reference rho ~ 0.03) are excluded by rho < RHO_MIN (same content: rho = sqrt(snr/(1+snr)),
 0.71 at 0 dB) and counted (excl). Per point: SNR = mean |ref|^2 / mean |rx - ref|^2 over the kept snapshots.
 
@@ -20,7 +20,8 @@ QAM = np.array([-1106, -790, -474, -158, 158, 474, 790, 1106])
 NULLS = set(range(0, 6)) | {32} | set(range(59, 64)); PILOTS = [11, 25, 39, 53]
 DATA = [k for k in range(64) if k not in NULLS and k not in PILOTS]
 NSYM = 683
-HDR_ROWS = {"sscc": 3}                            # OFDM symbols covering the SSCC packet header
+HDR_ROWS = {"sscc": 7}                            # OFDM symbols covering the first LDPC codeword (324 symbols),
+                                                  # which carries the SSCC packet header
 RHO_MIN = 0.5
 
 

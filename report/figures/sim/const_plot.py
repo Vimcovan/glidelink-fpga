@@ -1,5 +1,5 @@
 """Received DeepJSCC-Q constellations (equalizer output, 48 data subcarriers) at three attenuation points of the
-over-the-air sweep in data/measurements/psnr_snr (k0802_shallow, shallow-decoder system). Drawn as a 2-D histogram (log density) so that the
+over-the-air sweep in data/measurements/psnr_snr (k0802_final, deployed system). Drawn as a 2-D histogram (log density) so that the
 clusters stay visible where the points overlap; the ideal 64QAM points are marked.
 
     python const_plot.py      -> ../results/const_ota.png
@@ -27,7 +27,7 @@ QAM = np.array([-1106, -790, -474, -158, 158, 474, 790, 1106])
 LIM = 1500
 CMAP = LinearSegmentedColormap.from_list("dens", ["#e8f0f7", "#7fa3c4", S.BLUE, "#0f2a44"])
 
-da = json.load(open(os.path.join(MEAS, "k0802_shallow_da.json"), encoding="utf-8"))
+da = json.load(open(os.path.join(MEAS, "k0802_final_da.json"), encoding="utf-8"))
 snr = {(r["mode"], round(float(r["att"]), 2)): r for r in da["results"]}
 
 
@@ -36,7 +36,7 @@ def load(mode, att):
     return d["cpe"][:, :, DATA].reshape(-1)
 
 
-points = [0.0, 31.0, 42.0]
+points = [0.0, 31.0, 46.0]
 fig, axs = plt.subplots(1, 3, figsize=(6.3, 2.35))
 bins = np.linspace(-LIM, LIM, 301)
 gi, gq = np.meshgrid(QAM, QAM)

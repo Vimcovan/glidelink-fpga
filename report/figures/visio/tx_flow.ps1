@@ -35,7 +35,7 @@ $ba = FProc $xa 88 13 ("切到 SSCC 前等 60 ms`n写控制寄存器的模式位
 [void](Path @($xa, $ba.B, $xa, 104, ($cx + 15), 104))
 $xs = $cx - 33
 [void](Path @(($cx - 15), 104, $xs, 104, $xs, 113)); Yes ($cx - 29) 99
-$bs = FProc $xs 113 13 ("JPEG 自适应压缩`n打包（12272 B）`n送图像 DMA") 'ALT' 6.5
+$bs = FProc $xs 113 13 ("JPEG 自适应压缩`n打包（16360 B）`n送图像 DMA") 'ALT' 6.5
 [void](Line $cx 110 $cx 115); No ($cx + 1) 109.5
 [void](FProc ($cx + 6) 115 11 ("send_image(img)`nMM2S 196608 B，受编码器`n反压，收完才返回") 'PROC' 6.5)
 [void](Path @($xs, $bs.B, $xs, 131, $cx, 131))
@@ -63,7 +63,7 @@ $e1 = FProc $cx 20 8 'buf = imencode(img, q)'
 [void](Path @(($cx - 22), 57, ($cx - 29), 57, ($cx - 29), 82, $cx, 82))
 [void](Label ($cx - 29) 52 8 4.5 '否' 6.5 0 $ST.MUTE)
 [void](Line $cx 78 $cx 86)
-[void](Label 116 100 62 30 ("包格式（12272 字节）：`n魔数 'SC'、帧号、JPEG 长度、`n质量因子、CRC32（12 字节），`nJPEG 数据，其余补零。`n`n每帧 q 最多变化一档，又能跟上`n画面复杂度的变化。") 7 0 $ST.INK)
+[void](Label 116 100 62 30 ("包格式（16360 字节）：`n魔数 'SC'、帧号、JPEG 长度、`n质量因子、CRC32（12 字节），`nJPEG 数据，其余补零。`n`n每帧 q 最多变化一档，又能跟上`n画面复杂度的变化。") 7 0 $ST.INK)
 
 Save-Figure (Join-Path $here 'tx_flow.vsdx') (Join-Path $repo 'report\figures\sw\tx_flow.png')
 'saved'
