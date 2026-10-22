@@ -120,7 +120,7 @@ $title = Txt $M 64 ($W - 2*$M) 110 'Real-Time Over-the-Air Image Transmission wi
 [void](Txt $M 166 ($W - 2*$M) 100 ('Separate source and channel coding (JPEG + FEC) fails abruptly once the SNR drops below its code threshold; DeepJSCC-Q maps pixels straight to 64-QAM symbols and degrades gracefully. The CNN codec, an 802.11a-like OFDM PHY and the RF front-end control all run on two Zynq UltraScale+ boards.') 30 $MUTE $false 1 'subtitle')
 
 $stats = @(
-  @('30 fps',     ('256' + [char]0x00D7 + '256 RGB images over a 915 MHz air link')),
+  @('30 fps',     ('256' + [char]0x00D7 + '256 RGB images over a radio link')),
   @('71.5 ms',    'PL latency: encode 38.2 + air 2.9 + decode 30.4 ms'),
   @('+3.8 dB',    'PSNR over JPEG + convolutional code, with no cliff'),
   @('2.33 GMAC',  'per frame, 114 convolutions, W8A12 fixed point'),
@@ -140,7 +140,7 @@ $Y0 = 570
 Card $X1 $Y0 $CW 560 1 'Hardware'
 $p = Pic $img.hw ($X1 + 36) ($Y0 + 104) ($CW - 72)
 [void](Txt ($X1 + 36) ($Y0 + 104 + $p.Height + 12) ($CW - 72) 60 ('Left: RX (PYNQ-ZU + AD9361 + touch screen). Right: TX (PYNQ-ZU + AD9361 + USB camera). ' +
-  '915 MHz antennas in front.') $SMALL $MUTE)
+  'Antennas in front.') $SMALL $MUTE)
 
 # 2 system
 $yB = $Y0 + 590
@@ -149,7 +149,7 @@ $nw = 300; $nh = 84; $gap = 28; $xa = $X1 + 36; $xb = $X1 + $CW - 36 - $nw; $yy 
 [void](Txt $xa ($yB + 96) $nw 30 'TX board' 22 $MUTE $true 2); [void](Txt $xb ($yB + 96) $nw 30 'RX board' 22 $MUTE $true 2)
 $yy = $yB + 134
 $tx = @(@('Camera / video', ('PS: crop to 256' + [char]0x00D7 + '256')), @('DeepJSCC-Q encoder', 'PL, W8A12, 250 MHz'),
-        @('OFDM transmitter', 'PN flip, IFFT, frame buffer'), @('AD9361', '915 MHz, 20 MSPS'))
+        @('OFDM transmitter', 'PN flip, IFFT, frame buffer'), @('AD9361', '20 MSPS'))
 $rx = @(@('Touch-screen GUI', 'PS: display, control'), @('DeepJSCC-Q decoder', 'soft I/Q in, no hard decision'),
         @('OFDM receiver', ('sync, 2' + [char]0x00D7 + 'LTF CE, SFO / CPE')), @('AD9361', 'fast AGC'))
 for ($k = 0; $k -lt 4; $k++) {

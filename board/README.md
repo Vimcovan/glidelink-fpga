@@ -5,7 +5,7 @@
 | 部分 | 型号 / 设置 |
 |---|---|
 | 板卡 | 2 × PYNQ-ZU（xczu5eg-sfvc784-2-e），PYNQ 镜像 |
-| 射频 | 2 × AD-FMCOMMS3-EBZ（AD9361），插在 PYNQ-ZU 的 FMC 上；LVDS 1R1T，FDD，915 MHz，20 MSPS，参考时钟 40 MHz |
+| 射频 | 2 × AD-FMCOMMS3-EBZ（AD9361），插在 PYNQ-ZU 的 FMC 上；LVDS 1R1T，FDD，20 MSPS，参考时钟 40 MHz |
 | TX 外设 | USB UVC 摄像头（可选，否则用演示视频 / 预设图） |
 | RX 外设 | 1024×600 触摸屏（DisplayPort + USB 触摸） |
 | 网络 | PC ↔ RX 板 `192.168.3.1`；RX ↔ TX 板间网线：TX `192.168.4.1`、RX 侧 `192.168.4.2`（GUI 显示 TX 原图与 PSNR、调 TX 衰减用） |

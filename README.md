@@ -1,7 +1,7 @@
 # GlideLink：基于 FPGA 的 DeepJSCC-Q 实时无线图像传输
 
 两块 PYNQ-ZU（Zynq UltraScale+ xczu5eg）+ 两块 AD9361 射频卡，**深度联合信源信道编码器 / 解码器（DeepJSCC-Q）与类 802.11a OFDM
-物理层全部在 PL 中实现**，经 915 MHz 空口以 **30 fps** 实时传输 256×256 彩色图像。信道变差时画质平缓下降，而不是像
+物理层全部在 PL 中实现**，经射频空口以 **30 fps** 实时传输 256×256 彩色图像。信道变差时画质平缓下降，而不是像
 "JPEG + 纠错码"那样在某个 SNR 处突然失效。
 
 全国大学生嵌入式芯片与系统设计竞赛 · 2026 FPGA 赛道 · 自主选题（高级组）
@@ -47,7 +47,7 @@
 
 <p align="center"><img src="report/figures/results/hardware_45.jpg" alt="硬件实拍" width="720"></p>
 
-左：接收板（PYNQ-ZU + AD9361 + 1024×600 触摸屏）；右：发射板（PYNQ-ZU + AD9361 + USB 摄像头）；两块子卡各接一根 915 MHz 天线。
+左：接收板（PYNQ-ZU + AD9361 + 1024×600 触摸屏）；右：发射板（PYNQ-ZU + AD9361 + USB 摄像头）；两块子卡各接一根天线。
 编码后的图像只经射频空口传输，板间网线仅用于控制和发送原图预览（GUI 计算 PSNR 用）。
 
 <p align="center"><img src="report/figures/hw/sys_overview.png" alt="系统结构" width="860"></p>
@@ -55,7 +55,7 @@
 | 参数 | 值 |
 |---|---|
 | 帧 | 一帧 = 一幅 256×256×3 图 = 32,768 个 64-QAM 符号 = 683 个 OFDM 符号；前导 320 + 683×80 = 54,960 个采样 = 2.748 ms |
-| 物理层 | 64 点 FFT，CP 16，48 个数据子载波 + 4 个导频，20 MSPS，915 MHz |
+| 物理层 | 64 点 FFT，CP 16，48 个数据子载波 + 4 个导频，20 MSPS |
 | 网络 | 编码器 55 个、浅层解码器 12 个卷积；195k 参数；名义卷积工作量 0.913 + 0.241 = 1.154 GMAC/帧；每像素 0.5 个复符号 |
 | 时钟 | 网络 250 MHz，物理层 100 MHz，二者之间只经过异步 FIFO；AD9361 接口 40 MHz |
 
@@ -181,7 +181,7 @@ TX、RX 板上的程序由 systemd 自启动，上电约 1 分钟建立链路，
 ## 硬件
 
 - 2 × PYNQ-ZU（xczu5eg-sfvc784-2-e），PYNQ 镜像（Python venv `/etc/profile.d/pynq_venv.sh`）
-- 2 × AD-FMCOMMS3-EBZ（AD9361），LVDS 1R1T，FDD，915 MHz，参考时钟 40 MHz
+- 2 × AD-FMCOMMS3-EBZ（AD9361），LVDS 1R1T，FDD，参考时钟 40 MHz
 - TX：USB UVC 摄像头（可选）；RX：1024×600 触摸屏（DisplayPort）
 - 网络：PC ↔ RX 板 `192.168.3.1`；RX ↔ TX 板间网线，TX `192.168.4.1`、RX 侧 `192.168.4.2`
 

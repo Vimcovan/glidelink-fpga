@@ -803,7 +803,7 @@ class SystemDiagram(QtWidgets.QWidget):
     left part of the About page on the 1024 x 600 screen)."""
     TX = [("摄像头", "USB · MJPG\n/ 演示视频", ""), ("采集 / 裁剪", "256×256 RGB\nDMA → PL", "PS"),
           ("DeepJSCC-Q\n编码器", "CNN · W8A12 · 250 MHz\n→ 64QAM 星座点", "PL"), ("OFDM 发射", "64 点 IFFT · 导频\n前导 · 帧缓存", "PL"),
-          ("AD9361", "915 MHz\n20 MSPS", "子卡"), ("天线", "", "")]
+          ("AD9361", "上变频\n20 MSPS", "子卡"), ("天线", "", "")]
     RX = [("触摸屏", "实时显示", ""), ("重建图像", "PL → DMA → PS", "PS"),
           ("DeepJSCC-Q\n解码器", "均衡后软符号直接输入\n无硬判决", "PL"), ("OFDM 接收", "同步 · 双 LTF 信道估计\nSFO / CPE 跟踪", "PL"),
           ("AD9361", "AGC\n20 MSPS", "子卡"), ("天线", "", "")]
@@ -869,7 +869,7 @@ class SystemDiagram(QtWidgets.QWidget):
         self._arrow(p, QtCore.QPointF(ax, y1 - 30), QtCore.QPointF(ax, y1 - 4), ink)
         p.setFont(self._font(38)); p.setPen(ink)
         p.drawText(QtCore.QRectF(ax - 480, (y0 + y1) / 2 - 30, 450, 60),
-                   QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter, "射频空口  ·  915 MHz")
+                   QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter, "射频空口")
         p.end()
 
     @staticmethod
@@ -914,7 +914,7 @@ class FitImage(QtWidgets.QWidget):
 ABOUT_TOPICS = [
     ("系统简介", "系统简介", """
 本作品在两块 <b>PYNQ-ZU</b>（Zynq UltraScale+ ZU5EG）开发板上实现<b>实时无线图像传输</b>，两板各接一块
-<b>AD9361</b> 射频子卡，经 915 MHz 射频空口连接。<br><br>
+<b>AD9361</b> 射频子卡，经射频空口连接。<br><br>
 <b>发射端</b>：采集 USB 摄像头或演示视频，裁剪为 256×256 彩色图像，由 PL 中的 <b>DeepJSCC-Q 编码器</b>直接映射为
 64QAM 星座点，经类 802.11a 的 OFDM 发射机送入 AD9361。<br><br>
 <b>接收端</b>：完成同步、双 LTF 信道估计和逐符号的 SFO / CPE 跟踪，把均衡后的软符号直接送入
