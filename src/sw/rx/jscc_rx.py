@@ -78,9 +78,10 @@ class JsccRx:
 
     # ---------------------------------------------------------------- DMA helper
     @staticmethod
-    def _dma_reset(dma, timeout=0.1):
+    def _dma_reset(dma, timeout=0.5):
         """AXI DMA soft reset (S2MM DMACR bit 2), then restart the channel. A halted/aborted transfer cannot be
-        cleared with pynq's stop(), which waits for a halt that never comes while S2MM waits for data."""
+        cleared with pynq's stop(), which waits for a halt that never comes while S2MM waits for data. A reset that
+        is still in progress when the channel is started clears it again (the caller checks `running`)."""
         dma.mmio.write(0x30, 0x4)
         t0 = time.time()
         while dma.mmio.read(0x30) & 0x4 and time.time() - t0 < timeout:
@@ -118,6 +119,8 @@ class JsccRx:
         PHY frame start)."""
         buf = allocate(shape=(n,), dtype=np.uint32)
         try:
+            if not self.cap_dma.recvchannel.running:         # left halted by an earlier reset: every transfer() would
+                self._dma_reset(self.cap_dma)                # fail with "DMA channel not started" from then on
             self.cap_dma.recvchannel.transfer(buf)
             self.wr("CAP_LEN", n)
             self.wr("CAP_CTRL", 1 | ((1 if trig == "frame" else 0) << 1))
