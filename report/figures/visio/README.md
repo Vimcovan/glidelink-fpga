@@ -6,7 +6,7 @@
 |---|---|---|
 | —（手绘） | `fig02_network.vsdx`、`../network/fig02_network.png` | 编码器 / 浅层解码器模块结构，各块输出尺寸与 `data/model_shallow/manifest.json` 一致 |
 | `fig07_memory.ps1` | `fig07_memory.vsdx` | 旧版布局；报告图2-8现由 `../sim/resource_plan.py` 生成 |
-| `shallow_decoder.ps1` | `shallow_decoder.vsdx`、`../../notes/figures/shallow_decoder/dec_structure.png`（报告用副本 `../network/dec_structure.png`） | 浅层解码器结构 |
+| —（手绘） | `shallow_decoder.vsdx`、`../network/dec_structure.png`、`../../notes/figures/shallow_decoder/dec_structure.png` | 浅层解码器结构 |
 | `design_flow.ps1` | `design_flow.vsdx`、`../design_flow.png` | 设计流程（报告1.6节） |
 | —（手绘） | `sys_overview.vsdx`、`../hw/sys_overview.png` | 系统整体框图 |
 | —（手绘） | `block_rtl.vsdx`、`../hw/block_rtl.png` | RG / UP / ATT 块的 RTL 组成 |
@@ -25,4 +25,4 @@ powershell -ExecutionPolicy Bypass -File fig07_memory.ps1
 ```
 
 PNG 按 300 dpi 导出。脚本含中文，须保存为带 BOM 的 UTF-8（Windows PowerShell 5.1）。
-`fig05_conv_engine.vsdx`（卷积引擎）、`fig02_network.vsdx`（网络结构）、`block_rtl.vsdx`（块的 RTL 组成）、`sfo_loop.vsdx`（跟踪环）、`sync_hw_fd.vsdx`（帧检测）与 `sys_overview.vsdx`（系统框图）为手绘图，不由脚本生成，在 Visio 中修改后另存 300 dpi 的 PNG。
+`fig05_conv_engine.vsdx`（卷积引擎）、`fig02_network.vsdx`（网络结构）、`block_rtl.vsdx`（块的 RTL 组成）、`sfo_loop.vsdx`（跟踪环）、`sync_hw_fd.vsdx`（帧检测）、`sys_overview.vsdx`（系统框图）与 `shallow_decoder.vsdx`（浅层解码器结构）为手绘图，不由脚本生成，在 Visio 中修改后另存 300 dpi 的 PNG。

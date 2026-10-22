@@ -177,7 +177,7 @@ $$
 - 训练与评估：`src/model/train_shallow_dec.py`（结构选项`--subpixel --k1 3 --n 24 --k2 3 --pre 4 --pre-act pwl --pre-lin 1`，联合训练`--joint`，续训`--resume-joint`，量化感知训练`--qat-wbits 8`）。
 - 整数模型与导出：`src/model/quant_shallow.py`、`src/model/export_shallow.py`，导出在`data/model_shallow/`（含最终检查点）。
 - RTL：`src/hw/rx/rtl/network/rtl/axis_pwl.sv`；顶层由`src/network/gen_rtl_top.py`生成（`--export data/model_shallow`）。仿真：`sim/network/run_top_sim.ps1 -First rx_in -Last output -Export data\model_shallow -GenDir src\network\gen_shallow`。
-- 本节的图与数据：`src/model/shallow_analysis/report_figs.py`（图3、图4、图8）、`interp_stages.py`（表2）、`denoise_stages.py`（图7的测量方法）、`report/figures/visio/shallow_decoder.ps1`（图1）、`int_sweep.py`（图8数据）、`ablation_fig.py`（表3、图5、图7，数据在`figures/shallow_decoder/ablation.json`与`noise_stages.json`）。图2：`tf_ckpt_fetch.py`从Hugging Face的`yiboyang/shallow-ntc-checkpoints`按索引只取合成层张量（不需要TensorFlow），`yang_kernels.py`做能量分布、级联拟合与对照，拟合结果在`figures/shallow_decoder/yang_kernels_fit.json`。消融的完整记录见`report/notes/shallow_decoder_experiments.md`。
+- 本节的图与数据：`src/model/shallow_analysis/report_figs.py`（图3、图4、图8）、`interp_stages.py`（表2）、`denoise_stages.py`（图7的测量方法）、`report/figures/visio/shallow_decoder.vsdx`（图1，手绘）、`int_sweep.py`（图8数据）、`ablation_fig.py`（表3、图5、图7，数据在`figures/shallow_decoder/ablation.json`与`noise_stages.json`）。图2：`tf_ckpt_fetch.py`从Hugging Face的`yiboyang/shallow-ntc-checkpoints`按索引只取合成层张量（不需要TensorFlow），`yang_kernels.py`做能量分布、级联拟合与对照，拟合结果在`figures/shallow_decoder/yang_kernels_fit.json`。消融的完整记录见`report/notes/shallow_decoder_experiments.md`。
 
 ## 参考文献
 
