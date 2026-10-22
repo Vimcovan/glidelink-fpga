@@ -910,48 +910,49 @@ class FitImage(QtWidgets.QWidget):
         p.end()
 
 
-# About page topics: (button, title, text (rich), pictures in assets/about/). Facts as in the demo video.
+# About page topics: (button, title, text (rich), pictures in assets/about/, dark-theme copies in assets/about/dark/).
+# Facts as in the design report; pictures from src/sw/tools/make_about_assets.py.
 ABOUT_TOPICS = [
     ("系统简介", "系统简介", """
 本作品在两块 <b>PYNQ-ZU</b>（Zynq UltraScale+ ZU5EG）开发板上实现<b>实时无线图像传输</b>，两板各接一块
 <b>AD9361</b> 射频子卡，经射频空口连接。<br><br>
 <b>发射端</b>：采集 USB 摄像头或演示视频，裁剪为 256×256 彩色图像，由 PL 中的 <b>DeepJSCC-Q 编码器</b>直接映射为
 64QAM 星座点，经类 802.11a 的 OFDM 发射机送入 AD9361。<br><br>
-<b>接收端</b>：完成同步、双 LTF 信道估计和逐符号的 SFO / CPE 跟踪，把均衡后的软符号直接送入
-<b>DeepJSCC-Q 解码器</b>重建图像，显示在本触摸屏上。<br><br>
-整条链路实时运行于 <b>30 fps</b>：每帧即一幅图像 = 32768 个 64QAM 符号 = 683 个 OFDM 符号。
+<b>接收端</b>：完成同步、双 LTF 信道估计和逐符号的 SFO / CPE 跟踪，把均衡后的软符号直接送入与编码器联合训练的
+<b>浅层 DeepJSCC-Q 解码器</b>重建图像，显示在本触摸屏上。<br><br>
+整条链路实时运行于 <b>30 fps</b>：每帧即一幅图像 = 32,768 个 64QAM 符号 = 683 个 OFDM 符号；
+编码、空口与解码在 PL 内的端到端时延约 67.5 ms。
 系统内置分离式编码（SSCC）基线，与 DeepJSCC-Q 共用同一物理层，可运行时切换对比。""", ["hardware.jpg"]),
     ("对比实验", "对比实验 · SSCC 与 DeepJSCC-Q", """
 依据<b>香农分离定理</b>，信源编码与信道编码可以独立设计。<br><br>
-<b>SSCC 基线</b>：JPEG 压缩（每帧 16,360 字节）→ 扰码 → LDPC（802.11n，n = 1944，R = 2/3）→ 64QAM。<br>
+<b>SSCC 基线</b>：JPEG 压缩（每帧最多 16,348 字节）→ 扰码 → LDPC（802.11n，n = 1944，R = 2/3）→ 64QAM。<br>
 <b>DeepJSCC-Q</b>：单个神经网络，把图像直接映射为信道符号。<br><br>
-<b>对照条件</b>：两者每幅图像都占 32768 个 64QAM 符号、683 个 OFDM 符号，发射功率相同，
+<b>对照条件</b>：两者每幅图像都占 32,768 个 64QAM 符号、683 个 OFDM 符号，发射功率相同，
 使用同一个 OFDM 发射链和同一组板卡。<br><br>
-<b>结果</b>：增加 TX 衰减后，SSCC 的误码一旦超出纠错能力，图像整体失效，即<b>悬崖效应</b>
-（分离定理的最优性依赖无限码长与已知信道）。DeepJSCC-Q 在 SSCC 已经失效的衰减下
-质量基本不变，继续加大衰减时平滑下降，<b>没有悬崖</b>。可在「图像链路」页用衰减滑条亲自对比。""", ["fairness.png"]),
+<b>结果</b>（板上实测，DIV2K 测试图）：SSCC 在 SNR 约 19.6 dB 时完好，降到 16.2 dB 时误码超出纠错能力、图像整体失效，即<b>悬崖效应</b>；
+DeepJSCC-Q 在 36 dB 时 PSNR 为 32.2 dB，SNR 降到约 3 dB 仍有 23.5 dB，平缓下降，<b>没有悬崖</b>。
+可在「图像链路」页用衰减滑条亲自对比。""", ["fairness.png", "psnr_snr.png"]),
     ("星座约束", "DeepJSCC-Q · 星座约束", """
-原始 DeepJSCC 的编码器输出<b>任意复数值</b>，现有通信硬件无法直接发送。
-作为对照，GLOBECOM 2025 的 FPGA 实现为此<b>改造了商用 5G 基站与终端的 I/Q 接口</b>。<br><br>
+原始 DeepJSCC 的编码器输出<b>任意复数值</b>，需要能直接送入 I/Q 信号的专用接口才能发送。<br><br>
 <b>DeepJSCC-Q</b> 在训练中把编码器输出约束于 <b>64QAM 星座</b>，因此可以直接接入标准的
 OFDM 发射链；接收端看到的是标准的 64 点格（见「PHY detail」页的星座图）。<br><br>
 解码器直接使用均衡后的<b>软符号</b>，不做硬判决，也不需要信道译码。
 物理层沿用类 802.11a 的 OFDM 帧：64 点 FFT，4 个导频，长短训练序列前导。""", ["globecom_iq.png"]),
     ("采样频偏", "接收机 · 长帧采样频偏补偿", """
-参考实现 openofdm 每个 OFDM 符号只补偿一个<b>公共相位误差（CPE）</b>，适用于短帧。<br><br>
-本系统<b>一帧即一幅图像</b>，长 683 个 OFDM 符号，是 802.11a 最长帧（152 个符号）的 <b>4.5 倍</b>。<br><br>
-收发两端 <b>1 ppm</b> 的时钟偏差，会在帧尾使边缘子载波偏转约 <b>8°</b>，
-超出 64QAM 外圈 ±4.7° 的判决余量。<br><br>
-因此接收机引入<b>逐符号跟踪的采样频偏（SFO）补偿</b>：补偿前星座随符号旋转，补偿后收敛为格点。""",
+本系统<b>一帧即一幅图像</b>：683 个 OFDM 符号，54,960 个采样，2.75 ms。<br><br>
+两板参考晶振各为 ±20 ppm，最坏相对偏差 40 ppm，帧尾累积 2.2 个采样的定时漂移，边缘子载波旋转约 <b>5.6 rad</b>；
+即使只有 <b>1 ppm</b>，帧尾也偏转约 <b>8°</b>，超过 64QAM 最外角点约 7.7° 的判决容限。<br><br>
+因此接收机<b>逐符号跟踪</b>：每个符号用 4 个导频估计公共相位（CPE）与相位斜率，二阶跟踪环对斜坡输入
+没有稳态误差。板上实测帧尾 EVM 只比帧头差 1.7 dB。""",
      ["frame_length.png", "sfo_phase.png"]),
-    ("硬件架构", "硬件 · 逐层流式卷积引擎", """
-对照设计（GLOBECOM 2025，ZCU111）采用分块并行，把完整的中间特征图存于片上，<b>BRAM 占用约 96%</b>。<br><br>
-本设计采用<b>逐层流式卷积引擎</b>：<br>
-· <b>行缓冲</b>：每层只缓存 K−1 行，而非整幅特征图；<br>
+    ("硬件架构", "硬件 · 逐层流水卷积引擎", """
+本设计采用<b>逐层流水卷积引擎</b>，层间是带反压的 AXI-Stream 流水线：<br>
+· <b>行缓存</b>：每层只缓存 K−1 行输入，而非整幅特征图；<br>
 · <b>并行度</b>：各层并行度按该层运算量，取满足 30 fps 的最小值；<br>
-· <b>权重存储</b>：每拍 P 路 × 8 bit 权重，打包进 BRAM36 的 72 bit 宽字。<br><br>
-结果：每帧计算量（编 / 解 0.913 / 1.417 GMAC）约为对照设计的 <b>10 倍</b>，BRAM 用量（100 / 100 块）
-约为其<b>十分之一</b>，在更小的 ZU5EG 上实时运行于 30 fps。""", ["our_arch.png", "compare_table.png"]),
+· <b>权重 ROM</b>：按尺寸在 LUT ROM、BRAM 宽字 ROM、顺序读 ROM 三种组织方式中选择。<br><br>
+与已发表的 FPGA 实现（Isobe 等，GLOBECOM 2025，ZCU111）相比：名义卷积工作量 <b>1.15 GMAC/帧</b>，是其
+<b>5.2 倍</b>；编码器 DSP 233 块、BRAM36 100 块，分别约为其 <b>15%</b> 和 <b>1/10</b>；
+整板实测功耗 3.07 W / 3.44 W（TX / RX）。""", ["our_arch.png", "compare_table.png"]),
     ("操作说明", "操作说明", """
 <b>图像链路</b>：显示 RX 重建图像（两板连线时同时显示 TX 原图）和 PSNR、端到端延时（TX 取帧 → RX 收到图像）、帧率、EVM 等指标。<br>
 · 摄像头 / 预设：切换发射端的图像来源；「预设」每点一次依次切换：演示视频 → 5 张 DIV2K 测试图 → 演示视频；<br>
@@ -1084,7 +1085,9 @@ class AboutPage(QtWidgets.QWidget):
             if pics:
                 col = QtWidgets.QVBoxLayout(); col.setSpacing(8); r.addLayout(col, 10)
                 for name in pics:
-                    im = FitImage(os.path.join(ASSETS, "about", name)); im.clicked.connect(self.zoom_in)
+                    dark = os.path.join(ASSETS, "about", "dark", name)
+                    im = FitImage(dark if TH.get("DARK") and os.path.exists(dark) else os.path.join(ASSETS, "about", name))
+                    im.clicked.connect(self.zoom_in)
                     col.addWidget(im, 1)
                 hint = QtWidgets.QLabel("点击图片放大"); hint.setStyleSheet(f"color: {C_MUTED};")
                 hint.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter); col.addWidget(hint, 0)
