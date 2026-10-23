@@ -1,6 +1,7 @@
 """Received DeepJSCC-Q constellations (equalizer output, 48 data subcarriers) at three attenuation points of the
-over-the-air sweep in data/measurements/psnr_snr (k0802_final, deployed system). Drawn as a 2-D histogram (log density) so that the
-clusters stay visible where the points overlap; the ideal 64QAM points are marked.
+over-the-air sweep in data/measurements/psnr_snr (k0802_final, deployed system), drawn like MATLAB's scatterplot
+(Communications Toolbox): 4,000 randomly drawn received points per panel as blue dots, the reference 64QAM points as red stars ('r*'), square
+axes in units of the constellation level A = 158 (ideal points at +-1, +-3, +-5, +-7).
 
     python const_plot.py      -> ../results/const_ota.png
 """
@@ -8,7 +9,6 @@ import json
 import os
 
 import numpy as np
-from matplotlib.colors import LinearSegmentedColormap, LogNorm
 import matplotlib.pyplot as plt
 
 import plotstyle as S
@@ -23,9 +23,10 @@ S.apply()
 NULLS = set(range(0, 6)) | {32} | set(range(59, 64))
 PILOTS = [11, 25, 39, 53]
 DATA = [k for k in range(64) if k not in NULLS and k not in PILOTS]
-QAM = np.array([-1106, -790, -474, -158, 158, 474, 790, 1106])
-LIM = 1500
-CMAP = LinearSegmentedColormap.from_list("dens", ["#e8f0f7", "#7fa3c4", S.BLUE, "#0f2a44"])
+A = 158.0                                           # 64QAM level step of the RTL (levels +-1, +-3, +-5, +-7 times A)
+LV = np.arange(-7, 8, 2)
+LIM = 9.5
+N_SHOW = 4000                                       # points drawn per panel
 
 da = json.load(open(os.path.join(MEAS, "k0802_final_da.json"), encoding="utf-8"))
 snr = {(r["mode"], round(float(r["att"]), 2)): r for r in da["results"]}
@@ -33,24 +34,26 @@ snr = {(r["mode"], round(float(r["att"]), 2)): r for r in da["results"]}
 
 def load(mode, att):
     d = np.load(os.path.join(MEAS, "constellations", f"{mode}_{att:05.2f}dB_p0.npz"))
-    return d["cpe"][:, :, DATA].reshape(-1)
+    z = d["cpe"][:, :, DATA].reshape(-1) / A
+    return z[np.random.default_rng(1).choice(len(z), N_SHOW, replace=False)]   # all ~75,000 points would merge
 
 
 points = [0.0, 31.0, 46.0]
-fig, axs = plt.subplots(1, 3, figsize=(6.3, 2.35))
-bins = np.linspace(-LIM, LIM, 301)
-gi, gq = np.meshgrid(QAM, QAM)
-for ax, att in zip(axs, points):
+fig, axs = plt.subplots(1, 3, figsize=(6.3, 2.45))
+gi, gq = np.meshgrid(LV, LV)
+for k, (ax, att) in enumerate(zip(axs, points)):
     z = load("jscc", att)
     r = snr.get(("jscc", att), {})
-    h, _, _ = np.histogram2d(z.real, z.imag, bins=[bins, bins])
-    ax.imshow(np.ma.masked_equal(h.T, 0), origin="lower", extent=[-LIM, LIM, -LIM, LIM], cmap=CMAP,
-              norm=LogNorm(vmin=1, vmax=h.max()), interpolation="nearest", rasterized=True)
-    ax.plot(gi.ravel(), gq.ravel(), "+", ms=3.2, mew=0.6, color=S.ORANGE)
+    ax.plot(z.real, z.imag, ".", ms=2.6, mew=0, color="#0072BD", rasterized=True)     # MATLAB's default blue
+    ax.plot(gi.ravel(), gq.ravel(), "*", ms=3.2, mew=0.5, color="#D62728")             # reference points ('r*')
     ax.set_xlim(-LIM, LIM); ax.set_ylim(-LIM, LIM); ax.set_aspect("equal")
-    ax.set_xticks([]); ax.set_yticks([])
+    ax.set_xticks([-8, -4, 0, 4, 8]); ax.set_yticks([-8, -4, 0, 4, 8])
+    ax.tick_params(labelsize=6.5, length=2, pad=1.5)
+    ax.set_xlabel("同相", fontsize=7, labelpad=1)
+    if k == 0:
+        ax.set_ylabel("正交", fontsize=7, labelpad=1)
     for s in ax.spines.values():
         s.set_linewidth(0.6)
-    ax.set_title(f"数据辅助 SNR {r['snr_da_db']:.1f} dB\n解码 PSNR {r['psnr_shown']:.2f} dB", fontsize=8.5)
-fig.tight_layout()
+    ax.set_title(f"数据辅助 SNR {r['snr_da_db']:.1f} dB\n解码 PSNR {r['psnr_shown']:.2f} dB", fontsize=7.5)
+fig.tight_layout(w_pad=0.6)
 S.save(fig, os.path.join(OUT, "const_ota.png"))

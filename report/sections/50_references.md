@@ -26,20 +26,16 @@
 
 [13] E. Agustsson, R. Timofte. NTIRE 2017 challenge on single image super-resolution: Dataset and study[C]// IEEE Conference on Computer Vision and Pattern Recognition Workshops (CVPRW). 2017: 126-135.
 
-[14] R. Timofte, E. Agustsson, L. Van Gool, et al. NTIRE 2017 challenge on single image super-resolution: Methods and results[C]// IEEE Conference on Computer Vision and Pattern Recognition Workshops (CVPRW). 2017: 114-125.
+[14] Eastman Kodak. Kodak lossless true color image suite[DB/OL]. [2026-10-11]. http://r0k.us/graphics/kodak/.
 
-[15] Eastman Kodak. Kodak lossless true color image suite[DB/OL]. [2026-10-11]. http://r0k.us/graphics/kodak/.
+[15] G. K. Wallace. The JPEG still picture compression standard[J]. IEEE Transactions on Consumer Electronics, 1992, 38(1): xviii-xxxiv.
 
-[16] J. Deng, W. Dong, R. Socher, L.-J. Li, K. Li, L. Fei-Fei. ImageNet: A large-scale hierarchical image database[C]// IEEE Conference on Computer Vision and Pattern Recognition (CVPR). 2009: 248-255. DOI: 10.1109/CVPR.2009.5206848.
+[16] lzk2211. Zedboard_AD9361_radar[CP/OL]. (2025-01-11)[2026-10-11]. https://github.com/lzk2211/Zedboard_AD9361_radar.
 
-[17] G. K. Wallace. The JPEG still picture compression standard[J]. IEEE Transactions on Consumer Electronics, 1992, 38(1): xviii-xxxiv.
+[17] Analog Devices. HDL libraries and projects[CP/OL]. (2026-10-09)[2026-10-11]. https://github.com/analogdevicesinc/hdl.
 
-[18] lzk2211. Zedboard_AD9361_radar[CP/OL]. (2025-01-11)[2026-10-11]. https://github.com/lzk2211/Zedboard_AD9361_radar.
+[18] AMD. AMD Ross agentic AI assistant[CP/OL]. [2026-10-11]. https://github.com/xilinx/ross-ai-assistant.
 
-[19] Analog Devices. HDL libraries and projects[CP/OL]. (2026-10-09)[2026-10-11]. https://github.com/analogdevicesinc/hdl.
+[19] Y. Yang, S. Mandt. Computationally-efficient neural image compression with shallow decoders[C]// IEEE/CVF International Conference on Computer Vision (ICCV). Paris, 2023: 530-540. DOI: 10.1109/ICCV51070.2023.00055.
 
-[20] AMD. AMD Ross agentic AI assistant[CP/OL]. [2026-10-11]. https://github.com/xilinx/ross-ai-assistant.
-
-[21] Y. Yang, S. Mandt. Computationally-efficient neural image compression with shallow decoders[C]// IEEE/CVF International Conference on Computer Vision (ICCV). Paris, 2023: 530-540. DOI: 10.1109/ICCV51070.2023.00055.
-
-[22] F. Tosato, P. Bisaglia. Simplified soft-output demapper for binary interleaved COFDM with application to HIPERLAN/2[C]// IEEE International Conference on Communications (ICC). New York, 2002: 664-668.
+[20] F. Tosato, P. Bisaglia. Simplified soft-output demapper for binary interleaved COFDM with application to HIPERLAN/2[C]// IEEE International Conference on Communications (ICC). New York, 2002: 664-668.
