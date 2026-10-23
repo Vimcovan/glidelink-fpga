@@ -3,6 +3,7 @@
 | 文件 / 目录 | 内容 |
 |---|---|
 | [`design_report.docx`](design_report.docx) | 设计报告（竞赛模板，公式为 MathType 对象），由 `sections/` 生成 |
+| [`design_report.pdf`](design_report.pdf) | 同一报告的 PDF（由 Word 从 docx 导出，含版面手工调整，带章节书签） |
 | [`design_report.md`](design_report.md) | 同一报告的 Markdown 版本（`sections/*.md` 按顺序拼接；公式改写为 GitHub 的 ` ```math ` 与 `` $`…`$ `` 写法以便网页显示） |
 | [`sections/`](sections/) | 报告源文件：摘要、作品概述、系统组成及功能说明（硬件 / 软件）、完成情况及性能参数、总结、参考文献、附录 |
 | [`tools/`](tools/) | 生成 docx：`build_docx.ps1`（pandoc + 竞赛模板）、`make_reference_docx.py`（由模板生成样式表）、`docx_filter.lua`（图题 / 表题样式）、`math_markers.lua` + `mathtype_convert.ps1`（公式转 MathType）、`md_github.py`（生成 GitHub 显示用的 Markdown） |

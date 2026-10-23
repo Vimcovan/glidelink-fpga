@@ -17,14 +17,14 @@
 
 | 板 | 服务 / 进程 | 文件 | 功能 |
 |---|---|---|---|
-| TX | `jscc-tx.service` | `tx_camera.py` | 取图（摄像头 / 预设视频 / 预设图）、送图、模式与衰减控制、预览转发、手机预览（HTTP MJPEG） |
+| TX | `jscc-tx.service` | `tx_camera.py` | 取图、送图、模式与衰减控制、预览转发、手机预览 |
 | TX | （库） | `jscc_tx.py`、`sscc_pkt.py`、`v4l2ctl.py` | PL驱动（Overlay、寄存器、DMA、AD9361 SPI）、SSCC包格式与JPEG质量自适应、UVC控制 |
 | RX | `jscc-rx.service` | `rx_server.py` | 收图、遥测、频谱、SSCC包、AGC看门狗，经UDP转发给GUI |
 | RX | （库） | `jscc_rx.py`、`ad9361_ps.py` | PL驱动、AD9361的PS初始化与AGC看门狗 |
 | RX | `jscc-gui.service` | `jscc_gui.py` | 触摸屏GUI（PyQt5 + pyqtgraph） |
 | RX | `jscc-web.service` | `web_server.py` | 手机控制页：两路画面、物理层指标与链路控制（2.3.2.5节） |
-| RX | GUI的子进程 | `h3d_render.py` | 在Mali-400 GPU上离屏渲染信道 \|H\| 三维曲面 |
-| 两板 | （库） | `jscc_udp.py` | UDP协议：20字节包头，消息分片与重组 |
+| RX | GUI的子进程 | `h3d_render.py` | 在GPU上离屏渲染信道三维曲面 |
+| 两板 | （库） | `jscc_udp.py` | UDP协议：包头，消息分片与重组 |
 
 板上进程之间、板与板之间都走UDP。消息被切成不超过1400字节的分片，避免IP分片；订阅方每秒向数据源发一次订阅消息，数据源向最近5秒内发过订阅消息的地址推送数据，所以板上不需要预先配置对方的地址。
 

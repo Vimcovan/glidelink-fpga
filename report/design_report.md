@@ -717,7 +717,7 @@ c_k=\mathrm{sgn}_k\cdot\Big(m_k-\big\lfloor m_k/4\big\rfloor\Big),\qquad
 
 定点位宽由逐位定点的Python模型（`src/model/ldpc_ref.py`）与仿真确定：信道LLR取7位（软解映射的max-log值右移3位后限幅到±63），APP取11位，变量到校验消息取9位，在码字误码率10⁻⁴（对应整帧99 %正确）处与浮点分层译码完全相同；软解映射的简化max-log近似也没有可见损失。最大迭代次数取16：分层译码下8次比16次晚约0.5 dB，12次晚约0.25 dB，16次与浮点泛洪调度40次相同。某次迭代中每层读到的APP符号都满足本层全部校验、且本次迭代没有任何APP改变符号时，硬判决必为合法码字，译码提前结束；15 dB时平均只需4.6次迭代。
 
-译码过程如下，j为块所在的列，c_old[l]为第l层上次送出的校验消息（第1次迭代为0）：
+译码过程见下面的伪代码，j为块所在的列，c_old[l]为第l层上次送出的校验消息（第1次迭代为0）。
 
 ```
 APP ← 信道LLR                        // 24拍
@@ -790,14 +790,14 @@ TX端由`frame_src_mux`在帧边界切换JSCC与SSCC两路符号；RX端对每�
 
 | 板 | 服务 / 进程 | 文件 | 功能 |
 |---|---|---|---|
-| TX | `jscc-tx.service` | `tx_camera.py` | 取图（摄像头 / 预设视频 / 预设图）、送图、模式与衰减控制、预览转发、手机预览（HTTP MJPEG） |
+| TX | `jscc-tx.service` | `tx_camera.py` | 取图、送图、模式与衰减控制、预览转发、手机预览 |
 | TX | （库） | `jscc_tx.py`、`sscc_pkt.py`、`v4l2ctl.py` | PL驱动（Overlay、寄存器、DMA、AD9361 SPI）、SSCC包格式与JPEG质量自适应、UVC控制 |
 | RX | `jscc-rx.service` | `rx_server.py` | 收图、遥测、频谱、SSCC包、AGC看门狗，经UDP转发给GUI |
 | RX | （库） | `jscc_rx.py`、`ad9361_ps.py` | PL驱动、AD9361的PS初始化与AGC看门狗 |
 | RX | `jscc-gui.service` | `jscc_gui.py` | 触摸屏GUI（PyQt5 + pyqtgraph） |
 | RX | `jscc-web.service` | `web_server.py` | 手机控制页：两路画面、物理层指标与链路控制（2.3.2.5节） |
-| RX | GUI的子进程 | `h3d_render.py` | 在Mali-400 GPU上离屏渲染信道 \|H\| 三维曲面 |
-| 两板 | （库） | `jscc_udp.py` | UDP协议：20字节包头，消息分片与重组 |
+| RX | GUI的子进程 | `h3d_render.py` | 在GPU上离屏渲染信道三维曲面 |
+| 两板 | （库） | `jscc_udp.py` | UDP协议：包头，消息分片与重组 |
 
 板上进程之间、板与板之间都走UDP。消息被切成不超过1400字节的分片，避免IP分片；订阅方每秒向数据源发一次订阅消息，数据源向最近5秒内发过订阅消息的地址推送数据，所以板上不需要预先配置对方的地址。
 
