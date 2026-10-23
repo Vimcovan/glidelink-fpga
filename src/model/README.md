@@ -126,6 +126,7 @@ acc = Y[c][k] + S[c][s]·(x − T0 − k·2^L)，之后接与卷积相同的重�
 | `export_shallow.py` | 导出部署模型（编码器 + 浅层解码器）：参数文件、网络描述文件、参考数据 |
 | `shallow_analysis/` | 浅层解码器的分析与报告出图：插值线性度、各级噪声、消融、Yang 与 Mandt 的大核 |
 | `ofdm_channel.py`、`ofdm_eval.py` | 类 802.11a OFDM 链路模型下的评估（PAPR、限幅、频率选择性信道、LTF 信道估计、ZF / MMSE 均衡） |
+| `bench_gpu.py` | GPU 对照测试：部署网络在 FP32 / FP16 / W8A12 伪量化下的延迟、吞吐率和每帧能耗（结果在 `data/measurements/gpu_bench/`） |
 | `download_flickr2k.ps1` | 下载 Flickr2K |
 
 `data/model_shallow/` 中是部署模型（编码器 + 浅层解码器）的数据，`data/model/` 中是对称模型的数据，结构相同：
