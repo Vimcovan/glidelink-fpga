@@ -3,6 +3,10 @@ set_property IOSTANDARD LVDS [get_ports sysclk_p]
 
 set_property -dict {PACKAGE_PIN A7 IOSTANDARD LVCMOS12} [get_ports led]
 set_property -dict {PACKAGE_PIN W12 IOSTANDARD LVCMOS12} [get_ports rst_n]
+# SW0: TX LVDS data-pair polarity of the AD9361 daughter card (1: pairs of TX_SWAP_PAIRS swapped, e.g. the
+# third-party card; 0: FMCOMMS3); static, synchronised in ad9361_lvds_mode
+set_property -dict {PACKAGE_PIN AA12 IOSTANDARD LVCMOS12} [get_ports sw_tx_swap]
+set_false_path -from [get_ports sw_tx_swap]
 
 set_property -dict {PACKAGE_PIN L7 IOSTANDARD LVDS DIFF_TERM_ADV TERM_100} [get_ports rx_clk_in_p]
 set_property -dict {PACKAGE_PIN L6 IOSTANDARD LVDS DIFF_TERM_ADV TERM_100} [get_ports rx_clk_in_n]

@@ -41,7 +41,7 @@
 | `agc_trace.py`、`adc_frames.py`、`pl_counters.py` | 诊断：原始 ADC 抓取与 AD9361 `CTRL_OUT`（状态输出引脚，此处为 AGC 状态）同步记录、帧间隔、PL 计数器 |
 | `adc_edge.py` | 诊断：链路边缘处各衰减点的原始 ADC 采样（含 TX 衰减最大时的噪声底）、同步率与增益，供离线同步分析和 `sim/phy/sync/` 的 RTL 回放 |
 | `agc_edge_probe.py` | 诊断：在线改写一个快速 AGC 寄存器（如 0x110、0x118），比较各衰减点的同步率、解码帧率与增益，结束时恢复原值 |
-| `lvds_loopback.py` | 换射频子卡后的检查：AD9361 数据口环回（不经射频），测出子卡上 P/N 对调的 TX 数据线对，给出 TX 板 `lvds_tx_swap.txt` 应填的值；`lvds_invert_scan.py`、`lvds_rx_group.py` 为测定 LVDS 反相寄存器各位含义时用的诊断脚本 |
+| `lvds_loopback.py` | 换射频子卡后的检查：AD9361 数据口环回（不经射频），测出子卡上 P/N 对调的 TX 数据线对，给出该卡对应的 SW0 位置；`lvds_invert_scan.py`、`lvds_rx_group.py` 为测定 LVDS 反相寄存器各位含义时用的诊断脚本 |
 | `tx_spi.py`（TX 板） | 在 TX 服务运行时读写一个 AD9361 寄存器 |
 
 ## 常见问题
@@ -50,5 +50,5 @@
 - **SSCC 在高 SNR 下也偶发整帧失败**：已通过 AGC 锁定电平 −14 dBFS 解决（见 `THIRD_PARTY.md` 末节）；若改动初始化脚本后复现，用 `tests/agc_trace.py --adc` 检查帧内增益台阶。
 - **启动时的告警**：服务启动后的十几秒内 `rx_server.log` 中的 `spectrum: ADC capture did not complete` 与 0 帧/s 属正常，AGC 锁定后消失；`gui.log` 中的 `libGL error: failed to load driver: xlnx` 为 Mesa 找不到 Xilinx 专用驱动后的正常回退，随后出现 `h3d_render: Mali400` 即三维渲染正常。
 - **抓取 ADC / 测频谱前**先 `systemctl stop jscc-rx`（与频谱线程共用抓取 DMA）；`rx_server` 停止时会复位两个 DMA，防止遗留传输卡住下一个进程。
-- **换射频子卡后 EVM 只有约 −6 dB、能同步但解不出图**：子卡上 TX 数据线对的 P/N 走线可能与 RTL 的假设不同（RTL 按 D5 对调的子卡取反了样点的 bit 11 和 bit 5，适用于此前使用的第三方 AD9361 子卡；FMCOMMS3 不对调，实测两块均为 0x00）。把子卡插到 RX 板上运行 `tests/lvds_loopback.py`，将给出的值写入 TX 板 `/home/xilinx/claude/tx/lvds_tx_swap.txt`（如 `0x00`），重启 `jscc-tx`；`tx_camera.py` 启动时据此设置 AD9361 的 LVDS 反相寄存器（0x03D[7:6] 为 TX D1–D0，0x03E[3:0] 为 TX D5–D2），无需重建比特流。文件不存在时按 `0x20`（与 RTL 一致）处理。
+- **换射频子卡后 EVM 只有约 −6 dB、能同步但解不出图**：子卡上 TX 数据线对的 P/N 走线可能与开关位置不符。两块板的拨码开关 SW0 选择 TX 线对极性：拨下（0）用于 FMCOMMS3（无对调，实测两块均如此），拨上（1）用于此前使用的第三方 AD9361 子卡（D5 线对对调，RTL 对样点的 bit 11 和 bit 5 取反，`ad9361_lvds_mode.v` 的 `TX_SWAP_PAIRS`）。开关为静态输入，拨动后立即生效，无需重新加载比特流；当前位置可从 `STATUS` 寄存器 bit 1 读出（`tx_camera.log` 启动时也会打印）。换上不确定的子卡时，把它插到 RX 板上运行 `tests/lvds_loopback.py`，脚本给出该卡对应的开关位置。
 - **带内杂散**：显示像素时钟谐波（51.2 MHz × 18 = 921.6 MHz）落入 RX 带内，已改用 52.01 MHz；40 MHz 参考时钟的 23 次谐波（920 MHz，子载波 +16）为 RX 板侧固有杂散。

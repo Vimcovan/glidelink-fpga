@@ -65,7 +65,7 @@ class JsccRx:
     def status(self):
         s = {k: self.rd(k) for k in COUNTERS}
         agc = self.rd("AGC")
-        s.update(AGC_LOCK=agc >> 7 & 1, AGC_GAIN_IDX=agc & 0x7F, MMCM250_LOCKED=self.rd("STATUS") & 1,
+        s.update(AGC_LOCK=agc >> 7 & 1, AGC_GAIN_IDX=agc & 0x7F, MMCM250_LOCKED=self.rd("STATUS") & 1, TX_SWAP_SW=self.rd("STATUS") >> 1 & 1,
                  IMG_PENDING=self.rd("IMG_STATUS") & 1, CAP_BUSY=self.rd("CAP_STATUS") & 1,
                  RX_SOFT_RESET=self.rd("CTRL") & 1)
         return s

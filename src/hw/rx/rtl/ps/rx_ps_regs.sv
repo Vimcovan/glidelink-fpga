@@ -18,7 +18,7 @@
 //   0x34  IMG_FRAMES    RO      frames completed by the decoder
 //   0x38  IMG_SENT      RO      frames forwarded to the PS
 //   0x3C  AGC           RO      AD9361 CTRL_OUT (pointer 0x035=0x16: [7] RX1 gain lock, [6:0] gain index)
-//   0x40  STATUS        RO      [0] 250 MHz MMCM locked
+//   0x40  STATUS        RO      [0] 250 MHz MMCM locked [1] switch SW0: TX LVDS pairs inverted (tx_swap)
 //   0x44  CAP_OVF       RO      ADC samples lost by the capture (output busy)
 //   0x48  RF_CTRL       RW      [0] ps_mode (reset 1: AD9361 init by the PS; 0: PL LUT init) [1] AD9361 RESETB (reset 0)
 //                               [2] init done (reset 0: RX FIFOs held, ENABLE/TXNRX low; set it after the PS init)
@@ -53,6 +53,7 @@ module rx_ps_regs (
     input  logic        img_sent_toggle,      // async (250 MHz)
     input  logic [31:0] fb_in, input logic [31:0] fb_drop,
     input  logic [7:0]  agc,                  // async
+    input  logic        tx_swap,              // async (board switch)
     input  logic        locked,               // async
     // AD9361 init / SPI (ad9361_top, clk_20M)
     output logic        rf_ps_mode,
@@ -70,11 +71,11 @@ module rx_ps_regs (
     always_ff @(posedge clk) spi_s <= {spi_s[0], {spi_rf_ready, spi_cnt, spi_rdata}};
     //---------------------------------------------------------------- async inputs
     (* ASYNC_REG = "TRUE" *) logic [2:0] ft_s, st_s;
-    (* ASYNC_REG = "TRUE" *) logic [1:0] pend_s, lock_s;
+    (* ASYNC_REG = "TRUE" *) logic [1:0] pend_s, lock_s, swap_s;
     (* ASYNC_REG = "TRUE" *) logic [7:0] agc_s1, agc_s2;
     always_ff @(posedge clk) begin
         ft_s <= {ft_s[1:0], img_frame_toggle}; st_s <= {st_s[1:0], img_sent_toggle};
-        pend_s <= {pend_s[0], img_pending}; lock_s <= {lock_s[0], locked};
+        pend_s <= {pend_s[0], img_pending}; lock_s <= {lock_s[0], locked}; swap_s <= {swap_s[0], tx_swap};
         agc_s1 <= agc; agc_s2 <= agc_s1;
     end
     //---------------------------------------------------------------- counters
@@ -152,7 +153,7 @@ module rx_ps_regs (
                     6'h0D: s_axi_rdata <= c_img;
                     6'h0E: s_axi_rdata <= c_sent;
                     6'h0F: s_axi_rdata <= {24'd0, agc_s2};
-                    6'h10: s_axi_rdata <= {31'd0, lock_s[1]};
+                    6'h10: s_axi_rdata <= {30'd0, swap_s[1], lock_s[1]};
                     6'h11: s_axi_rdata <= cap_ovf;
                     6'h12: s_axi_rdata <= {29'd0, rf_init_done, rf_resetb, rf_ps_mode};
                     6'h13: s_axi_rdata <= {14'd0, spi_wdata, spi_addr};

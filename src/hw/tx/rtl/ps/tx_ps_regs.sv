@@ -14,7 +14,7 @@
 //   0x1C  TX_FRAMES     RO      frames sent to the DAC (20 MSPS gate)
 //   0x20  FB_FRAMES     RO      frames entering the DAC frame buffer (since reset)
 //   0x24  TLAST_ERR     RO      symbol frames whose tlast was not on symbol 32767
-//   0x28  STATUS        RO      [0] 250 MHz MMCM locked
+//   0x28  STATUS        RO      [0] 250 MHz MMCM locked [1] switch SW0: TX LVDS pairs inverted (tx_swap)
 //   0x2C  SPI_CMD       RW      AD9361 register access (after rf_ready): [9:0] address, [17:10] write data,
 //                               [24] = 1: start a write, [25] = 1: start a read (bits 24/25 read back 0)
 //   0x30  SPI_STAT      RO      [7:0] last read data, [15:8] finished transfers (wraps), [16] rf_ready
@@ -37,6 +37,7 @@ module tx_ps_regs (
     input  logic        ev_tx_frame,
     input  logic        ev_tlast_err,
     input  logic [31:0] fb_frames,
+    input  logic        tx_swap,              // async (board switch)
     input  logic        locked,              // async
     // AD9361 SPI debug engine (ad9361_top, clk_20M)
     output logic [9:0]  spi_addr,
@@ -54,8 +55,8 @@ module tx_ps_regs (
     logic [31:0] c_sscc;
     (* ASYNC_REG = "TRUE" *) logic [1:0][16:0] spi_s;
     always_ff @(posedge clk) spi_s <= {spi_s[0], {spi_rf_ready, spi_cnt, spi_rdata}};
-    (* ASYNC_REG = "TRUE" *) logic [1:0] act_s, lock_s;
-    always_ff @(posedge clk) begin act_s <= {act_s[0], src_active}; lock_s <= {lock_s[0], locked}; end
+    (* ASYNC_REG = "TRUE" *) logic [1:0] act_s, lock_s, swap_s;
+    always_ff @(posedge clk) begin act_s <= {act_s[0], src_active}; lock_s <= {lock_s[0], locked}; swap_s <= {swap_s[0], tx_swap}; end
     logic clr;
     logic [31:0] c_img, c_sym, c_symf, c_txf, c_terr;
     always_ff @(posedge clk or negedge rst_n) begin
@@ -112,7 +113,7 @@ module tx_ps_regs (
                     6'h07: s_axi_rdata <= c_txf;
                     6'h08: s_axi_rdata <= fb_frames;
                     6'h09: s_axi_rdata <= c_terr;
-                    6'h0A: s_axi_rdata <= {31'd0, lock_s[1]};
+                    6'h0A: s_axi_rdata <= {30'd0, swap_s[1], lock_s[1]};
                     6'h0B: s_axi_rdata <= {14'd0, spi_wdata, spi_addr};
                     6'h0C: s_axi_rdata <= {15'd0, spi_s[1]};
                     6'h0D: s_axi_rdata <= c_sscc;

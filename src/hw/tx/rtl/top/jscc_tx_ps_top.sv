@@ -51,6 +51,7 @@ module jscc_tx_ps_top #(
     output wire [3:0]  ctrl_in,
     input  wire [7:0]  ctrl_out,
     output wire        led,
+    input  wire        sw_tx_swap,   // DIP switch SW0: TX LVDS pair polarity of the daughter card (ad9361_lvds_mode)
 
 
     input  wire        rst_n
@@ -283,6 +284,7 @@ module jscc_tx_ps_top #(
         .sys_clk        (clk100),
         .clk_20M        (clk20),
         .rst_n          (rst100_n),   // reset after the MMCM is locked
+        .tx_swap        (sw_tx_swap),
         .led            (led),
         .rx_data_i      (rx_data_i),
         .rx_data_q      (rx_data_q),
@@ -367,6 +369,7 @@ module jscc_tx_ps_top #(
         .ev_tlast_err  (tx_tlast_err),
         .fb_frames     (tx_frames_buffered),
         .locked        (locked),
+        .tx_swap       (sw_tx_swap),
         .spi_addr      (spi_addr),
         .spi_wdata     (spi_wdata),
         .spi_wr_tgl    (spi_wr_tgl),

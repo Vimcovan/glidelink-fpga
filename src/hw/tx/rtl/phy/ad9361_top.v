@@ -24,6 +24,7 @@ module ad9361_top(
     input           sys_clk                  ,//������ʱ�� 100MHz (����/TX FIFO д��/RX FIFO ����/ILA ͬ��)
     input           clk_20M                  ,//SPIʱ��
     input           rst_n                    ,
+    input           tx_swap                  ,   // board switch: TX data-pair polarity (ad9361_lvds_mode)
     output          led                      ,
     //��������
     output[11:0]    rx_data_i                ,
@@ -227,6 +228,7 @@ module ad9361_top(
 /*************************** ģ������  **************************************/
     ad9361_lvds_mode u_ad9361_lvds_mode(
 		.clk_100M                           (sys_clk                  ),
+		.tx_swap                            (tx_swap                 ),
 		.data_clk                           (data_clk                  ),
 		.rx_clk_in_p                        (rx_clk_in_p             ),
 		.rx_clk_in_n                        (rx_clk_in_n             ),

@@ -42,9 +42,15 @@
 //   PYNQ-ZU pinout, interface to the OFDM PHY). The notice above is restored as required by the ADI license.
 // ***************************************************************************
 
-module ad9361_lvds_mode (
+module ad9361_lvds_mode #(
+    // TX data pairs inverted when tx_swap = 1 (bit k = pair Dk): for a daughter card with these pairs' P/N
+    // swapped on its PCB (the third-party AD9361 card: D5; FMCOMMS3: none). Each pair carries sample bits k + 6
+    // and k of I and Q, so the whole 6-bit half-words are XORed with the mask.
+    parameter [5:0]                     TX_SWAP_PAIRS = 6'b100000
+) (
     input                               clk_100M                   ,   // (本模块内部未使用, 仅为兼容例化)
     input                               rst_n                      ,
+    input                               tx_swap                    ,   // async (board switch)
     // physical interface (receive)
     input                               rx_clk_in_p                ,
     input                               rx_clk_in_n                ,
@@ -298,6 +304,12 @@ module ad9361_lvds_mode (
     //dataq :q1      q1      q1      q1                       //
     //cnt   :    100 101 100 101 100 101 100                  //
     assign tx_data_sel_s = {dac_valid,dac_ready};
+    (* ASYNC_REG = "TRUE" *) reg [1:0] tx_swap_s = 2'b00;     // static switch: two-flop synchroniser
+    reg [5:0] tx_inv = 6'd0;
+    always @(posedge data_clk) begin
+        tx_swap_s <= {tx_swap_s[0], tx_swap};
+        tx_inv    <= tx_swap_s[1] ? TX_SWAP_PAIRS : 6'd0;
+    end
     always @(posedge data_clk)
         begin
             if(rst_n) dac_ready <= 1'b1;
@@ -305,10 +317,10 @@ module ad9361_lvds_mode (
                 2'b11:
                 begin
                     tx_frame  <= 1'b1;
-                    tx_data_p <= {~dac_data_i[11],dac_data_i[10:6]};
-                    tx_data_n <= {~dac_data_q[11],dac_data_q[10:6]};
-                    tx_data_i_d <= {~dac_data_i[5],dac_data_i[4:0]};
-                    tx_data_q_d <= {~dac_data_q[5],dac_data_q[4:0]};
+                    tx_data_p <= dac_data_i[11:6] ^ tx_inv;
+                    tx_data_n <= dac_data_q[11:6] ^ tx_inv;
+                    tx_data_i_d <= dac_data_i[5:0] ^ tx_inv;
+                    tx_data_q_d <= dac_data_q[5:0] ^ tx_inv;
                     dac_ready <= 1'b0;
                 end
                 2'b10,2'b00:

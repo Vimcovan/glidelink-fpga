@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2025.2 (win64) Build 6299465 Fri Nov 14 19:35:11 GMT 2025
-| Date             : Wed Oct 21 23:02:27 2026
+| Date             : Mon Oct 26 20:32:11 2026
 | Host             : DESKTOP-MCAH50K running 64-bit major release  (build 9200)
 | Command          : report_power -file D:/ClaudePrj/deepjsccq-ofdm-fpga/build/out/rx_power.rpt
 | Design           : jscc_rx_ps_top
@@ -30,10 +30,10 @@ Table of Contents
 ----------
 
 +--------------------------+--------------+
-| Total On-Chip Power (W)  | 4.280        |
+| Total On-Chip Power (W)  | 4.260        |
 | Design Power Budget (W)  | Unspecified* |
 | Power Budget Margin (W)  | NA           |
-| Dynamic (W)              | 3.837        |
+| Dynamic (W)              | 3.817        |
 | Device Static (W)        | 0.443        |
 | Effective TJA (C/W)      | 2.3          |
 | Max Ambient (C)          | 90.1         |
@@ -52,27 +52,27 @@ Table of Contents
 +--------------------------+-----------+----------+-----------+-----------------+
 | On-Chip                  | Power (W) | Used     | Available | Utilization (%) |
 +--------------------------+-----------+----------+-----------+-----------------+
-| Clocks                   |     0.183 |        9 |       --- |             --- |
-| CLB Logic                |     0.335 |   147196 |       --- |             --- |
-|   LUT as Logic           |     0.233 |    56551 |    117120 |           48.28 |
-|   LUT as Distributed RAM |     0.073 |     5840 |     57600 |           10.14 |
+| Clocks                   |     0.184 |        9 |       --- |             --- |
+| CLB Logic                |     0.327 |   147213 |       --- |             --- |
+|   LUT as Logic           |     0.225 |    56559 |    117120 |           48.29 |
+|   LUT as Distributed RAM |     0.072 |     5840 |     57600 |           10.14 |
 |   CARRY8                 |     0.014 |     2734 |     14640 |           18.67 |
-|   Register               |     0.009 |    57587 |    234240 |           24.58 |
+|   Register               |     0.009 |    57600 |    234240 |           24.59 |
 |   LUT as Shift Register  |     0.008 |     1300 |     57600 |            2.26 |
 |   BUFG                   |    <0.001 |        6 |        32 |           18.75 |
 |   Others                 |     0.000 |     3133 |       --- |             --- |
 |   F7/F8 Muxes            |     0.000 |      352 |    117120 |            0.30 |
-| Signals                  |     0.278 |   112860 |       --- |             --- |
+| Signals                  |     0.265 |   112833 |       --- |             --- |
 | Block RAM                |     0.048 |     65.5 |       144 |           45.49 |
 | URAM                     |     0.008 |        7 |        64 |           10.94 |
 | MMCM                     |     0.089 |        0 |       --- |             --- |
 | DSPs                     |     0.040 |      133 |      1248 |           10.66 |
-| I/O                      |     0.124 |       57 |       252 |           22.62 |
+| I/O                      |     0.124 |       58 |       252 |           23.02 |
 | PS8                      |     2.733 |        1 |       --- |             --- |
 | Static Power             |     0.443 |          |           |                 |
-|   PS Static              |     0.108 |          |           |                 |
+|   PS Static              |     0.107 |          |           |                 |
 |   PL Static              |     0.335 |          |           |                 |
-| Total                    |     4.280 |          |           |                 |
+| Total                    |     4.260 |          |           |                 |
 +--------------------------+-----------+----------+-----------+-----------------+
 
 
@@ -82,7 +82,7 @@ Table of Contents
 +------------------+-------------+-----------+-------------+------------+-------------+-------------+------------+
 | Source           | Voltage (V) | Total (A) | Dynamic (A) | Static (A) | Powerup (A) | Budget (A)  | Margin (A) |
 +------------------+-------------+-----------+-------------+------------+-------------+-------------+------------+
-| Vccint           |       0.850 |     1.163 |       1.048 |      0.115 |       NA    | Unspecified | NA         |
+| Vccint           |       0.850 |     1.139 |       1.025 |      0.115 |       NA    | Unspecified | NA         |
 | Vccint_io        |       0.850 |     0.041 |       0.004 |      0.037 |       NA    | Unspecified | NA         |
 | Vccbram          |       0.850 |     0.003 |       0.001 |      0.002 |       NA    | Unspecified | NA         |
 | Vccaux           |       1.800 |     0.124 |       0.049 |      0.074 |       NA    | Unspecified | NA         |
@@ -174,7 +174,7 @@ Table of Contents
 +-----------------------------------+-----------+
 | Name                              | Power (W) |
 +-----------------------------------+-----------+
-| jscc_rx_ps_top                    |     3.837 |
+| jscc_rx_ps_top                    |     3.817 |
 |   dbg_hub                         |     0.001 |
 |     inst                          |     0.001 |
 |       BSCANID.u_xsdbm_id          |     0.001 |
@@ -184,10 +184,10 @@ Table of Contents
 |   u_dec_cdc                       |     0.002 |
 |     u_xpm_fifo_axis               |     0.002 |
 |       xpm_fifo_base_inst          |     0.002 |
-|   u_decoder                       |     0.288 |
+|   u_decoder                       |     0.291 |
 |     u_drain_sd_conv1_ps2          |     0.003 |
 |       g_packed.u_ram              |     0.002 |
-|     u_fifo_sd_pre0_out_b          |     0.002 |
+|     u_fifo_sd_pre0_out_b          |     0.003 |
 |       g_packed.u_ram              |     0.001 |
 |     u_fifo_sd_pre1_out_b          |     0.002 |
 |       g_packed.u_ram              |     0.001 |
@@ -198,7 +198,7 @@ Table of Contents
 |     u_fifo_sd_sum_a               |     0.003 |
 |     u_fifo_sd_sum_b               |     0.005 |
 |       g_packed.u_ram              |     0.004 |
-|     u_lb_sd_conv1_res             |     0.004 |
+|     u_lb_sd_conv1_res             |     0.005 |
 |       u_ram                       |     0.002 |
 |     u_lb_sd_conv2                 |     0.004 |
 |       u_ram                       |     0.003 |
@@ -209,38 +209,38 @@ Table of Contents
 |       u_ram                       |     0.001 |
 |     u_lb_sd_pre1_c1               |     0.004 |
 |       u_ram                       |     0.002 |
-|     u_lb_sd_pre1_c2               |     0.003 |
+|     u_lb_sd_pre1_c2               |     0.004 |
 |       u_ram                       |     0.001 |
 |     u_lb_sd_pre2_c1               |     0.003 |
 |       u_ram                       |     0.001 |
 |     u_lb_sd_pre2_c2               |     0.004 |
-|       u_ram                       |     0.001 |
+|       u_ram                       |     0.002 |
 |     u_lb_sd_pre3_c1               |     0.003 |
 |     u_lb_sd_pre3_c2               |     0.004 |
 |       u_ram                       |     0.002 |
 |     u_output                      |     0.003 |
 |     u_sd_conv1_ps2                |     0.004 |
 |       u_rb                        |     0.002 |
-|     u_sd_conv1_res                |     0.025 |
-|       fifo_mem_reg_0_15_0_13      |     0.001 |
+|     u_sd_conv1_res                |     0.026 |
 |       g_direct.g_wrom[0].u_wrom   |     0.003 |
 |       g_direct.g_wrom[1].u_wrom   |     0.003 |
 |     u_sd_conv2                    |     0.012 |
 |       g_direct.g_wrom[0].u_wrom   |     0.001 |
 |       g_mul_lut.u_mul             |     0.002 |
-|     u_sd_conv2_ps2                |     0.003 |
+|     u_sd_conv2_ps2                |     0.002 |
 |     u_sd_conv_res_ps2             |     0.004 |
 |       u_rb                        |     0.002 |
 |     u_sd_igdn                     |     0.017 |
 |       g_unit[0].u_unit            |     0.001 |
 |       g_unit[1].u_unit            |     0.001 |
 |       g_unit[2].u_unit            |     0.001 |
-|     u_sd_lin0                     |     0.008 |
+|     u_sd_lin0                     |     0.009 |
+|       fifo_mem_reg_0_15_0_13      |     0.001 |
 |       g_gear.u_ws                 |     0.002 |
 |       g_mul_lut.u_mul             |     0.002 |
 |     u_sd_pre0_a1                  |     0.010 |
-|       u_m2                        |     0.001 |
-|     u_sd_pre0_a2                  |     0.011 |
+|       u_m2                        |     0.002 |
+|     u_sd_pre0_a2                  |     0.010 |
 |       u_m2                        |     0.002 |
 |     u_sd_pre0_c1                  |     0.008 |
 |       g_gear.u_ws                 |     0.002 |
@@ -286,16 +286,16 @@ Table of Contents
 |   u_img_cdc                       |     0.001 |
 |     u_xpm_fifo_axis               |     0.001 |
 |       xpm_fifo_base_inst          |     0.001 |
-|   u_ps                            |     2.831 |
+|   u_ps                            |     2.832 |
 |     ps_rx_i                       |     2.831 |
 |       cap_dma                     |     0.004 |
 |       cap_fifo                    |     0.003 |
 |       img_dma                     |     0.004 |
 |       ps_e_0                      |     2.734 |
-|       sc_ctl                      |     0.059 |
+|       sc_ctl                      |     0.060 |
 |       sc_mem                      |     0.026 |
 |   u_regs                          |     0.002 |
-|   u_rf                            |     0.120 |
+|   u_rf                            |     0.119 |
 |     u_ad9361_lvds_mode            |     0.117 |
 |       IBUFGDS_data_clk            |     0.003 |
 |       g_rx_data[0].i_rx_data_ibuf |     0.003 |
@@ -314,13 +314,13 @@ Table of Contents
 |       u_sfo_rot                   |     0.009 |
 |     synchronizer_top_inst         |     0.064 |
 |       frame_detection_inst        |     0.023 |
-|       time_sync_inst              |     0.042 |
-|   u_rx_frame_buf                  |     0.008 |
-|   u_sscc                          |     0.368 |
+|       time_sync_inst              |     0.041 |
+|   u_rx_frame_buf                  |     0.009 |
+|   u_sscc                          |     0.345 |
 |     u_bits                        |     0.005 |
-|     u_dec                         |     0.361 |
+|     u_dec                         |     0.338 |
 |     u_fifo                        |     0.002 |
-|   u_telemetry                     |     0.008 |
+|   u_telemetry                     |     0.007 |
 +-----------------------------------+-----------+
 
 

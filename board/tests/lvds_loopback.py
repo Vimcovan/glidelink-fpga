@@ -2,13 +2,13 @@
 daughter card, without the analog path.
 
 With 0x3F5 bit 0 (Data Port Loop Test Enable) the AD9361 returns the samples it receives on its TX data port on its
-RX data port. The RX bitstream keeps dac_valid = 1 with zero samples (ad9361_top.v), so ad9361_lvds_mode sends them
-through its normal path, which inverts sample bits 11 and 5 (TX pair D5, RTL_TX_SWAP in src/sw/tx/jscc_tx.py): a card
-without swapped pairs reads back 0x820 in I and Q. Each further TX pair with swapped P/N toggles two more bits, k + 6
-and k (the pair carries the upper half of the sample in one DATA_CLK phase and the lower half in the other). The
-script prints the card's swapped-pair mask, the value for lvds_tx_swap.txt on the TX board when this card is used
-there. RX pairs are not covered (an inverted RX pair would already break reception). Measured 2026-10-26: two
-FMCOMMS3 cards 0x00 each.
+RX data port. The RX bitstream drives the TX port with zero samples (dac_valid = 1, ad9361_top.v); ad9361_lvds_mode
+XORs them with the TX_SWAP_PAIRS mask (pair D5, sample bits 11 and 5) when switch SW0 is on (STATUS bit 1). A pair
+with swapped P/N on the card toggles two more bits, k + 6 and k (the pair carries the upper half of the sample in one
+DATA_CLK phase and the lower half in the other). The script removes the switch's own inversion and prints the card's
+swapped-pair mask and the SW0 position for it: on for a card with pair D5 swapped (the third-party card), off for a
+card without swapped pairs (FMCOMMS3, both cards measured 2026-10-26). RX pairs are not covered (an inverted RX pair
+would already break reception).
 
 Needs jscc-rx and jscc-gui stopped (uses the capture DMA and the SPI port):
     bash -lc 'source /etc/profile.d/pynq_venv.sh && python3 lvds_loopback.py'
@@ -19,7 +19,7 @@ import numpy as np
 
 from jscc_rx import JsccRx
 
-RTL_TX_SWAP = 0x20                 # TX pairs the RTL inverts (= src/sw/tx/jscc_tx.py RTL_TX_SWAP)
+TX_SWAP_PAIRS = 0x20               # pairs inverted with SW0 on (ad9361_lvds_mode.v TX_SWAP_PAIRS)
 
 
 def raw_words(rx, n):
@@ -53,11 +53,14 @@ try:
     bad = [b for b in range(12) if (i >> b & 1).mean() > 0.5 or (q >> b & 1).mean() > 0.5]
     seen = sum(1 << k for k in range(6) if k in bad and k + 6 in bad)          # pairs read back inverted
     odd = [b for b in bad if not ((b + 6) in bad or (b - 6) in bad)]
-    swap = seen ^ RTL_TX_SWAP                                                  # minus the RTL's own inversion
+    sw = rx.rd("STATUS") >> 1 & 1
+    swap = seen ^ (TX_SWAP_PAIRS if sw else 0)                               # minus the switch's own inversion
     if odd:
         print(f"RESULT: unexpected set bits {odd} (not in pairs k, k + 6): check the setup")
-    print(f"RESULT: read back 0x{seen << 6 | seen:03X} -> TX pairs swapped on this card 0x{swap:02X}; "
-          f"lvds_tx_swap.txt on the TX board for this card: 0x{swap:02X}")
+    advice = ("SW0 off" if swap == 0 else "SW0 on" if swap == TX_SWAP_PAIRS else
+              f"neither SW0 position fits (TX_SWAP_PAIRS = 0x{TX_SWAP_PAIRS:02X})")
+    print(f"RESULT: SW0 {'on' if sw else 'off'}, read back 0x{seen << 6 | seen:03X} -> TX pairs swapped on this card "
+          f"0x{swap:02X}: {advice} for this card")
 finally:
     rx.rf.wr(0x3F5, reg0)
     print(f"restored 0x3F5 = 0x{rx.rf.rd(0x3F5):02X}")

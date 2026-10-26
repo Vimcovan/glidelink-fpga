@@ -15,10 +15,6 @@ from pynq import Overlay, MMIO, allocate
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REG_BASE = 0x8002_0000
-# TX LVDS data pairs whose P/N the RTL already inverts (ad9361_lvds_mode.v flips sample bits 11 and 5 = pair D5):
-# made for a third-party AD9361 card with that pair swapped on its PCB; FMCOMMS3 has no swapped pair (lvds_tx_swap.txt 0x00)
-RTL_TX_SWAP = 0x20
-TX_SWAP_FILE = "lvds_tx_swap.txt"
 IMG_BYTES = 256 * 256 * 3
 R = dict(ID=0x00, VERSION=0x04, CTRL=0x08, SRC_ACTIVE=0x0C, IMG_BYTES=0x10, SYMS=0x14, SYM_FRAMES=0x18,
          TX_FRAMES=0x1C, FB_FRAMES=0x20, TLAST_ERR=0x24, STATUS=0x28, SPI_CMD=0x2C, SPI_STAT=0x30, SSCC_FRAMES=0x34)
@@ -47,7 +43,8 @@ class JsccTx:
         s = {k: self.rd(k) for k in COUNTERS}
         s.update(SRC_SEL="prbs" if self.rd("CTRL") & 1 else "encoder",
                  SRC_ACTIVE="prbs" if self.rd("SRC_ACTIVE") & 1 else "encoder",
-                 MMCM250_LOCKED=self.rd("STATUS") & 1)
+                 MMCM250_LOCKED=self.rd("STATUS") & 1,
+                 TX_SWAP_SW=self.rd("STATUS") >> 1 & 1)      # SW0: TX LVDS pairs inverted for the daughter card
         return s
 
     # ---------------------------------------------------------------- AD9361 SPI (bitstream VERSION >= 2)
@@ -95,29 +92,6 @@ class JsccTx:
             time.sleep(0.1)
         L.retune(self.spi, mhz * 1e6, log)
         return L.tx_quad_search(self.spi, log)
-
-    def set_lvds_tx_polarity(self, folder=HERE, log=print):
-        """TX data-pair polarity of the daughter card in use. lvds_tx_swap.txt in `folder` holds the card's swapped-pair
-        mask (bit k = TX pair Dk has P/N swapped on the board), as measured with board/tests/lvds_loopback.py; absent
-        = RTL_TX_SWAP (the card the RTL was written for). Pairs that differ from the RTL's assumption are inverted
-        inside the AD9361: LVDS invert bits 0x03D[7:6] = TX D1..D0, 0x03E[3:0] = TX D5..D2 (measured 2026-10-26).
-        Returns the AD9361 invert mask (bit k = TX Dk)."""
-        t0 = time.time()
-        while not self.rd("SPI_STAT") >> 16 & 1:            # PL init + its phase search still running
-            if time.time() - t0 > 15:
-                raise RuntimeError("AD9361 not ready (rf_ready = 0) after 15 s")
-            time.sleep(0.1)
-        try:
-            swap = int(open(os.path.join(folder, TX_SWAP_FILE), encoding="ascii").read().split()[0], 0) & 0x3F
-        except (OSError, IndexError, ValueError):
-            swap = RTL_TX_SWAP
-        inv = swap ^ RTL_TX_SWAP
-        r3d, r3e = self.spi(0x03D), self.spi(0x03E)
-        self.spi(0x03D, (r3d & 0x3F) | (inv & 0x03) << 6)
-        self.spi(0x03E, (r3e & 0xF0) | inv >> 2)
-        log(f"LVDS TX pairs swapped on the card 0x{swap:02X}, RTL compensates 0x{RTL_TX_SWAP:02X} -> AD9361 inverts "
-            f"0x{inv:02X} (0x03D 0x{self.spi(0x03D):02X}, 0x03E 0x{self.spi(0x03E):02X})")
-        return inv
 
     def clear_counters(self):
         self.wr("CTRL", (self.rd("CTRL") & 5) | 2)

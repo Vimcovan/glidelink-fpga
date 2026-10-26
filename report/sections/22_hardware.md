@@ -399,7 +399,7 @@ R是每个符号的斜率增量，对应SFO本身。旋转放在CPE之前，是�
 
 ##### （1）LVDS数据接口`ad9361_lvds_mode`
 
-接收方向，`rx_clk_in`经IBUFGDS和BUFG成为`data_clk`，6对数据线和帧线经IBUFDS、IDDRE1转成单沿数据，帧信号的4位样式为1100时把两拍各6位拼成12位的I和Q；发送方向由ODDRE1产生随路时钟和数据。1R1T下每个采样占2个`data_clk`周期，20 MSPS对应`data_clk` 40 MHz。`data_clk`域与100 MHz域之间各有一个异步FIFO：
+接收方向，`rx_clk_in`经IBUFGDS和BUFG成为`data_clk`，6对数据线和帧线经IBUFDS、IDDRE1转成单沿数据，帧信号的4位样式为1100时把两拍各6位拼成12位的I和Q；发送方向由ODDRE1产生随路时钟和数据；数据在进入ODDRE1之前可与线对掩码异或，掩码由拨码开关SW0选通，用于数据线对P/N在子卡PCB上对调的子卡（一对线在两个`data_clk`相位分别传样点的bit k+6和bit k，对调后两位同时取反），FMCOMMS3不需要。1R1T下每个采样占2个`data_clk`周期，20 MSPS对应`data_clk` 40 MHz。`data_clk`域与100 MHz域之间各有一个异步FIFO：
 
 - DAC侧FIFO为空时输出0。AD9361的收发状态机（ENSM）始终保持在FDD状态，帧间的“静默”靠发送0实现，而不是在发送、接收、待机状态之间切换。原因是ENSM的状态切换需要时间，`enable`、`txnrx`引脚的阶跃也会耦合到射频输出上。
 - ADC侧FIFO满时丢样。RX物理层各级的吞吐都高于20 MSPS，对ADC侧始终保持ready，所以这个FIFO实际不会写满。

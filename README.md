@@ -37,8 +37,8 @@
 | PSNR–SNR（DIV2K 0802） | DeepJSCC-Q：SNR 36 dB 时 32.2 dB，2.9 dB 时仍有 23.5 dB，平缓退化；SSCC（JPEG + LDPC）最高 29.4 dB，在 SNR 约 16–19.5 dB 处悬崖式失效 | `data/measurements/psnr_snr/` |
 | 帧率 | 30 fps：连续 600 s 解码 18,020 帧（PL 帧计数器） | `data/measurements/fps/` |
 | 时延（PL 计数器，中位数） | 编码 38.20 ms / 传输 2.90 ms / 解码 26.39 ms，合计 67.49 ms | `data/measurements/latency/` |
-| 资源 / 时序（xczu5eg，布局布线后） | TX：LUT 54,246（46 %）、BRAM36 104.5（73 %）、URAM 10、DSP 243，WNS +0.261 ns；RX：LUT 63,691（54 %）、BRAM36 65.5（45 %）、URAM 7、DSP 133，WNS +0.437 ns | `build/reports/` |
-| 功耗（实测，板载 PMBus 遥测） | TX 3.07 W / RX 3.44 W（PL、PS 与 DDR 电源轨，30 fps）；Vivado 估算 4.49 / 4.28 W | `data/measurements/power/`、`build/reports/*_power.rpt` |
+| 资源 / 时序（xczu5eg，布局布线后） | TX：LUT 54,241（46 %）、BRAM36 104.5（73 %）、URAM 10、DSP 243，WNS +0.082 ns；RX：LUT 63,699（54 %）、BRAM36 65.5（45 %）、URAM 7、DSP 133，WNS +0.307 ns | `build/reports/` |
+| 功耗（实测，板载 PMBus 遥测） | TX 3.07 W / RX 3.44 W（PL、PS 与 DDR 电源轨，30 fps）；Vivado 估算 4.48 / 4.26 W | `data/measurements/power/`、`build/reports/*_power.rpt` |
 | 网络精度 | W8A12 比浮点低 0.002 dB（DIV2K）/ 0.027 dB（Kodak）；RTL 与整数参考模型逐比特一致 | `data/model_shallow/`、`sim/network/` |
 
 ---
