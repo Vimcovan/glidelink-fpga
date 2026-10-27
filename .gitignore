@@ -29,3 +29,6 @@ sim/network/work*/
 hs_err_pid*
 data/model_shallow/golden/
 src/network/gen_shallow/
+
+# enclosure: scratch renders
+mechanical/out/_*

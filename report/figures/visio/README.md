@@ -5,7 +5,7 @@
 | 脚本 | 输出 | 内容 |
 |---|---|---|
 | —（手绘） | `fig02_network.vsdx`、`../network/fig02_network.png` | 编码器 / 浅层解码器模块结构，各块输出尺寸与 `data/model_shallow/manifest.json` 一致 |
-| `fig07_memory.ps1` | `fig07_memory.vsdx` | 旧版布局；报告图2-8现由 `../sim/resource_plan.py` 生成 |
+| `fig07_memory.ps1` | `fig07_memory.vsdx` | 旧版布局；报告图2-9现由 `../sim/resource_plan.py` 生成 |
 | —（手绘） | `shallow_decoder.vsdx`、`../network/dec_structure.png`、`../../notes/figures/shallow_decoder/dec_structure.png` | 浅层解码器结构 |
 | `design_flow.ps1` | `design_flow.vsdx`、`../design_flow.png` | 设计流程（报告1.6节） |
 | —（手绘） | `sys_overview.vsdx`、`../hw/sys_overview.png` | 系统整体框图 |

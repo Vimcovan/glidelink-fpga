@@ -1,4 +1,4 @@
-"""Figure 2-6 of the report: (a) output-channel parallelism P per block (pies), (b) the three weight-ROM mappings with
+"""Figure 2-7 of the report: (a) output-channel parallelism P per block (pies), (b) the three weight-ROM mappings with
 the number of convolution engines of each, (c) on-chip storage plan (BRAM36 planned values). Data: memory_plan of
 data/model_shallow/manifest.json (encoder: DeepJSCC-Q, decoder: shallow decoder).
 

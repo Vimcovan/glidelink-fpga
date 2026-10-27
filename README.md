@@ -174,6 +174,7 @@ TX、RX 板上的程序由 systemd 自启动，上电约 1 分钟建立链路，
 | `sim` | `network/` 编解码器 RTL 与整数参考模型比特精确比对；`phy/` OFDM 基带；`sscc/` SSCC 基线（见 `sim/README.md`） |
 | `build` | 一键构建脚本 `build_hw.tcl`（从本仓库重建的结果与部署版资源、时序完全一致）；`reports/` 资源、时序、功耗报告，`reports/network/` 网络核 OOC 报告 |
 | `board` | `bitstreams/` 部署版比特流（含 SHA-256）；`tests/` 板上测量与诊断脚本 |
+| `mechanical` | 外壳：参数化设计脚本、3D 打印底壳（STL）与激光切割亚克力顶盖（DXF）、侧板开孔纸样（见 `mechanical/README.md`） |
 | `data` | `model/` 部署模型的检查点（`checkpoint/`）、量化后的权重与 RTL 初始化数据；`measurements/` 实测数据与图 |
 | `report` | 设计报告（源文件、生成脚本与图）、海报、开发记录与大模型协作记录 |
 | `skill` | 技能包 |
