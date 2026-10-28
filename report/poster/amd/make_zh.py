@@ -1,4 +1,4 @@
-"""Derive build_poster_zh.py from build_poster.py (Chinese texts and fonts). Usage: python make_zh.py <this directory>
+"""Derive build_poster_zh.py from build_poster.py (Chinese texts and fonts). Usage: python make_zh.py <this directory>"""
 import os, sys
 D = sys.argv[1]
 s = open(os.path.join(D, 'build_poster.py'), encoding='utf-8').read()
@@ -20,7 +20,7 @@ rep('"""AMD poster template -> GlideLink poster (one 13.33 x 7.5 in slide).',
     '"""AMD poster template -> GlideLink poster, Chinese version (one 13.33 x 7.5 in slide; see build_poster.py).')
 rep("INFO = json.load(open(os.path.join(HERE, 'team.json'), encoding='utf-8'))",
     "INFO = json.load(open(os.path.join(HERE, 'team_zh.json'), encoding='utf-8'))\nSERIF = ('Times New Roman', 'Cambria', 'Georgia', 'Garamond', 'Bookman Old Style', 'Century Schoolbook')\n"
-    "# East Asian font follows the Latin one: serif -> 华文中宋, sans serif -> Noto Sans SC")
+    "# East Asian font follows the Latin one: serif -> 华文中宋, sans serif -> Noto Sans SC Static (static instances of the variable font: PowerPoint's PDF export embeds a variable font's default, Thin)")
 rep("t = set_paras(by_id[9], ['GlideLink: Real-Time DeepJSCC-Q', 'Image Transmission on AMD FPGA'])",
     "t = set_paras(by_id[9], ['GlideLink：基于AMD FPGA的', 'DeepJSCC-Q实时无线图像传输'])")
 rep("by_id[8].top = Inches(1.1)                                       # INTRODUCTION",
@@ -46,13 +46,16 @@ for i in list(range(15, 29)) + list(range(33, 39)):
     remove(by_id[i])
 for bar, text in ((by_id[10], '创新设计'), (by_id[32], '测试结果')):
     bar.width, bar.height = by_id[10].width, BAR
-    vb = s.shapes.add_textbox(bar.left, bar.top + Inches(PAD), bar.width, Inches(4 * HS / 72))   # eaVert text starts at the top
+    # one character per line at exactly one em, i.e. the advance of vertical CJK text (PowerPoint's PDF export
+    # overlaps the characters of eaVert text in a static instance of Noto Sans SC)
+    vb = s.shapes.add_textbox(bar.left, bar.top, bar.width, bar.height)
     tf = vb.text_frame; tf.word_wrap = True; tf.vertical_anchor = MSO_ANCHOR.MIDDLE
     tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
-    tf._txBody.find(qn('a:bodyPr')).set('vert', 'eaVert')         # upright characters, top to bottom
-    p = tf.paragraphs[0]; p.alignment = PP_ALIGN.CENTER
-    r = p.add_run(); r.text = text
-    r.font.size = Pt(HS); r.font.bold = True; r.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
+    for k, ch_ in enumerate(text):
+        p = tf.paragraphs[0] if k == 0 else tf.add_paragraph()
+        p.alignment = PP_ALIGN.CENTER; p.line_spacing = Pt(HS); p.space_before = Pt(0)
+        r = p.add_run(); r.text = ch_
+        r.font.size = Pt(HS); r.font.bold = True; r.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
 """)
 rep("af.left, af.width = Inches(7.72), Inches(2.5)",
     "af.left, af.width = Inches(7.72), Inches(2.5)\nfor shp in (nm, af):\n    for p in shp.text_frame.paragraphs:\n        for r in p.runs:\n            r.font.size = Pt(15)\nnm.left, af.left = Inches(7.5), Inches(8.2)                      # closer to the badge")
@@ -136,9 +139,9 @@ for root in (s._element, gf.chart._chartSpace):
         lat = rpr.find(qn('a:latin'))
         ea = etree.Element(qn('a:ea'))
         if rpr.attrib.pop('heading', None):
-            ea.set('typeface', 'Noto Sans SC Black')
+            ea.set('typeface', 'Noto Sans SC Static Black')
         else:
-            ea.set('typeface', '华文中宋' if lat is not None and lat.get('typeface') in SERIF else 'Noto Sans SC')
+            ea.set('typeface', '华文中宋' if lat is not None and lat.get('typeface') in SERIF else 'Noto Sans SC Static')
         if lat is not None:
             lat.addnext(ea)
         else:

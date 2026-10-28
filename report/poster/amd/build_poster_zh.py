@@ -25,7 +25,7 @@ REPO = os.path.normpath(os.path.join(HERE, '..', '..', '..'))
 TEMPLATE, OUT = sys.argv[1], sys.argv[2]
 INFO = json.load(open(os.path.join(HERE, 'team_zh.json'), encoding='utf-8'))
 SERIF = ('Times New Roman', 'Cambria', 'Georgia', 'Garamond', 'Bookman Old Style', 'Century Schoolbook')
-# East Asian font follows the Latin one: serif -> 华文中宋, sans serif -> Noto Sans SC
+# East Asian font follows the Latin one: serif -> 华文中宋, sans serif -> Noto Sans SC Static (static instances of the variable font: PowerPoint's PDF export embeds a variable font's default, Thin)
 BLUE, ORANGE = RGBColor(0x2E, 0x5E, 0x8E), RGBColor(0xC8, 0x60, 0x2A)
 INK, MUTE, BLACK = RGBColor(0x1F, 0x29, 0x33), RGBColor(0x52, 0x60, 0x6D), RGBColor(0, 0, 0)
 PS_F, PS_L = RGBColor(0xEE, 0xE8, 0xF5), RGBColor(0x7E, 0x6A, 0x9E)
@@ -159,13 +159,16 @@ for i in list(range(15, 29)) + list(range(33, 39)):
     remove(by_id[i])
 for bar, text in ((by_id[10], '创新设计'), (by_id[32], '测试结果')):
     bar.width, bar.height = by_id[10].width, BAR
-    vb = s.shapes.add_textbox(bar.left, bar.top + Inches(PAD), bar.width, Inches(4 * HS / 72))   # eaVert text starts at the top
+    # one character per line at exactly one em, i.e. the advance of vertical CJK text (PowerPoint's PDF export
+    # overlaps the characters of eaVert text in a static instance of Noto Sans SC)
+    vb = s.shapes.add_textbox(bar.left, bar.top, bar.width, bar.height)
     tf = vb.text_frame; tf.word_wrap = True; tf.vertical_anchor = MSO_ANCHOR.MIDDLE
     tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
-    tf._txBody.find(qn('a:bodyPr')).set('vert', 'eaVert')         # upright characters, top to bottom
-    p = tf.paragraphs[0]; p.alignment = PP_ALIGN.CENTER
-    r = p.add_run(); r.text = text
-    r.font.size = Pt(HS); r.font.bold = True; r.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
+    for k, ch_ in enumerate(text):
+        p = tf.paragraphs[0] if k == 0 else tf.add_paragraph()
+        p.alignment = PP_ALIGN.CENTER; p.line_spacing = Pt(HS); p.space_before = Pt(0)
+        r = p.add_run(); r.text = ch_
+        r.font.size = Pt(HS); r.font.bold = True; r.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
 nm = set_paras(by_id[29], [INFO['members']])
 nm.left, nm.width = Inches(6.95), Inches(3.3)
 af = set_paras(by_id[31], INFO['affiliation'])
@@ -368,9 +371,9 @@ for root in (s._element, gf.chart._chartSpace):
         lat = rpr.find(qn('a:latin'))
         ea = etree.Element(qn('a:ea'))
         if rpr.attrib.pop('heading', None):
-            ea.set('typeface', 'Noto Sans SC Black')
+            ea.set('typeface', 'Noto Sans SC Static Black')
         else:
-            ea.set('typeface', '华文中宋' if lat is not None and lat.get('typeface') in SERIF else 'Noto Sans SC')
+            ea.set('typeface', '华文中宋' if lat is not None and lat.get('typeface') in SERIF else 'Noto Sans SC Static')
         if lat is not None:
             lat.addnext(ea)
         else:
