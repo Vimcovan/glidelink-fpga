@@ -5,7 +5,7 @@
 | 部分 | 型号 / 设置 |
 |---|---|
 | 板卡 | 2 × PYNQ-ZU（xczu5eg-sfvc784-2-e），PYNQ 镜像 |
-| 射频 | 2 × AD-FMCOMMS3-EBZ（AD9361），插在 PYNQ-ZU 的 FMC 上；LVDS 1R1T，FDD，20 MSPS，参考时钟 40 MHz |
+| 射频 | 2 × AD9361 FMC 子卡（TX 数据线对 D5 在子卡上 P/N 对调，SW0 拨上），插在 PYNQ-ZU 的 FMC 上；LVDS 1R1T，FDD，20 MSPS，参考时钟 40 MHz |
 | TX 外设 | USB UVC 摄像头（可选，否则用演示视频 / 预设图） |
 | RX 外设 | 1024×600 触摸屏（DisplayPort + USB 触摸） |
 | 网络 | PC ↔ RX 板 `192.168.3.1`；RX ↔ TX 板间网线：TX `192.168.4.1`、RX 侧 `192.168.4.2`（GUI 显示 TX 原图与 PSNR、调 TX 衰减用） |
@@ -50,5 +50,5 @@
 - **SSCC 在高 SNR 下也偶发整帧失败**：已通过 AGC 锁定电平 −14 dBFS 解决（见 `THIRD_PARTY.md` 末节）；若改动初始化脚本后复现，用 `tests/agc_trace.py --adc` 检查帧内增益台阶。
 - **启动时的告警**：服务启动后的十几秒内 `rx_server.log` 中的 `spectrum: ADC capture did not complete` 与 0 帧/s 属正常，AGC 锁定后消失；`gui.log` 中的 `libGL error: failed to load driver: xlnx` 为 Mesa 找不到 Xilinx 专用驱动后的正常回退，随后出现 `h3d_render: Mali400` 即三维渲染正常。
 - **抓取 ADC / 测频谱前**先 `systemctl stop jscc-rx`（与频谱线程共用抓取 DMA）；`rx_server` 停止时会复位两个 DMA，防止遗留传输卡住下一个进程。
-- **换射频子卡后 EVM 只有约 −6 dB、能同步但解不出图**：子卡上 TX 数据线对的 P/N 走线可能与开关位置不符。两块板的拨码开关 SW0 选择 TX 线对极性：拨下（0）用于 FMCOMMS3（无对调，实测两块均如此），拨上（1）用于此前使用的第三方 AD9361 子卡（D5 线对对调，RTL 对样点的 bit 11 和 bit 5 取反，`ad9361_lvds_mode.v` 的 `TX_SWAP_PAIRS`）。开关为静态输入，拨动后立即生效，无需重新加载比特流；当前位置可从 `STATUS` 寄存器 bit 1 读出（`tx_camera.log` 启动时也会打印）。换上不确定的子卡时，把它插到 RX 板上运行 `tests/lvds_loopback.py`，脚本给出该卡对应的开关位置。
+- **换射频子卡后 EVM 只有约 −6 dB、能同步但解不出图**：子卡上 TX 数据线对的 P/N 走线可能与开关位置不符。两块板的拨码开关 SW0 选择 TX 线对极性：拨上（1）用于本系统的 AD9361 FMC 子卡（D5 线对对调，RTL 对样点的 bit 11 和 bit 5 取反，`ad9361_lvds_mode.v` 的 `TX_SWAP_PAIRS`），拨下（0）用于 AD-FMCOMMS3（无对调，实测两块均如此）。开关为静态输入，拨动后立即生效，无需重新加载比特流；当前位置可从 `STATUS` 寄存器 bit 1 读出（`tx_camera.log` 启动时也会打印）。换上不确定的子卡时，把它插到 RX 板上运行 `tests/lvds_loopback.py`，脚本给出该卡对应的开关位置。
 - **带内杂散**：显示像素时钟谐波（51.2 MHz × 18 = 921.6 MHz）落入 RX 带内，已改用 52.01 MHz；40 MHz 参考时钟的 23 次谐波（920 MHz，子载波 +16）为 RX 板侧固有杂散。

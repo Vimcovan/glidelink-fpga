@@ -84,7 +84,7 @@ AI反复出现的问题有四类：没有证据就下结论；把自己定的经
 
 ## 附录C复现说明
 
-硬件：2块PYNQ-ZU、2块AD-FMCOMMS3-EBZ、2根胶棒天线；TX可选USB UVC摄像头，RX接1024×600 DisplayPort触摸屏；两板之间一根网线。
+硬件：2块PYNQ-ZU、2块AD9361 FMC子卡、2根胶棒天线；TX可选USB UVC摄像头，RX接1024×600 DisplayPort触摸屏；两板之间一根网线。
 
 使用部署版比特流：见仓库根目录`README.md`。把`board/bitstreams/`与`src/sw/`拷到两块板上，安装`src/sw/systemd/`中的服务，上电约1分钟后触摸屏显示GUI。比特流的SHA-256见`board/bitstreams/SHA256SUMS`。Mali-400驱动与PyQt5的安装见`src/sw/board_setup/`。
 

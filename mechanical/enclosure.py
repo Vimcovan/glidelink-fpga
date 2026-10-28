@@ -1,4 +1,4 @@
-"""GlideLink enclosure: 3D-printed base for one PYNQ-ZU + AD-FMCOMMS3 board, laser-cut 3 mm acrylic lid.
+"""GlideLink enclosure: 3D-printed base for one PYNQ-ZU + AD9361 FMC card, laser-cut 3 mm acrylic lid.
 
 Coordinates (mm): origin at the front-left corner of the PYNQ-ZU PCB, x to the right (power jack side), y to the back
 (edge with HDMI / USB / mini DP), z up with z = 0 at the outer bottom of the base. "Front" is the FMC edge; the

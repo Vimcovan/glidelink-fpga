@@ -6,7 +6,7 @@ Samples every rail at ~2 Hz and prints / appends the mean voltage, current and p
 mean(V) x mean(I): the regulators report current in 1/64 A steps but power only in 1/32 W steps.
 Groups: PL = INT (VCCINT, VCCINT_IO, VCCBRAM) + AUX (VCCAUX, VCCAUX_IO); PS = PSINTFP + PSINTLP + PSAUX;
 DDR = PSDDR_HDMI (DDR4 1.2 V, shared with the HDMI buffer); the other rails supply board peripherals.
-The AD-FMCOMMS3 is powered from the FMC 12 V / 3V3 pins and is not on these rails.
+The AD9361 FMC card is powered from the FMC 12 V / 3V3 pins and is not on these rails.
 """
 import argparse
 import json

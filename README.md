@@ -182,7 +182,7 @@ TX、RX 板上的程序由 systemd 自启动，上电约 1 分钟建立链路，
 ## 硬件
 
 - 2 × PYNQ-ZU（xczu5eg-sfvc784-2-e），PYNQ 镜像（Python venv `/etc/profile.d/pynq_venv.sh`）
-- 2 × AD-FMCOMMS3-EBZ（AD9361），LVDS 1R1T，FDD，参考时钟 40 MHz
+- 2 × AD9361 FMC 子卡，LVDS 1R1T，FDD，参考时钟 40 MHz
 - TX：USB UVC 摄像头（可选）；RX：1024×600 触摸屏（DisplayPort）
 - 网络：PC ↔ RX 板 `192.168.3.1`；RX ↔ TX 板间网线，TX `192.168.4.1`、RX 侧 `192.168.4.2`
 
