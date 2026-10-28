@@ -28,3 +28,12 @@ python report_fig.py         # 报告插图
 | Ø12 mm × 4 mm 硅胶脚垫 | 4 | 底面凹槽 |
 
 装配：铜柱从底壳下方固定 → 子卡插在开发板上，整体竖直放入底壳，SMA 落入前侧板的通槽 → 开发板拧到铜柱上 → 接天线和线缆 → 盖上顶盖。
+
+## 贴纸
+
+`logo/` 为外壳贴纸的 GlideLink 标志：圆形（Ø50 mm）、横版（90 × 24.4 mm）和图标（40 × 40 mm）三种，各有按实际尺寸排版的矢量 PDF（下单用，文字已转曲）、600 dpi 透明底 PNG 和 SVG。字体为 Montserrat（SIL Open Font License，`logo/fonts/`）。
+
+```bash
+python logo/make_logo.py     # SVG
+python logo/export.py        # PDF / PNG（Edge 无头模式），尺寸在 SIZES 中修改
+```
