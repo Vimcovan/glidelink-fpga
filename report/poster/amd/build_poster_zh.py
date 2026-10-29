@@ -359,9 +359,9 @@ box(9.25, 7.04, 3.1, 0.15, '* 功耗为实测值，含PS、PL与DDR；资源为x
 # the section headings (Aharoni in the English version) get the Black weight
 HEADINGS = {'作品简介', '创新设计', '测试结果'}
 for sp in s.shapes:
-    if sp.has_text_frame and sp.text_frame.text.replace('\\n', '').replace('\\v', '') in HEADINGS:
+    if sp.has_text_frame and ''.join(sp.text_frame.text.split()) in HEADINGS:
         for rpr in sp._element.iter(qn('a:rPr')):
-            rpr.set('heading', '1')
+            rpr.set('heading', '1'); rpr.set('b', '0')               # Black weight, no synthetic bold on top
 for root in (s._element, gf.chart._chartSpace):
     for rpr in list(root.iter(qn('a:rPr'), qn('a:endParaRPr'), qn('a:defRPr'))):
         for e in rpr.findall(qn('a:ea')):
