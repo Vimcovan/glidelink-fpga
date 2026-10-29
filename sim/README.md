@@ -57,10 +57,10 @@ powershell -ExecutionPolicy Bypass -File sim\network\run_top_sim.ps1 -First rx_i
 | `tb_tx_long.sv`、`tb_tx_jscc.sv` | OFDM 发射基带（后者为 DeepJSCC-Q 帧格式，PRBS 64QAM 源），按 20 MSPS 读出，检查帧开始后不欠载，导出采样供 RX 仿真 |
 | `tb_rx_long.sv`、`tb_rx_jscc.sv` | OFDM 接收基带：两帧分别加正、负 SFO，再加 CFO、多径、AWGN，检查同步、信道估计与 SFO / CPE 跟踪 |
 | `tb_cap_2board.sv` | 把两板空口实测的 ADC 采样回放进接收基带 |
-| `sync/` | 同步模块（帧检测、频偏纠正、LTF 定时）的文件激励仿真：合成激励与板上实采采样回放，一键脚本见下 |
+| `sync/` | 同步模块（帧检测、频偏纠正、LTF 定时）的文件激励仿真：合成激励与板上实采采样回放，运行脚本见下 |
 
 这几个测试平台在开发时的 Vivado 工程中运行（OFDM 块用到 FFT / IFFT、CORDIC、DDS 等 IP），激励来自 `tb_tx_*` 的导出或
-`board/tests/adc_frames.py` 的实采数据，仓库中不带一键脚本。要运行它们，先用 `build/build_hw.tcl` 建出 RX / TX 工程，
+`board/tests/adc_frames.py` 的实采数据，仓库中不带运行脚本。要运行它们，先用 `build/build_hw.tcl` 建出 RX / TX 工程，
 把测试平台加入 `sim_1`，再按测试平台开头的说明准备激励文件。
 
 ### `phy/sync/`：同步模块

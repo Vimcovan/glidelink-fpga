@@ -1,12 +1,12 @@
 # 大模型协作记录
 
-本项目由参赛者与两个 AI 编程代理协作完成：**Claude Code**（Anthropic）与 **Codex**（OpenAI）。
+本项目由参赛者与两个 AI 编程代理协作完成：Claude Code（Anthropic）与 Codex（OpenAI）。
 参赛者提出目标和约束、做关键的技术判断，并负责所有物理操作（接线、上电、观察 LED / 屏幕 / 天线）；代理在本机与两块板卡上
 读写代码、运行 Vivado / 仿真 / 板上程序、采集数据并出图。
 
 | 文件 | 内容 |
 |---|---|
-| [`cases.md`](cases.md) | **17 个典型案例**：背景、模型做了什么、用户做了什么、结果，含出处 |
+| [`cases.md`](cases.md) | 17 个典型案例：背景、模型做了什么、用户做了什么、结果，含出处 |
 | [`claude_codex/`](claude_codex/) | 两个代理之间的协作：Claude Code 写给 Codex 的任务书、Codex 的网络章节原稿与合稿后版本、Codex 对全文的交叉审查及逐条处理 |
 | [`transcripts/`](transcripts/) | 会话全文的压缩、脱敏版本：`claude/`（10 个会话）、`codex/`（30 个会话），文件名为 工作区_时间_会话 ID（见下） |
 | [`tools/export_transcripts.py`](tools/export_transcripts.py) | 从 Claude Code / Codex 的原始 jsonl 记录生成上述转写的脚本 |
@@ -28,6 +28,9 @@
 | 10-05 – 10-06 | 演示视频（代理控制两块板卡、配音、剪辑）、AGC 现场记录、显示杂散排查 | Claude Code |
 | 10-07 | AGC 看门狗与锁定电平、PSNR–SNR / 帧率 / 分段时延实测、开源仓库、设计报告 | Claude Code |
 | 10-07 | 设计报告网络章节起草、全文交叉审查 | Codex（由 Claude Code 调用） |
+| 10-07 – 10-11 | 设计报告：撰写、绘图，参赛者逐条批注修改 | Claude Code |
+| 10-15 – 10-19 | 浅层解码器：结构探索、联合训练与量化感知训练、PWL 的 RTL、逐比特仿真、消融实验、上板测试与报告修改 | Claude Code |
+| 10-20 – 10-21 | 残差块个数扫描与对照实验；SSCC 基线改用 LDPC（AWGN 仿真、Vivado LDPC IP 资源评估、编译码器 RTL 与逐位参考模型）；定时同步改为两点度量、频偏估计改为 64 点累加；重新上板测试 | Claude Code |
 
 ## 会话统计（与本项目相关的部分）
 

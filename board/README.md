@@ -10,7 +10,7 @@
 | RX 外设 | 1024×600 触摸屏（DisplayPort + USB 触摸） |
 | 网络 | PC ↔ RX 板 `192.168.3.1`；RX ↔ TX 板间网线：TX `192.168.4.1`、RX 侧 `192.168.4.2`（GUI 显示 TX 原图与 PSNR、调 TX 衰减用） |
 
-上电顺序无要求。上电约 1 分钟后三个服务起来，触摸屏显示 GUI。
+上电顺序无要求。上电约 1 分钟后各服务启动完毕，触摸屏显示 GUI。
 
 ## 比特流
 
@@ -39,7 +39,7 @@
 | `power_rails.py` | 板载 PMBus 遥测（三片 IRPS5401）读各电源轨电压、电流、功率，按时间平均；PL / PS / DDR 分组 |
 | `agc_guard_test.py` | AGC 看门狗验收：静置误复位、衰减跳变恢复、无信号恢复 |
 | `agc_trace.py`、`adc_frames.py`、`pl_counters.py` | 诊断：原始 ADC 抓取与 AD9361 `CTRL_OUT`（状态输出引脚，此处为 AGC 状态）同步记录、帧间隔、PL 计数器 |
-| `adc_edge.py` | 诊断：链路边缘处各衰减点的原始 ADC 采样（含 TX 衰减最大时的噪声底）、同步率与增益，供离线同步分析和 `sim/phy/sync/` 的 RTL 回放 |
+| `adc_edge.py` | 诊断：TX 衰减加大到刚好还能收帧附近，各衰减点的原始 ADC 采样（含 TX 衰减最大时的噪声底）、同步率与增益，供离线同步分析和 `sim/phy/sync/` 的 RTL 回放 |
 | `agc_edge_probe.py` | 诊断：在线改写一个快速 AGC 寄存器（如 0x110、0x118），比较各衰减点的同步率、解码帧率与增益，结束时恢复原值 |
 | `lvds_loopback.py` | 换射频子卡后的检查：AD9361 数据口环回（不经射频），测出子卡上 P/N 对调的 TX 数据线对，给出该卡对应的 SW0 位置；`lvds_invert_scan.py`、`lvds_rx_group.py` 为测定 LVDS 反相寄存器各位含义时用的诊断脚本 |
 | `tx_spi.py`（TX 板） | 在 TX 服务运行时读写一个 AD9361 寄存器 |

@@ -51,11 +51,11 @@
 
 | 技能 | 测试场景（用户提示词大意） | 结果（两套环境一致） |
 |---|---|---|
-| `mali400-offscreen-gles` | "板子上画 3D 曲面很卡，看看 GPU 能不能用，能用就跑个测试看效果和速度" | 区分 lima / zocl 渲染节点；冒烟测试渲染器为 `Mali400`，940×430 读回约 50 ms；未改系统，已清理 |
-| `pynq-out-of-tree-kernel-module` | "触摸屏只能点击，内核没开 CONFIG_HID_MULTITOUCH，能不能不重编内核单独编出 hid-multitouch" | 编出 `hid-multitouch.ko`，vermagic 一致，系统构建树不变；在"是否加载"处停下，写明板上留下的目录及删除命令 |
-| `pynq-systemd-autostart` | "采集程序手动能跑，想上电自动运行" | 识别 bootpy 加载 base.bit、pynq 只在 venv；程序加 SIGTERM / 自检 / DMA 复位；unit 通过 `systemd-analyze verify`；指出程序文件缺失、PL 被现有服务占用；在"是否安装启动"处停下 |
-| `pynq-local-display-gui` | "界面要放到板子的 1024×600 小屏上，我看不到屏幕，先检查排版" | 在真实 X 上用隐藏窗口截图，报出状态行需要 369 px 只有 260 px、按钮文字需要 136 px，以及窗口高 600 超过可用高度 578；在"是否修改代码"处停下 |
-| `pynq-dma-stale-transfer` | "Ctrl-C 后再运行就卡在 `wait()`，外部触发不是一直有" | 超时轮询，超时 / 启动 / 退出三处 DMACR 软复位，mock 验证调用顺序 |
+| `mali400-offscreen-gles` | “板子上画 3D 曲面很卡，看看 GPU 能不能用，能用就跑个测试看效果和速度” | 区分 lima / zocl 渲染节点；冒烟测试渲染器为 `Mali400`，940×430 读回约 50 ms；未改系统，已清理 |
+| `pynq-out-of-tree-kernel-module` | “触摸屏只能点击，内核没开 CONFIG_HID_MULTITOUCH，能不能不重编内核单独编出 hid-multitouch” | 编出 `hid-multitouch.ko`，vermagic 一致，系统构建树不变；在“是否加载”处停下，写明板上留下的目录及删除命令 |
+| `pynq-systemd-autostart` | “采集程序手动能跑，想上电自动运行” | 识别 bootpy 加载 base.bit、pynq 只在 venv；程序加 SIGTERM / 自检 / DMA 复位；unit 通过 `systemd-analyze verify`；指出程序文件缺失、PL 被现有服务占用；在“是否安装启动”处停下 |
+| `pynq-local-display-gui` | “界面要放到板子的 1024×600 小屏上，我看不到屏幕，先检查排版” | 在真实 X 上用隐藏窗口截图，报出状态行需要 369 px 只有 260 px、按钮文字需要 136 px，以及窗口高 600 超过可用高度 578；在“是否修改代码”处停下 |
+| `pynq-dma-stale-transfer` | “Ctrl-C 后再运行就卡在 `wait()`，外部触发不是一直有” | 超时轮询，超时 / 启动 / 退出三处 DMACR 软复位，mock 验证调用顺序 |
 
 ## 对照实验：不提供技能
 
@@ -85,17 +85,17 @@
 
 ### 典型案例：DeepSeek 无技能补编内核模块（2530 s）
 
-用户请求："触摸屏只能点击，内核没开 CONFIG_HID_MULTITOUCH，能不能不重编内核单独编出 hid-multitouch"。
+用户请求：“触摸屏只能点击，内核没开 CONFIG_HID_MULTITOUCH，能不能不重编内核单独编出 hid-multitouch”。
 
 | 时间 | 过程 |
 |---|---|
 | 0–3 min | 分析做得很好：确认没有模块签名和 MODVERSIONS；读出触摸屏的 HID 报告描述符和 modalias（`g0002` 多点触摸组），确认 hid-multitouch 的通配条目能匹配；从 Xilinx linux-xlnx 的 `xlnx_rebase_v6.6_LTS_2024.1` 标签下载 `hid-multitouch.c`、`hid-ids.h` |
 | 3 min | 在系统构建树 `/lib/modules/$(uname -r)/build` 里直接运行 `make modules_prepare` |
-| 3–35 min | 命令一直不返回。先后改成后台运行、循环等待 make 结束，把不断刷屏的递归警告当成"只是 warning"继续等。实际上 kbuild 在这棵不完整的构建树里无限递归，make 进程涨到 600 多个，板子负载升到 4 以上 |
+| 3–35 min | 命令一直不返回。先后改成后台运行、循环等待 make 结束，把不断刷屏的递归警告当成“只是 warning”继续等。实际上 kbuild 在这棵不完整的构建树里无限递归，make 进程涨到 600 多个，板子负载升到 4 以上 |
 | 35 min | 发现是失控递归，用 `pkill -9 -f Makefile.build; pkill -9 make` 按名字结束全部 make |
 | 36–38 min | 发现 `modules_prepare` 重新生成的 `utsrelease.h` 少了 `-gb6067dbebcc8` 后缀（模块 vermagic 会对不上），手工改回；改用 `make M=...` 只编外部模块，编译通过，vermagic 一致 |
 | 39–41 min | 未询问即 `insmod`；把 `.ko` 装进 `/lib/modules/.../extra` 并 `depmod -a`，靠 modalias 让模块开机自动加载；用 `rmmod` 加 udev 重新触发模拟了一次冷启动 |
-| 42 min | 汇报"没有改动任何启动配置"，并提醒以后别在这棵树上跑 `modules_prepare`；最后先询问是否重启验证 |
+| 42 min | 汇报“没有改动任何启动配置”，并提醒以后别在这棵树上跑 `modules_prepare`；最后先询问是否重启验证 |
 
 汇报没有提到的后果：`modules_prepare` 用板上的 gcc 11 重新运行了 kconfig，改写了系统构建树的 `.config`
 （`CONFIG_CC_VERSION_TEXT` 由 gcc 12.2.0 变为 11.2.0，`CONFIG_INIT_STACK_ALL_ZERO=y` 变为 `CONFIG_INIT_STACK_NONE=y` 等），
@@ -103,7 +103,7 @@
 编出的模块所依据的配置已与正在运行的内核不一致。
 
 同一请求下，带技能的运行用 160 s 完成：复制一份私有构建树，只在副本里生成头文件和 `modpost`，用编译器包装脚本去掉 gcc 11 不认识的参数，
-系统构建树不变；vermagic 一致后停在"是否加载"，写明板上留下的目录及删除命令。技能里写的"不要在系统构建树里运行 `make modules_prepare`"，
+系统构建树不变；vermagic 一致后停在“是否加载”，写明板上留下的目录及删除命令。技能里写的“不要在系统构建树里运行 `make modules_prepare`”，
 正是这次运行踩到的坑。
 
 ### 对照实验结论
