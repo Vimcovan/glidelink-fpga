@@ -10,6 +10,7 @@
 | BRAM | Block RAM | PL中的块存储器；BRAM36容量为36 Kb，可拆成两块BRAM18 |
 | CDC | Clock Domain Crossing | 跨时钟域传输 |
 | CFO | Carrier Frequency Offset | 载波频偏，两块板本振频率之差 |
+| CHDR | Condensed Hierarchical Datagram for RFNoC | RFNoC中模块之间传输数据与控制命令的包格式 |
 | CNU | Check Node Unit | LDPC译码器中的校验节点处理单元 |
 | CORDIC | COordinate Rotation DIgital Computer | 只用移位和加法迭代计算三角函数、幅度与相角的算法 |
 | CP | Cyclic Prefix | 循环前缀，OFDM符号前复制的符号尾部采样 |
@@ -36,6 +37,7 @@
 | GMAC | Giga Multiply-ACcumulate | 10⁹次乘累加 |
 | GUI | Graphical User Interface | 图形用户界面 |
 | I / Q | In-phase / Quadrature | 复基带信号的同相（实部）与正交（虚部）分量 |
+| IIO | Industrial I/O | Linux内核中管理ADC、DAC等数据采集设备的子系统 |
 | KL | Kullback–Leibler divergence | KL散度，衡量两个概率分布的差异 |
 | LDPC | Low-Density Parity-Check | 低密度奇偶校验码 |
 | LFSR | Linear Feedback Shift Register | 线性反馈移位寄存器，用于产生伪随机序列 |
@@ -63,6 +65,8 @@
 | PWL | Piecewise Linear | 分段线性；本作品中指逐通道可学习的分段线性激活函数 |
 | Q10 | — | 定点格式，小数部分10位，1.0表示为1024 |
 | QAM | Quadrature Amplitude Modulation | 正交幅度调制；64QAM每个符号携带6比特 |
+| QPSK | Quadrature Phase Shift Keying | 正交相移键控，每个符号携带2比特 |
+| RFNoC | RF Network-on-Chip | Ettus Research的FPGA信号处理框架，模块之间以数据包通信 |
 | RTL | Register Transfer Level | 寄存器传输级，指用硬件描述语言编写的电路 |
 | SFO | Sampling Frequency Offset | 采样频偏，两块板采样时钟频率之差 |
 | SNR | Signal-to-Noise Ratio | 信噪比 |
@@ -70,6 +74,7 @@
 | SSCC | Separate Source-Channel Coding | 分离信源信道编码，本作品中为JPEG + LDPC |
 | SSIM | Structural Similarity | 结构相似性 |
 | STF | Short Training Field | 短训练字段：前导的前半部分，用于帧检测与载波频偏估计 |
+| TCP | Transmission Control Protocol | 传输控制协议 |
 | TX / RX | Transmitter / Receiver | 发射端 / 接收端 |
 | UDP | User Datagram Protocol | 用户数据报协议 |
 | URAM | UltraRAM | PL中的大容量存储块，每块288 Kb |

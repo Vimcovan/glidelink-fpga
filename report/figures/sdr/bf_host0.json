@@ -1,0 +1,1 @@
+{"reg": [{"bits": 16, "name": "包长（样点数）"}, {"bits": 8, "name": "标志"}, {"bits": 8, "name": "同步字0xA5"}], "config": {"bits": 32, "lanes": 1, "hspace": 700, "vspace": 64, "fontsize": 15, "fontfamily": "Times New Roman, SimSun", "margin": {"left": 70, "right": 4}, "label": {"left": "字0"}}}

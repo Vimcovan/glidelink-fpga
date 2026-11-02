@@ -1,0 +1,1 @@
+{"reg": [{"bits": 16, "name": "I"}, {"bits": 16, "name": "Q"}], "config": {"bits": 32, "lanes": 1, "hspace": 700, "vspace": 64, "fontsize": 15, "fontfamily": "Times New Roman, SimSun", "margin": {"left": 70, "right": 4}, "label": {"left": "tdata"}}}

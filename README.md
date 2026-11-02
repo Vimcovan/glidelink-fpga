@@ -152,11 +152,18 @@ TX、RX 板上的程序由 systemd 自启动，上电约 1 分钟建立链路，
 
 ---
 
+## 通信算法验证平台
+
+在本作品的两块板卡上，我们又做了一个通用的通信算法验证平台：[GlideLink SDR](https://github.com/Vimcovan/glidelink-sdr)。
+射频、数据搬运、驱动和上位机由平台提供，板卡可以作为 SoapySDR 设备直接接入 GNU Radio、GQRX 和 MATLAB。PL 部分参考 Ettus Research 的 RFNoC：
+用户只写数据处理的 RTL，模块放进槽位后，在 GNU Radio 中像软件块一样连线，并且可以和自己的软件实现逐样点核对。
+本作品的编码器、OFDM 收发和解码器已作为平台上的模块运行，帧率与 PSNR 和本作品相同。平台的设计见设计报告附录 E。
+
 ## 文档
 
 | 文档 | 内容 |
 |---|---|
-| [`report/design_report.docx`](report/design_report.docx)（[Markdown 版](report/design_report.md)） | 设计报告（竞赛模板）：术语与缩略语、作品概述、系统组成及功能说明（硬件 / 软件设计细节）、完成情况及性能参数、总结、参考文献、附录（大模型协作、技能包、复现说明、浅层解码器的设计细节） |
+| [`report/design_report.docx`](report/design_report.docx)（[Markdown 版](report/design_report.md)） | 设计报告（竞赛模板）：术语与缩略语、作品概述、系统组成及功能说明（硬件 / 软件设计细节）、完成情况及性能参数、总结、参考文献、附录（大模型协作、技能包、复现说明、浅层解码器的设计细节、基于本作品的通信算法验证平台） |
 | [`report/poster/`](report/poster/) | 英文海报（A0），以及按 AMD 海报模板制作的中、英文海报（`poster_amd*`） |
 | [`report/llm_collab/`](report/llm_collab/) | 大模型协作记录：17 个典型案例、Claude Code 与 Codex 的协作材料、脱敏的会话转写 |
 | [`skill/`](skill/) | 5 个面向 PYNQ / Zynq UltraScale+ 的通用技能（Mali-400 GPU 离屏渲染、补编内核模块、开机自启、板载屏 GUI、AXI DMA 遗留传输），按 AMD 官方 [AMD Ross™ Agentic AI Assistant](https://github.com/xilinx/ross-ai-assistant) 的技能格式编写，在 Cursor + Grok 4.7、CodeBuddy + DeepSeek V4.1 Flash 两套独立会话中测试，并与不提供技能的对照组比较 |

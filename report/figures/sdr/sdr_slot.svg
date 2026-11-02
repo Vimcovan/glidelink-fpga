@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="830" height="890" viewBox="120 0 830 890" font-family="Times New Roman, SimSun" font-size="24">
+  <defs>
+    <marker id="ad" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" fill="#7B52C9"/></marker>
+    <marker id="ac" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" fill="#E8792B"/></marker>
+    <marker id="ak" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" fill="#222"/></marker>
+    <style>
+      text { fill:#111; text-anchor:middle; }
+      .d { stroke:#7B52C9; stroke-width:2.2; fill:none; marker-end:url(#ad); }
+      .db { stroke:#7B52C9; stroke-width:2.2; fill:none; marker-start:url(#ad); marker-end:url(#ad); }
+      .dn { stroke:#7B52C9; stroke-width:2.2; fill:none; }
+      .c { stroke:#E8792B; stroke-width:2.2; fill:none; marker-end:url(#ac); }
+      .cb { stroke:#E8792B; stroke-width:2.2; fill:none; marker-start:url(#ac); marker-end:url(#ac); }
+      .cn { stroke:#E8792B; stroke-width:2.2; fill:none; }
+      .k { stroke:#222; stroke-width:2; fill:none; marker-end:url(#ak); }
+      .kb { stroke:#222; stroke-width:2; fill:none; marker-start:url(#ak); marker-end:url(#ak); }
+      .bx { fill:#FFFFFF; stroke:#1F5AA6; stroke-width:2; }
+      .sh { fill:#EAF1FA; stroke:#1F5AA6; stroke-width:2; }
+      .usr { fill:#FCE9D9; stroke:#C8602A; stroke-width:2; }
+      .ext { fill:#F2F2F2; stroke:#555; stroke-width:2; }
+      .ps { fill:#F3EFF8; stroke:#7E6A9E; stroke-width:2; }
+      .xb { stroke:#1F5AA6; stroke-width:4; fill:none; }
+    </style>
+  </defs>
+  <rect x="250" y="60" width="680" height="800" fill="none" stroke="#1F5AA6" stroke-width="2" stroke-dasharray="12 8"/>
+  <text x="590" y="45" fill="#1F5AA6">模块槽位</text>
+  <rect x="320" y="120" width="260" height="620" fill="#F5F8FC" stroke="#1F5AA6" stroke-width="2"/>
+  <text x="450" y="108">平台生成</text>
+
+  <rect x="355" y="150" width="190" height="180" fill="#fff" stroke="#222" stroke-width="2"/>
+  <text x="450" y="232">时钟</text><text x="450" y="264">与复位</text>
+  <rect x="355" y="360" width="190" height="140" fill="#fff" stroke="#E8792B" stroke-width="2"/>
+  <text x="450" y="422">跨时钟桥</text><text x="450" y="454">寄存器文件</text>
+  <rect x="355" y="530" width="190" height="180" fill="#fff" stroke="#7B52C9" stroke-width="2"/>
+  <text x="450" y="586">输入缓冲</text><text x="450" y="624">分包</text><text x="450" y="662">输出缓冲</text>
+
+  <rect class="usr" x="660" y="150" width="200" height="560"/>
+  <text x="760" y="438">用户模块</text>
+
+  <line class="k" x1="290" y1="175" x2="355" y2="175"/>
+  <line class="k" x1="290" y1="215" x2="355" y2="215"/>
+  <line class="k" x1="290" y1="255" x2="355" y2="255"/>
+  <line class="k" x1="290" y1="295" x2="355" y2="295"/>
+  <line class="cb" x1="290" y1="430" x2="355" y2="430"/>
+  <line class="d" x1="290" y1="585" x2="355" y2="585"/>
+  <line class="d" x1="355" y1="655" x2="290" y2="655"/>
+
+  <line class="k" x1="545" y1="200" x2="660" y2="200" stroke-dasharray="10 7"/>
+  <line class="k" x1="545" y1="240" x2="660" y2="240" stroke-dasharray="10 7"/>
+  <line class="k" x1="545" y1="280" x2="660" y2="280" stroke-dasharray="10 7"/>
+  <line class="cb" x1="545" y1="430" x2="660" y2="430" stroke-dasharray="10 7"/>
+  <line class="d" x1="545" y1="585" x2="660" y2="585" stroke-dasharray="10 7"/>
+  <line class="d" x1="660" y1="655" x2="545" y2="655" stroke-dasharray="10 7"/>
+
+  <path d="M320,755 Q320,785 350,785 H430 Q450,785 450,805 Q450,785 470,785 H550 Q580,785 580,755" fill="none" stroke="#222" stroke-width="2"/>
+  <text x="450" y="832">由模块说明文件生成</text>
+<polygon points="140,158 272,158 290,175 272,192 140,192" fill="#fff" stroke="#222" stroke-width="2"/><text x="206" y="183" font-size="22">处理时钟</text>
+<polygon points="140,198 272,198 290,215 272,232 140,232" fill="#fff" stroke="#222" stroke-width="2"/><text x="206" y="223" font-size="22">槽位时钟</text>
+<polygon points="140,238 272,238 290,255 272,272 140,272" fill="#fff" stroke="#222" stroke-width="2"/><text x="206" y="263" font-size="22">复位</text>
+<polygon points="140,278 272,278 290,295 272,312 140,312" fill="#fff" stroke="#222" stroke-width="2"/><text x="206" y="303" font-size="22">清理</text>
+<polygon points="140,413 272,413 290,430 272,447 140,447" fill="#fff" stroke="#E8792B" stroke-width="2"/><text x="206" y="438" font-size="22">寄存器读写</text>
+<polygon points="140,568 272,568 290,585 272,602 140,602" fill="#fff" stroke="#7B52C9" stroke-width="2"/><text x="206" y="593" font-size="22">数据输入</text>
+<polygon points="158,638 290,638 290,672 158,672 140,655" fill="#fff" stroke="#7B52C9" stroke-width="2"/><text x="224" y="663" font-size="22">数据输出</text>
+</svg>

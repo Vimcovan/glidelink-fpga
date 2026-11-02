@@ -1,0 +1,1 @@
+{"reg": [{"bits": 64, "name": "时间戳（采样计数）"}, {"bits": 8, "name": "标志"}], "config": {"bits": 72, "lanes": 1, "hspace": 700, "vspace": 64, "fontsize": 15, "fontfamily": "Times New Roman, SimSun", "margin": {"left": 70, "right": 4}, "label": {"left": "tuser"}}}
