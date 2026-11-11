@@ -6,6 +6,8 @@
 
 全国大学生嵌入式芯片与系统设计竞赛 · 2026 FPGA 赛道 · 自主选题（高级组）
 
+<p align="center"><img src="report/poster/poster_amd_collage.jpg" alt="海报" width="900"></p>
+
 <p align="center"><a href="https://www.bilibili.com/video/BV1UDHy6aEp8/"><img src="report/figures/demo_video_thumb.jpg" alt="演示视频" width="720"></a></p>
 
 **演示视频**（约 2 分 50 秒，点击图片或[此处](https://www.bilibili.com/video/BV1UDHy6aEp8/)在 B 站观看）：作品概述；SSCC 与 DeepJSCC-Q
