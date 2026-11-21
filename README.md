@@ -107,7 +107,7 @@ TX、RX 板上的程序由 systemd 自启动，上电约 1 分钟建立链路，
 
 <p align="center"><img src="report/figures/results/gui_image_page.png" alt="接收端 GUI · 图像页" width="640"></p>
 
-<p align="center"><img src="report/poster/assets/gui_phy_page.png" alt="接收端 GUI · PHY 页" width="640"></p>
+<p align="center"><img src="report/figures/results/gui_phy_page.png" alt="接收端 GUI · PHY 页" width="640"></p>
 
 接收端触摸屏 GUI：上为图像链路页（TX 额外衰减 20 dB），下为物理层页（星座、Mali-400 渲染的 |H| 三维曲面、逐子载波 SNR、ADC 频谱）。
 
@@ -164,7 +164,6 @@ TX、RX 板上的程序由 systemd 自启动，上电约 1 分钟建立链路，
 | 文档 | 内容 |
 |---|---|
 | [`report/design_report.docx`](report/design_report.docx)（[Markdown 版](report/design_report.md)） | 设计报告（竞赛模板）：术语与缩略语、作品概述、系统组成及功能说明（硬件 / 软件设计细节）、完成情况及性能参数、总结、参考文献、附录（大模型协作、技能包、复现说明、浅层解码器的设计细节、基于本作品的通信算法验证平台） |
-| [`report/poster/`](report/poster/) | 英文海报（A0），以及按 AMD 海报模板制作的中、英文海报（`poster_amd*`） |
 | [`report/llm_collab/`](report/llm_collab/) | 大模型协作记录：17 个典型案例、Claude Code 与 Codex 的协作材料、脱敏的会话转写 |
 | [`skill/`](skill/) | 5 个面向 PYNQ / Zynq UltraScale+ 的通用技能（Mali-400 GPU 离屏渲染、补编内核模块、开机自启、板载屏 GUI、AXI DMA 遗留传输），按 AMD 官方 [AMD Ross™ Agentic AI Assistant](https://github.com/xilinx/ross-ai-assistant) 的技能格式编写，在 Cursor + Grok 4.7、CodeBuddy + DeepSeek V4.1 Flash 两套独立会话中测试，并与不提供技能的对照组比较 |
 | [`report/notes/`](report/notes/) | 开发过程记录：AD9361 调试、PHY 与网络对接、AGC |

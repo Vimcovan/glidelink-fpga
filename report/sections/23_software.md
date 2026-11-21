@@ -100,7 +100,7 @@ GUI用PyQt5 + pyqtgraph编写，在RX板上全屏运行，有五个页面：
 - 介绍页：系统框图与原理说明；
 - 手机页：手机控制页的地址与二维码（2.3.2.5节）。
 
-![接收端 GUI · PHY 页](poster/assets/gui_phy_page.png "w=80%")
+![接收端 GUI · PHY 页](figures/results/gui_phy_page.png "w=80%")
 
 图2-28　RX板触摸屏上的物理层页（局部）：星座图、信道 |H| 三维曲面（Mali-400渲染）、逐子载波SNR与链路状态。
 

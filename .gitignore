@@ -32,3 +32,6 @@ src/network/gen_shallow/
 
 # enclosure: scratch renders
 mechanical/out/_*
+
+# posters (team information; kept out of the public repository)
+report/poster/

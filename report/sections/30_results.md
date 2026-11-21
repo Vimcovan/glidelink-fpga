@@ -4,7 +4,7 @@
 
 系统实物见图3-1（正面）与图3-2（斜45°）：左侧为RX板（PYNQ-ZU + AD9361子卡 + 1024×600触摸屏），右侧为TX板（PYNQ-ZU + AD9361子卡 + USB摄像头），两块子卡各接一根胶棒天线（TX子卡接发射口，RX子卡接接收口）。两块板上电约1分钟后自动建立链路，触摸屏实时显示重建图像与物理层状态；测试在室内进行，信道SNR通过TX的AD9361衰减调节。
 
-![系统实物](poster/assets/hardware.jpg)
+![系统实物](figures/results/hardware.jpg)
 
 图3-1　系统实物（正面）。
 
@@ -65,7 +65,7 @@ RX板的触摸屏GUI有图像链路页（图3-4）和物理层页（图3-5）。
 
 图3-4　RX板触摸屏GUI（图像链路页，DIV2K 0801预设图，TX额外衰减20 dB）。
 
-![接收端 GUI · PHY 页](poster/assets/gui_phy_page.png "w=80%")
+![接收端 GUI · PHY 页](figures/results/gui_phy_page.png "w=80%")
 
 图3-5　RX板触摸屏GUI（物理层页）。
 
